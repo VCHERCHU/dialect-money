@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #0b5c46; text-decoration: none; }
+    a:hover { color: #08402f; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #fbf9f4; color: #1a1a17; display: flex; flex-direction: column; overflow: hidden">
+
+  <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 16px 18px 14px; background: #ffffff; border-bottom: 1px solid #e3ded1">
+    <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true" style="flex: 0 0 auto">
+      <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+      <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+      <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+      <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+    </svg>
+    <div style="flex: 1 1 auto; font-size: 20px; font-weight: 700; letter-spacing: -0.01em">送给你的</div>
+    <div style="display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: #e8f2ee">
+      <div style="font-size: 15px; font-weight: 600; color: #0b5c46">福建话</div>
+      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9 L12 15 L18 9" stroke="#0b5c46" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>
+    </div>
+  </div>
+
+  <!-- An inbox with nothing in it is this direction's real risk. It must not be
+       a dead end: the library is still one tap away, and the ask to the helper
+       is stated in her words so she can make it out loud. -->
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 0 24px">
+
+    <svg width="52" height="52" viewBox="0 0 64 64" aria-hidden="true" style="opacity: 0.32">
+      <path d="M19 41 L13 51 L28 44 Z" fill="#8a857a"></path>
+      <circle cx="32" cy="29" r="18" fill="none" stroke="#8a857a" stroke-width="3"></circle>
+      <rect x="22" y="27" width="20" height="3.2" rx="1.6" fill="#8a857a"></rect>
+      <rect x="22" y="33" width="12" height="3.2" rx="1.6" fill="#8a857a"></rect>
+    </svg>
+
+    <div style="font-size: 26px; font-weight: 700; line-height: 1.4; text-wrap: pretty">现在没有新的。</div>
+
+    <div style="font-size: 17px; line-height: 1.65; color: #55524a">
+      叫你的女儿用WhatsApp发一个给你。她只要把链接发过来，你按一下就能听。
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 14px; background: #0b5c46; border-radius: 12px; min-height: 64px; padding: 0 22px">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto"><path d="M4 7 L20 7 M4 12 L20 12 M4 17 L20 17" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path></svg>
+      <div style="flex: 1 1 auto; font-size: 19px; font-weight: 700; color: #ffffff">自己找题目（6）</div>
+    </div>
+
+  </div>
+
+  <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-top: 1px solid #e3ded1; background: #fdf1e0">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto">
+      <path d="M6 3 L6 21" stroke="#8a4b00" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M6 4 L17 4 L17 12 L6 12" stroke="#8a4b00" stroke-width="2" stroke-linejoin="round" fill="none"></path>
+    </svg>
+    <div style="flex: 1 1 auto; font-size: 14px; line-height: 1.45; color: #8a4b00; font-weight: 600">卖给你的公司，在MAS的名册里吗？</div>
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto"><path d="M9 6 L15 12 L9 18" stroke="#8a4b00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

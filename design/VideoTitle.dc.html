@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #6fd3ad; text-decoration: none; }
+    a:hover { color: #8fe0c1; }
+
+    /* The invitation to tap is motion, not a sentence. */
+    @keyframes halo {
+      0%   { transform: scale(1);    opacity: .45; }
+      100% { transform: scale(1.42); opacity: 0; }
+    }
+    .halo { animation: halo 2.1s ease-out infinite; }
+    .halo-2 { animation-delay: .7s; }
+    @media (prefers-reduced-motion: reduce) {
+      .halo { animation: none; opacity: .3; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #14140f; color: #fbf9f4; display: flex; flex-direction: column; overflow: hidden">
+
+  <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 12px; padding: 16px 20px">
+    <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true" style="flex: 0 0 auto">
+      <rect x="0" y="0" width="64" height="64" rx="15" fill="#6fd3ad"></rect>
+      <path d="M19 41 L13 51 L28 44 Z" fill="#14140f"></path>
+      <circle cx="32" cy="29" r="18" fill="#14140f"></circle>
+      <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#6fd3ad"></rect>
+      <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#6fd3ad"></rect>
+      <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#6fd3ad"></rect>
+    </svg>
+    <div style="flex: 1 1 auto; display: flex; gap: 5px; align-items: center">
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+    </div>
+    <div style="flex: 0 0 auto; font-size: 14px; font-weight: 600; color: #6fd3ad">福建话</div>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; padding: 0 24px">
+
+    <!-- THE SITUATION, DRAWN. She recognises "a man is showing me a paper"
+         without reading a title. One pictogram per explainer, from the set on
+         the vocabulary sheet. -->
+    <svg width="290" height="196" viewBox="0 0 120 80" aria-hidden="true">
+      <circle cx="24" cy="24" r="10" fill="#a8a397"></circle>
+      <rect x="12" y="38" width="24" height="34" rx="11" fill="#a8a397"></rect>
+      <rect x="44" y="22" width="32" height="42" rx="3" fill="#fbf9f4"></rect>
+      <rect x="49" y="30" width="22" height="3" rx="1.5" fill="#14140f"></rect>
+      <rect x="49" y="38" width="22" height="3" rx="1.5" fill="#14140f"></rect>
+      <rect x="49" y="46" width="13" height="3" rx="1.5" fill="#14140f"></rect>
+      <circle cx="96" cy="23" r="11" fill="#6fd3ad"></circle>
+      <rect x="82" y="39" width="28" height="33" rx="12" fill="#6fd3ad"></rect>
+    </svg>
+
+    <!-- One target, unmissable, breathing so it reads as pressable. -->
+    <div style="position: relative; width: 168px; height: 168px; display: flex; align-items: center; justify-content: center">
+      <div class="halo" style="position: absolute; inset: 14px; border-radius: 50%; background: #6fd3ad"></div>
+      <div class="halo halo-2" style="position: absolute; inset: 14px; border-radius: 50%; background: #6fd3ad"></div>
+      <div style="position: relative; width: 140px; height: 140px; border-radius: 50%; background: #6fd3ad; display: flex; align-items: center; justify-content: center">
+        <svg width="58" height="58" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 L20 12 L8 20 Z" fill="#06251b"></path></svg>
+      </div>
+    </div>
+
+    <!-- Instead of "按一下就开始", the page SPEAKS the prompt in her dialect on
+         open. This glyph is all that stays on screen: sound is coming. -->
+    <div style="display: flex; align-items: center; gap: 10px; opacity: .6">
+      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9 L8 9 L13 5 L13 19 L8 15 L4 15 Z" fill="#fbf9f4"></path>
+        <path d="M16 9 a4 4 0 0 1 0 6" stroke="#fbf9f4" stroke-width="1.8" stroke-linecap="round" fill="none"></path>
+        <path d="M19 6 a8 8 0 0 1 0 12" stroke="#fbf9f4" stroke-width="1.8" stroke-linecap="round" fill="none"></path>
+      </svg>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

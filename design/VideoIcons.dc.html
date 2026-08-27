@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #6fd3ad; text-decoration: none; }
+    a:hover { color: #8fe0c1; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 780px; background: #14140f; color: #fbf9f4; display: flex; flex-direction: column; gap: 24px; padding: 32px; overflow: hidden">
+
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.01em">The wordless vocabulary</div>
+    <div style="font-size: 14px; line-height: 1.55; color: #a8a397; max-width: 92ch">
+      One picture per explainer so a title never has to be read, one glyph per control, and three sound
+      states so she can see whether it is talking. Everything on a 24 or 32 grid, one stroke weight, and
+      recolourable — which is why none of it is an emoji.
+    </div>
+  </div>
+
+  <!-- one situation picture per explainer in the library -->
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #6fd3ad">The situation, not the title</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px">
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; background: #23231a; border-radius: 14px; padding: 14px 8px">
+        <svg width="132" height="88" viewBox="0 0 120 80" aria-hidden="true">
+          <circle cx="24" cy="24" r="10" fill="#a8a397"></circle>
+          <rect x="12" y="38" width="24" height="34" rx="11" fill="#a8a397"></rect>
+          <rect x="44" y="22" width="32" height="42" rx="3" fill="#fbf9f4"></rect>
+          <rect x="49" y="30" width="22" height="3" rx="1.5" fill="#14140f"></rect>
+          <rect x="49" y="38" width="22" height="3" rx="1.5" fill="#14140f"></rect>
+          <rect x="49" y="46" width="13" height="3" rx="1.5" fill="#14140f"></rect>
+          <circle cx="96" cy="23" r="11" fill="#6fd3ad"></circle>
+          <rect x="82" y="39" width="28" height="33" rx="12" fill="#6fd3ad"></rect>
+        </svg>
+        <div style="font-size: 11px; line-height: 1.4; color: #a8a397; text-align: center">Someone is selling<br>you a policy</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; background: #23231a; border-radius: 14px; padding: 14px 8px">
+        <svg width="132" height="88" viewBox="0 0 120 80" aria-hidden="true">
+          <rect x="20" y="16" width="34" height="52" rx="4" fill="#6fd3ad"></rect>
+          <rect x="66" y="16" width="34" height="52" rx="4" fill="none" stroke="#f0b46a" stroke-width="3" stroke-dasharray="7 6"></rect>
+          <rect x="27" y="30" width="20" height="4" rx="2" fill="#14140f"></rect>
+          <rect x="27" y="42" width="14" height="4" rx="2" fill="#14140f"></rect>
+        </svg>
+        <div style="font-size: 11px; line-height: 1.4; color: #a8a397; text-align: center">Guaranteed<br>vs not</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; background: #23231a; border-radius: 14px; padding: 14px 8px">
+        <svg width="132" height="88" viewBox="0 0 120 80" aria-hidden="true">
+          <ellipse cx="42" cy="60" rx="26" ry="8" fill="#6fd3ad"></ellipse>
+          <ellipse cx="42" cy="50" rx="26" ry="8" fill="#6fd3ad"></ellipse>
+          <ellipse cx="42" cy="40" rx="26" ry="8" fill="#fbf9f4"></ellipse>
+          <circle cx="88" cy="30" r="18" fill="none" stroke="#f0b46a" stroke-width="3.4"></circle>
+          <path d="M88 20 L88 30 L96 34" stroke="#f0b46a" stroke-width="3.4" stroke-linecap="round" fill="none"></path>
+        </svg>
+        <div style="font-size: 11px; line-height: 1.4; color: #a8a397; text-align: center">Interest depends<br>on time</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; background: #23231a; border-radius: 14px; padding: 14px 8px">
+        <svg width="132" height="88" viewBox="0 0 120 80" aria-hidden="true">
+          <rect x="26" y="32" width="48" height="36" rx="4" fill="#6fd3ad"></rect>
+          <rect x="26" y="22" width="48" height="12" rx="4" fill="#fbf9f4"></rect>
+          <rect x="45" y="22" width="10" height="46" fill="#14140f"></rect>
+          <path d="M84 30 L102 30 L106 44 L88 50 Z" fill="#f0b46a"></path>
+          <circle cx="90" cy="35" r="2.6" fill="#14140f"></circle>
+        </svg>
+        <div style="font-size: 11px; line-height: 1.4; color: #a8a397; text-align: center">The gift has<br>a price</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; background: #23231a; border-radius: 14px; padding: 14px 8px">
+        <svg width="132" height="88" viewBox="0 0 120 80" aria-hidden="true">
+          <path d="M8 44 a26 26 0 0 1 52 0 Z" fill="#6fd3ad"></path>
+          <path d="M34 44 L34 68" stroke="#6fd3ad" stroke-width="4" stroke-linecap="round"></path>
+          <path d="M64 44 a24 24 0 0 1 48 0 Z" fill="none" stroke="#f0b46a" stroke-width="3.2" stroke-dasharray="8 6"></path>
+          <path d="M88 44 L88 66" stroke="#f0b46a" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 5"></path>
+        </svg>
+        <div style="font-size: 11px; line-height: 1.4; color: #a8a397; text-align: center">Cover forever<br>vs for a term</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; background: #23231a; border-radius: 14px; padding: 14px 8px">
+        <svg width="132" height="88" viewBox="0 0 120 80" aria-hidden="true">
+          <circle cx="46" cy="24" r="12" fill="#a8a397"></circle>
+          <rect x="30" y="42" width="32" height="30" rx="12" fill="#a8a397"></rect>
+          <circle cx="86" cy="46" r="15" fill="#f0b46a"></circle>
+          <circle cx="86" cy="46" r="8" fill="none" stroke="#14140f" stroke-width="2.6"></circle>
+          <path d="M62 50 L72 47" stroke="#a8a397" stroke-width="6" stroke-linecap="round"></path>
+        </svg>
+        <div style="font-size: 11px; line-height: 1.4; color: #a8a397; text-align: center">He is paid<br>to sell it</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- controls and sound states -->
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px">
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #6fd3ad">Controls — shapes only</div>
+      <div style="display: flex; gap: 12px; align-items: center; background: #23231a; border-radius: 14px; padding: 16px">
+
+        <div style="width: 58px; height: 58px; border-radius: 50%; border: 2px solid rgba(251,249,244,.28); display: flex; align-items: center; justify-content: center">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5 L8 12 L18 19 Z" fill="#fbf9f4"></path><rect x="4" y="5" width="3" height="14" rx="1.5" fill="#fbf9f4"></rect></svg>
+        </div>
+        <div style="width: 58px; height: 58px; border-radius: 50%; background: #6fd3ad; display: flex; align-items: center; justify-content: center">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4.5" height="16" rx="2.2" fill="#06251b"></rect><rect x="13.5" y="4" width="4.5" height="16" rx="2.2" fill="#06251b"></rect></svg>
+        </div>
+        <div style="width: 58px; height: 58px; border-radius: 50%; background: #f0b46a; display: flex; align-items: center; justify-content: center">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 L20 12 L8 20 Z" fill="#2b1a05"></path></svg>
+        </div>
+        <div style="width: 58px; height: 58px; border-radius: 50%; border: 2px solid rgba(251,249,244,.28); display: flex; align-items: center; justify-content: center">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5 L16 12 L6 19 Z" fill="#fbf9f4"></path><rect x="17" y="5" width="3" height="14" rx="1.5" fill="#fbf9f4"></rect></svg>
+        </div>
+        <div style="width: 58px; height: 58px; border-radius: 50%; border: 2px solid rgba(251,249,244,.28); display: flex; align-items: center; justify-content: center">
+          <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M6 20 a10 7 0 0 1 20 0 Z" fill="#fbf9f4"></path>
+            <path d="M26 17 a3.4 3.4 0 0 1 4 2.4 a3 3 0 0 1 -3.6 2" fill="#fbf9f4"></path>
+            <rect x="8" y="20" width="3.4" height="5" rx="1.7" fill="#fbf9f4"></rect>
+            <rect x="19" y="20" width="3.4" height="5" rx="1.7" fill="#fbf9f4"></rect>
+            <path d="M11 16 a5 4 0 0 1 10 0" stroke="#14140f" stroke-width="1.4" fill="none"></path>
+          </svg>
+        </div>
+        <div style="width: 58px; height: 58px; border-radius: 50%; border: 2px solid #f0b46a; background: rgba(240,180,106,.14); display: flex; align-items: center; justify-content: center">
+          <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3 L20 6 L20 12 c0 4.4 -3.4 7.6 -8 9 c-4.6 -1.4 -8 -4.6 -8 -9 L4 6 Z" stroke="#f0b46a" stroke-width="2" fill="none"></path>
+            <circle cx="11" cy="11" r="3.1" stroke="#f0b46a" stroke-width="2" fill="none"></circle>
+            <path d="M13.4 13.4 L16 16" stroke="#f0b46a" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #6fd3ad">Three sound states, no status text</div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; background: #23231a; border-radius: 14px; padding: 16px">
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+          <div style="display: flex; align-items: flex-end; gap: 4px; height: 42px">
+            <div style="width: 6px; height: 18px; border-radius: 3px; background: #6fd3ad"></div>
+            <div style="width: 6px; height: 34px; border-radius: 3px; background: #6fd3ad"></div>
+            <div style="width: 6px; height: 26px; border-radius: 3px; background: #6fd3ad"></div>
+            <div style="width: 6px; height: 40px; border-radius: 3px; background: #6fd3ad"></div>
+            <div style="width: 6px; height: 22px; border-radius: 3px; background: #6fd3ad"></div>
+          </div>
+          <div style="font-size: 11px; color: #a8a397">Talking — bars move</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+          <div style="display: flex; align-items: flex-end; gap: 4px; height: 42px">
+            <div style="width: 6px; height: 6px; border-radius: 3px; background: #f0b46a"></div>
+            <div style="width: 6px; height: 6px; border-radius: 3px; background: #f0b46a"></div>
+            <div style="width: 6px; height: 6px; border-radius: 3px; background: #f0b46a"></div>
+            <div style="width: 6px; height: 6px; border-radius: 3px; background: #f0b46a"></div>
+            <div style="width: 6px; height: 6px; border-radius: 3px; background: #f0b46a"></div>
+          </div>
+          <div style="font-size: 11px; color: #a8a397">Stopped — bars flat</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+          <div style="display: flex; align-items: flex-end; gap: 4px; height: 42px">
+            <div style="width: 6px; height: 20px; border-radius: 3px; border: 1.5px dashed #a8a397"></div>
+            <div style="width: 6px; height: 20px; border-radius: 3px; border: 1.5px dashed #a8a397"></div>
+            <div style="width: 6px; height: 20px; border-radius: 3px; border: 1.5px dashed #a8a397"></div>
+            <div style="width: 6px; height: 20px; border-radius: 3px; border: 1.5px dashed #a8a397"></div>
+            <div style="width: 6px; height: 20px; border-radius: 3px; border: 1.5px dashed #a8a397"></div>
+          </div>
+          <div style="font-size: 11px; color: #a8a397">No voice yet — outlined</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- the honest part -->
+  <div style="display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-left: 4px solid #f0b46a; border-radius: 0 12px 12px 0; background: rgba(240,180,106,.09)">
+    <div style="flex: 1 1 auto; font-size: 13px; line-height: 1.6; color: #f0b46a">
+      <strong style="font-weight: 700">What could not be made wordless, and why.</strong>
+      The spoken lines and the three questions are the product — removing those words would remove the
+      thing she came for; they stay, read aloud, with the pictogram as the anchor. The dialect name
+      (福建话) stays too: it is the one label she reliably reads, and no picture distinguishes Hokkien
+      from Teochew. Everything else — 上一句, 停, 下一句, 慢一点, 按一下就开始, 停了, 听完了, 再听一次,
+      分享, 其他题目 — is now a shape.
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

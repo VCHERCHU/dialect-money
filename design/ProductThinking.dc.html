@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #0b5c46; text-decoration: none; }
+    a:hover { color: #08402f; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 860px; background: #fbf9f4; color: #1a1a17; display: flex; flex-direction: column; gap: 22px; padding: 36px; overflow: hidden">
+
+  <!-- header -->
+  <div style="display: flex; align-items: flex-start; gap: 28px">
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 7px">
+      <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #8a857a">Product Thinking · Institute of Digital Government</div>
+      <div style="font-size: 26px; font-weight: 700; letter-spacing: -0.01em">What the three options are actually being judged on</div>
+    </div>
+    <div style="flex: 0 0 auto; display: flex; gap: 8px">
+      <div style="font-size: 12px; font-weight: 600; color: #0b5c46; background: #e8f2ee; border-radius: 999px; padding: 7px 13px">Problems before solutions</div>
+      <div style="font-size: 12px; font-weight: 600; color: #0b5c46; background: #e8f2ee; border-radius: 999px; padding: 7px 13px">Outcomes over outputs</div>
+      <div style="font-size: 12px; font-weight: 600; color: #0b5c46; background: #e8f2ee; border-radius: 999px; padding: 7px 13px">Policy · Ops · Tech</div>
+    </div>
+  </div>
+
+  <!-- the 4Cs -->
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+
+    <div style="display: flex; flex-direction: column; gap: 8px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 18px">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #0b5c46">Clarity</div>
+      <div style="font-size: 14px; line-height: 1.6; color: #1a1a17">
+        A 72-year-old who speaks only Hokkien cannot tell whether the rider, fixed-deposit promo or investment pitch in front of her is worth her money.
+      </div>
+      <div style="font-size: 12px; line-height: 1.55; color: #8a857a">
+        Named person, named moment. Not “seniors lack financial literacy”.
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 18px">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #0b5c46">Consequence</div>
+      <div style="font-size: 14px; line-height: 1.6; color: #1a1a17">
+        Not confusion — <strong style="font-weight: 700">delegation</strong>. She misses what she is entitled to, and cannot evaluate what is offered to her.
+      </div>
+      <div style="font-size: 12px; line-height: 1.55; color: #8a857a">
+        Every money question waits for a child who visits, or for the person selling.
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 18px">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #0b5c46">Cause</div>
+      <div style="font-size: 14px; line-height: 1.6; color: #1a1a17">
+        The guidance is not missing. It is <strong style="font-weight: 700">text, in English, on websites</strong> built for someone who searches, reads and scrolls.
+      </div>
+      <div style="font-size: 12px; line-height: 1.55; color: #8a857a">
+        Five Whys below — the chain does not end at language.
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 18px">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #0b5c46">Confirmation</div>
+      <div style="font-size: 14px; line-height: 1.6; color: #1a1a17">
+        Access to users is secondary research only. One two-minute Hokkien explainer, played to two or three seniors, two questions asked.
+      </div>
+      <div style="font-size: 12px; line-height: 1.55; color: #8a857a">
+        SingStat · IMDA Digital Society Report · MAS literacy surveys · CPF take-up.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- five whys -->
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #55524a">Start with the whys</div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+
+      <div style="display: flex; flex-direction: column; gap: 7px; background: #e8f2ee; border-radius: 12px; padding: 14px">
+        <div style="font-size: 20px; font-weight: 700; color: #0b5c46; line-height: 1">1</div>
+        <div style="font-size: 13px; line-height: 1.55; color: #1a1a17">She cannot judge the offer — the only explanation she gets is the sales pitch.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 7px; background: #e8f2ee; border-radius: 12px; padding: 14px">
+        <div style="font-size: 20px; font-weight: 700; color: #0b5c46; line-height: 1">2</div>
+        <div style="font-size: 13px; line-height: 1.55; color: #1a1a17">Why only his? Because every trustworthy explanation exists as written English.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 7px; background: #e8f2ee; border-radius: 12px; padding: 14px">
+        <div style="font-size: 20px; font-weight: 700; color: #0b5c46; line-height: 1">3</div>
+        <div style="font-size: 13px; line-height: 1.55; color: #1a1a17">Why does that not reach her? She reads almost no English and does not browse or search.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 7px; background: #e8f2ee; border-radius: 12px; padding: 14px">
+        <div style="font-size: 20px; font-weight: 700; color: #0b5c46; line-height: 1">4</div>
+        <div style="font-size: 13px; line-height: 1.55; color: #1a1a17">Why is it published that way? A website is the delivery model, and it assumes a reader.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 7px; background: #fdf1e0; border-radius: 12px; padding: 14px">
+        <div style="font-size: 20px; font-weight: 700; color: #8a4b00; line-height: 1">5</div>
+        <div style="font-size: 13px; line-height: 1.55; color: #1a1a17">Why does no channel replace it? The one that reaches her runs through a person — and that person is nobody&#39;s product surface.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- outcomes over outputs, and the three lenses -->
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+
+    <div style="display: flex; flex-direction: column; gap: 12px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 20px">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #55524a">Outcomes over outputs</div>
+      <div style="display: flex; flex-direction: column; gap: 9px">
+        <div style="display: flex; gap: 12px; align-items: baseline">
+          <div style="flex: 0 0 84px; font-size: 12px; font-weight: 700; color: #8a857a; text-transform: uppercase; letter-spacing: 0.08em">Output</div>
+          <div style="flex: 1 1 auto; font-size: 14px; line-height: 1.55; color: #55524a">Six explainers, three dialects, a video mode, an auto-publish pipeline.</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: baseline">
+          <div style="flex: 0 0 84px; font-size: 12px; font-weight: 700; color: #0b5c46; text-transform: uppercase; letter-spacing: 0.08em">Outcome</div>
+          <div style="flex: 1 1 auto; font-size: 15px; line-height: 1.55; font-weight: 600; color: #1a1a17">She has enough understanding to ask a real question — of the agent, the teller, or her own daughter — instead of nodding along.</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: baseline">
+          <div style="flex: 0 0 84px; font-size: 12px; font-weight: 700; color: #8a4b00; text-transform: uppercase; letter-spacing: 0.08em">Counter</div>
+          <div style="flex: 1 1 auto; font-size: 14px; line-height: 1.55; color: #8a4b00">100% of factual claims trace to a cited whitelisted page. The refusal screen is what that looks like in the interface — one confidently narrated wrong figure in Hokkien does more damage than the product does good.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 20px">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #55524a">Policy · Ops · Tech</div>
+      <div style="display: flex; flex-direction: column; gap: 9px">
+        <div style="display: flex; gap: 12px; align-items: baseline">
+          <div style="flex: 0 0 60px; font-size: 12px; font-weight: 700; color: #0b5c46; text-transform: uppercase; letter-spacing: 0.08em">Policy</div>
+          <div style="flex: 1 1 auto; font-size: 14px; line-height: 1.55; color: #1a1a17">Explains, never advises. Whitelisted sources only. Institutions named through the MAS Financial Institutions Directory and nowhere else.</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: baseline">
+          <div style="flex: 0 0 60px; font-size: 12px; font-weight: 700; color: #0b5c46; text-transform: uppercase; letter-spacing: 0.08em">Ops</div>
+          <div style="flex: 1 1 auto; font-size: 14px; line-height: 1.55; color: #1a1a17">A human accuracy check before anything publishes, and a named person — daughter, befriender, CC volunteer — who puts the link in front of her.</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: baseline">
+          <div style="flex: 0 0 60px; font-size: 12px; font-weight: 700; color: #0b5c46; text-transform: uppercase; letter-spacing: 0.08em">Tech</div>
+          <div style="flex: 1 1 auto; font-size: 14px; line-height: 1.55; color: #1a1a17">Retrieval decides what the model may see; it answers from those passages only and must say NO_ANSWER otherwise. Dialect speech in and out is still a stand-in — that, not the pipeline, is the open risk.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

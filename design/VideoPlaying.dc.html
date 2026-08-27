@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #6fd3ad; text-decoration: none; }
+    a:hover { color: #8fe0c1; }
+
+    /* Visible proof that sound is happening — the single biggest legibility win
+       for someone who cannot read a "playing" label. */
+    @keyframes talk {
+      0%, 100% { height: 12px; }
+      50%      { height: 40px; }
+    }
+    .bar { width: 7px; border-radius: 4px; background: #6fd3ad; animation: talk 900ms ease-in-out infinite; }
+    .b2 { animation-delay: 120ms; }
+    .b3 { animation-delay: 240ms; }
+    .b4 { animation-delay: 360ms; }
+    .b5 { animation-delay: 480ms; }
+    .b6 { animation-delay: 600ms; }
+    @media (prefers-reduced-motion: reduce) {
+      .bar { animation: none; height: 26px; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #14140f; color: #fbf9f4; display: flex; flex-direction: column; overflow: hidden">
+
+  <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 12px; padding: 16px 20px">
+    <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true" style="flex: 0 0 auto">
+      <rect x="0" y="0" width="64" height="64" rx="15" fill="#6fd3ad"></rect>
+      <path d="M19 41 L13 51 L28 44 Z" fill="#14140f"></path>
+      <circle cx="32" cy="29" r="18" fill="#14140f"></circle>
+      <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#6fd3ad"></rect>
+      <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#6fd3ad"></rect>
+      <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#6fd3ad"></rect>
+    </svg>
+    <div style="flex: 1 1 auto; display: flex; gap: 5px; align-items: center">
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.55)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.55)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: #6fd3ad"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+      <div style="flex: 1 1 0; height: 6px; border-radius: 3px; background: rgba(251,249,244,.22)"></div>
+    </div>
+    <div style="flex: 0 0 auto; font-size: 14px; font-weight: 600; color: #6fd3ad">福建话</div>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 26px; padding: 0 24px 8px">
+
+    <!-- A small pictogram anchors each line, so the beat has a picture even if
+         the sentence never gets read. -->
+    <div style="display: flex; align-items: flex-end; gap: 18px">
+      <svg width="54" height="54" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto; opacity: .85">
+        <path d="M4 20 L4 12 L8 12 L8 20 Z" fill="#6fd3ad"></path>
+        <path d="M10 20 L10 8 L14 8 L14 20 Z" fill="#6fd3ad"></path>
+        <path d="M16 20 L16 3 L20 3 L20 20 Z" fill="#6fd3ad"></path>
+        <path d="M2 21 L22 21" stroke="#6fd3ad" stroke-width="1.6" stroke-linecap="round"></path>
+      </svg>
+      <div style="flex: 1 1 auto; display: flex; align-items: flex-end; gap: 5px; height: 44px">
+        <div class="bar"></div>
+        <div class="bar b2"></div>
+        <div class="bar b3"></div>
+        <div class="bar b4"></div>
+        <div class="bar b5"></div>
+        <div class="bar b6"></div>
+      </div>
+    </div>
+
+    <div style="font-size: 33px; font-weight: 600; line-height: 1.42; max-width: 320px; text-wrap: pretty">
+      而且，你现在的保费不等于以后的保费。年纪越大，保费会调高。
+    </div>
+
+  </div>
+
+  <!-- Controls: shapes only. Every label is gone; the targets grew to fill the
+       space the words were using. -->
+  <div style="flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 20px 26px; background: #23231a">
+
+    <div style="width: 62px; height: 62px; border-radius: 50%; border: 2px solid rgba(251,249,244,.28); display: flex; align-items: center; justify-content: center">
+      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M18 5 L8 12 L18 19 Z" fill="#fbf9f4"></path>
+        <rect x="4" y="5" width="3" height="14" rx="1.5" fill="#fbf9f4"></rect>
+      </svg>
+    </div>
+
+    <div style="width: 92px; height: 92px; border-radius: 50%; background: #6fd3ad; display: flex; align-items: center; justify-content: center">
+      <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="6" y="4" width="4.5" height="16" rx="2.2" fill="#06251b"></rect>
+        <rect x="13.5" y="4" width="4.5" height="16" rx="2.2" fill="#06251b"></rect>
+      </svg>
+    </div>
+
+    <div style="width: 62px; height: 62px; border-radius: 50%; border: 2px solid rgba(251,249,244,.28); display: flex; align-items: center; justify-content: center">
+      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 5 L16 12 L6 19 Z" fill="#fbf9f4"></path>
+        <rect x="17" y="5" width="3" height="14" rx="1.5" fill="#fbf9f4"></rect>
+      </svg>
+    </div>
+
+    <!-- Slow: a tortoise, drawn rather than an emoji, so it recolours with the
+         pressed state and looks the same on every phone. -->
+    <div style="width: 62px; height: 62px; border-radius: 50%; border: 2px solid rgba(251,249,244,.28); display: flex; align-items: center; justify-content: center">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M6 20 a10 7 0 0 1 20 0 Z" fill="#fbf9f4"></path>
+        <path d="M26 17 a3.4 3.4 0 0 1 4 2.4 a3 3 0 0 1 -3.6 2" fill="#fbf9f4"></path>
+        <rect x="8" y="20" width="3.4" height="5" rx="1.7" fill="#fbf9f4"></rect>
+        <rect x="19" y="20" width="3.4" height="5" rx="1.7" fill="#fbf9f4"></rect>
+        <path d="M11 16 a5 4 0 0 1 10 0" stroke="#14140f" stroke-width="1.4" fill="none"></path>
+      </svg>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

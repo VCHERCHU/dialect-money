@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #0b5c46; text-decoration: none; }
+    a:hover { color: #08402f; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 1120px; background: #fbf9f4; color: #1a1a17; display: flex; flex-direction: column; padding: 8px 18px 24px; overflow: hidden">
+
+  <div style="display: flex; align-items: center; min-height: 56px; font-size: 16px; font-weight: 600; color: #0b5c46">← 回到全部题目</div>
+
+  <!-- Listening state: the mic goes to --stop #9b2c1f, the one place that
+       colour appears in the product. -->
+  <div style="display: flex; align-items: center; gap: 16px; margin-top: 6px; padding: 14px 16px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px">
+    <div style="flex: 0 0 auto; width: 64px; height: 64px; border-radius: 50%; background: #9b2c1f; box-shadow: 0 4px 0 rgba(155,44,31,.25); display: flex; align-items: center; justify-content: center">
+      <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="9" y="2" width="6" height="11" rx="3" fill="#ffffff"></rect>
+        <path d="M5 11 a7 7 0 0 0 14 0" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        <path d="M12 18 L12 22 M8 22 L16 22" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </div>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px">
+      <div style="font-size: 18px; font-weight: 600">我在听……</div>
+      <div style="font-size: 13px; color: #8a857a">Listening. Tap again to stop.</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 16px; padding: 14px 16px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px">
+    <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #8a857a">听到 Heard</div>
+    <div style="font-size: 20px; line-height: 1.5">他叫我加附加险，值得吗？</div>
+  </div>
+
+  <!-- The answer card. The line being spoken is highlighted, exactly as the
+       library and video mode already do it. -->
+  <div style="display: flex; flex-direction: column; margin-top: 18px; padding: 18px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px">
+
+    <div style="font-size: 21px; font-weight: 600; line-height: 1.45; text-wrap: pretty">加了附加险，看病真的不用自己付钱？</div>
+
+    <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 14px">
+      <div style="padding: 8px 11px; border-radius: 8px; font-size: 17px; line-height: 1.6; color: #55524a">保险公司说，加了这个附加险，看病你就不用自己出钱。</div>
+      <div style="padding: 8px 11px; border-radius: 8px; font-size: 17px; line-height: 1.6; color: #55524a">听起来很好。但是附加险不是免费的，你每年要多付保费。</div>
+      <div style="padding: 8px 11px; border-radius: 8px; background: #e8f2ee; color: #0b5c46; font-weight: 600; font-size: 17px; line-height: 1.6">而且，你现在的保费不等于以后的保费。年纪越大，保费会调高。</div>
+      <div style="padding: 8px 11px; border-radius: 8px; font-size: 17px; line-height: 1.6; color: #55524a">这不是说附加险不好。是说你要知道你在买什么。</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding: 16px; background: #fbf9f4; border-radius: 14px">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <div style="font-size: 17px; font-weight: 600; color: #0b5c46">你可以这样问他</div>
+        <div style="font-size: 12px; color: #8a857a">Questions you can ask them</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px">
+        <div style="display: flex; gap: 9px"><div style="flex: 0 0 auto; font-weight: 700; color: #8a857a">1.</div><div style="flex: 1 1 auto; font-size: 16px; line-height: 1.55">这个附加险，我七十五岁、八十岁的时候，保费大概是多少？</div></div>
+        <div style="display: flex; gap: 9px"><div style="flex: 0 0 auto; font-weight: 700; color: #8a857a">2.</div><div style="flex: 1 1 auto; font-size: 16px; line-height: 1.55">如果以后我付不起，可以只取消附加险，保住主要的保险吗？</div></div>
+        <div style="display: flex; gap: 9px"><div style="flex: 0 0 auto; font-weight: 700; color: #8a857a">3.</div><div style="flex: 1 1 auto; font-size: 16px; line-height: 1.55">看病的时候，我自己最多要付多少？</div></div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px">
+      <div style="min-height: 56px; display: flex; align-items: center; padding: 0 16px; background: #0b5c46; border: 2px solid #0b5c46; border-radius: 14px; font-size: 15px; font-weight: 600; color: #ffffff">▶ 听更清楚的说法</div>
+      <div style="min-height: 56px; display: flex; align-items: center; padding: 0 16px; background: #ffffff; border: 2px solid #e3ded1; border-radius: 14px; font-size: 15px; font-weight: 600">全部内容</div>
+    </div>
+
+    <!-- Provenance is not a footnote here: which pass produced the words, and
+         which page they came from, both sit on the card. -->
+    <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 16px">
+      <div style="font-size: 13px; line-height: 1.5; color: #8a857a">glm-5.3-flash 讲得更清楚了 · refined by glm-5.3-flash, from the cited source only</div>
+      <div style="font-size: 13px; line-height: 1.5; color: #8a857a">来源 Source: <span style="color: #0b5c46">MoneySense — Integrated Shield Plans and riders</span></div>
+    </div>
+
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 14px 16px; border-left: 4px solid #8a4b00; border-radius: 0 12px 12px 0; background: #fdf1e0">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto">
+      <path d="M6 3 L6 21" stroke="#8a4b00" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M6 4 L17 4 L17 12 L6 12" stroke="#8a4b00" stroke-width="2" stroke-linejoin="round" fill="none"></path>
+    </svg>
+    <div style="flex: 1 1 auto; font-size: 14px; line-height: 1.45; color: #8a4b00; font-weight: 600">卖给你的公司，在MAS的名册里吗？</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

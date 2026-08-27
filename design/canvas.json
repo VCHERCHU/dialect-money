@@ -1,0 +1,65 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Sent to you + Ask" },
+    { "id": "page-2", "name": "Options reviewed" },
+    { "id": "page-3", "name": "Video mode — wordless" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html",            "title": "Sent to you — home",                "page": "page-1", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
+    { "file": "SentEmpty.dc.html",       "title": "Nothing sent yet",                  "page": "page-1", "x": 470,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "Ask.dc.html",             "title": "Ask — the mic is the interface",    "page": "page-1", "x": 940,  "y": 0,    "w": 390,  "h": 960 },
+    { "file": "AskAnswer.dc.html",       "title": "Ask — heard, and answered",         "page": "page-1", "x": 1410, "y": 0,    "w": 390,  "h": 1120 },
+    { "file": "AskRefuse.dc.html",       "title": "Ask — the refusal",                 "page": "page-1", "x": 1880, "y": 0,    "w": 390,  "h": 960 },
+    { "file": "ProductThinking.dc.html", "title": "The 4Cs behind the design",         "page": "page-1", "x": 0,    "y": 1260, "w": 1240, "h": 860 },
+    { "file": "AppIcon.dc.html",         "title": "App icon",                          "page": "page-1", "x": 0,    "y": 2260, "w": 880,  "h": 600 },
+    { "file": "Logo.dc.html",            "title": "Logo",                              "page": "page-1", "x": 960,  "y": 2260, "w": 880,  "h": 660 },
+
+    { "file": "OptionA.dc.html",         "title": "Option A — Question-first",         "page": "page-2", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
+    { "file": "OptionB.dc.html",         "title": "Option B — One at a time",          "page": "page-2", "x": 470,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "OptionC.dc.html",         "title": "Option C — Sent to you (chosen)",   "page": "page-2", "x": 940,  "y": 0,    "w": 390,  "h": 844 },
+
+    { "file": "VideoTitle.dc.html",      "title": "Title — a picture, not a sentence", "page": "page-3", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
+    { "file": "VideoPlaying.dc.html",    "title": "Talking",                           "page": "page-3", "x": 470,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "VideoPaused.dc.html",     "title": "Stopped",                           "page": "page-3", "x": 940,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "VideoEnd.dc.html",        "title": "Now ask him",                       "page": "page-3", "x": 1410, "y": 0,    "w": 390,  "h": 900 },
+    { "file": "VideoIcons.dc.html",      "title": "The wordless vocabulary",           "page": "page-3", "x": 0,    "y": 1040, "w": 1240, "h": 780 }
+  ],
+  "annotations": [
+    {
+      "id": "chosen",
+      "x": 0, "y": -340, "w": 420, "page": "page-1",
+      "text": "SENT TO YOU — the chosen direction\n\nNot a library, an inbox. Newest first, each item showing who sent it. The new one carries everything she needs; the ones she has heard go quiet with a tick.\n\nOUTCOME — she asks a real question instead of nodding. This direction serves it by designing the helper IN: the handover is the product.\nASSUMPTION — attacks risk 1, distribution, head-on.\nCONFIRM — forward rate. Did the helper send a second one?\n\nUpdated: 问一问 now sits above the library link, because a question she already has beats a list she has to read."
+    },
+    {
+      "id": "empty-note",
+      "x": 470, "y": -340, "w": 420, "page": "page-1",
+      "text": "The empty state is this direction's honest cost, so it is drawn, not deferred.\n\nAn inbox nobody has sent to is a dead end — the exact failure mode of betting on distribution. So it routes her to the library anyway, and states the ask to her helper in words she can say out loud.\n\n女儿 and 义工 are role labels, not real accounts. Sender identity is a feature this direction needs and the product does not have yet."
+    },
+    {
+      "id": "ask-note",
+      "x": 940, "y": -340, "w": 860, "page": "page-1",
+      "text": "ASK — brought forward to match site/ask.html as it now stands\n\nThese three are the page's real states, drawn from its source rather than imagined: the mic idle with the type-or-tap way in; the listening state in --stop #9b2c1f, the one place that colour appears in the product; and the refusal.\n\nThe answer card shows what the code actually does — the line being spoken highlighted, the two-pass badge naming which pass produced the words, the source page cited on the card, and a button to hear the clearer version rather than swapping audio under her mid-sentence.\n\nTHE REFUSAL IS THE MOST IMPORTANT SCREEN HERE. The counter-metric is that every claim traces to a cited page; this is what that looks like when there is no page to cite. It is styled as an answer, not an error, and it hands her what the library does have — a refusal that dead-ends is a failure.\n\nOne deliberate deviation from the source: the mic is drawn as SVG, where ask.html uses an emoji glyph that renders differently on every platform and cannot be recoloured for the listening state."
+    },
+    {
+      "id": "brand-note",
+      "x": 0, "y": 2960, "w": 420, "page": "page-1",
+      "text": "The mark is one shape doing two jobs: a coin and a speech bubble, with the three spoken lines inside it. Built only from the app's own #0b5c46 and #fbf9f4 — no new colours invented.\n\nNo text and no emoji in the icon: it has to work for someone who does not read. Drawn as SVG on a 64 grid, so it is production-ready at any size."
+    },
+    {
+      "id": "reviewed",
+      "x": 0, "y": -200, "w": 860, "page": "page-2",
+      "text": "The three directions this design was chosen from — kept for the record.\n\nOPTION A — Question-first. The list, tightened. Judged on: does a second explainer get opened in the same sitting? Cost: still six decisions for someone who cannot read them.\n\nOPTION B — One at a time. The home screen IS this week's explainer. Judged on completion rate. Cost: whoever picks the topic holds real editorial power, and five explainers get buried.\n\nOPTION C — Sent to you. CHOSEN. Judged on forward rate. It is the only one of the three that tests the riskiest assumption instead of working around it."
+    },
+    {
+      "id": "wordless",
+      "x": 0, "y": -320, "w": 860, "page": "page-3",
+      "text": "VIDEO MODE, WITHOUT THE WORDS\n\nvideo.html currently leans on fourteen written labels — 上一句, 停, 下一句, 慢一点, 按一下就开始, 停了, 听完了, 再听一次, 分享, 其他题目 and the rest. Every one of them asks a non-reader to read. These four screens replace them with three things she can use instead:\n\n1. A PICTURE INSTEAD OF A TITLE. Each explainer gets one drawn situation — a man holding out a paper, a gift with a price tag — so she recognises what this is about before a word is spoken.\n\n2. MOTION INSTEAD OF STATUS TEXT. Bars move while it talks and fall flat when it stops. Movement starting and stopping is the only playing-or-paused indicator anyone needs, and it is the one thing the current design does not show her at all.\n\n3. SPEECH INSTEAD OF INSTRUCTIONS. The written hint becomes a spoken prompt in her dialect on open. The product's whole premise is that she is told things out loud; the instructions should obey it too.\n\nControls keep their meaning as shapes and get bigger, because the labels were taking the room. The tortoise is drawn rather than the emoji — an emoji cannot be recoloured for a pressed state and renders differently on every phone."
+    },
+    {
+      "id": "wordless-end",
+      "x": 940, "y": -320, "w": 860, "page": "page-3",
+      "text": "THE END SCREEN IS THE OUTCOME, SO IT IS DRAWN AS AN ACT\n\n听完了。下次他跟你讲这个，你可以这样问他。 is two sentences doing what one picture can: her, a speech bubble with a question in it, an arrow, him. The arrow carries the instruction.\n\nThe three questions stay as words — they ARE the outcome the problem statement names, and numbering them in mint circles is what lets her point at one rather than read all three.\n\nFour wordless exits: hear it again, check the firm against the MAS register, send it on, more topics. The MAS check keeps the warn amber so it never reads as just another button.\n\nWhat stays a word, deliberately: the dialect name. It is the one label she reliably reads, and no picture tells Hokkien from Teochew."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "page-3" }
+}
