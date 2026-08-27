@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=Familjen+Grotesk:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; font-family: "Familjen Grotesk", system-ui, sans-serif; }
+    a { color: #8f6829; } a:hover { color: #6f4f1c; }
+    .wm { font-family: "Newsreader", Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+    .lbl { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; color: #6d6459; }
+    .cap { font-size: 11.5px; color: #6d6459; line-height: 1.5; }
+  </style>
+</helmet>
+
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs>
+    <mask id="coinHole" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+      <rect x="0" y="0" width="100" height="100" fill="#ffffff"></rect>
+      <rect x="41" y="37" width="18" height="18" rx="1.5" fill="#000000"></rect>
+    </mask>
+    <symbol id="coinMark" viewBox="0 0 100 100">
+      <g mask="url(#coinHole)" fill="currentColor">
+        <circle cx="50" cy="46" r="33"></circle>
+        <path d="M30 72 C 27 83 22 89 15 93 C 28 91 41 84 46 74 Z"></path>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div style="background: #f7f4ee; color: #241f1b; min-height: 560px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 21px;">
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline;">
+    <div class="lbl">Direction A</div>
+    <div class="lbl" style="color: #a8563a;">Not chosen</div>
+  </div>
+
+  <div style="font-size: 21px; font-weight: 600; letter-spacing: -0.01em;">Coin &amp; voice</div>
+
+  <div style="display: flex; gap: 15px; opacity: 0.85;">
+    <div style="width: 112px; height: 112px; border-radius: 22.5%; background: #2b2621; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg style="width: 90px; height: 90px; color: #b8873f"><use href="#coinMark"></use></svg>
+    </div>
+    <div style="width: 112px; height: 112px; border-radius: 22.5%; background: #b8873f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg style="width: 90px; height: 90px; color: #2b2621"><use href="#coinMark"></use></svg>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 11px; opacity: 0.85;">
+    <svg style="width: 32px; height: 32px; color: #241f1b"><use href="#coinMark"></use></svg>
+    <div class="wm" style="font-size: 19px;">Dialect Money</div>
+  </div>
+
+  <div style="height: 1px; background: #ddd5c8;"></div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div>
+      <div class="lbl" style="margin-bottom: 4px;">Why it was the lead</div>
+      <div class="cap">The only direction carrying <em>both</em> halves &mdash;
+        money and speech &mdash; in one silhouette, and the only one that stayed
+        legible at 29px without a second variant.</div>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom: 4px;">Why it lost</div>
+      <div class="cap">Its rationale was the weakest link: square-holed cash
+        coins stopped circulating long before Mdm Tan was born, so
+        &ldquo;money as her generation knows it&rdquo; was never true. 话 says
+        less, but everything it says is true.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

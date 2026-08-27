@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Familjen+Grotesk:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; font-family: "Familjen Grotesk", system-ui, sans-serif; }
+    a { color: #8f6829; } a:hover { color: #6f4f1c; }
+    .wm { font-family: "Newsreader", Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+    .lbl { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; }
+  </style>
+</helmet>
+
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hua" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width="5"></circle>
+      <g transform="translate(29.204 62.331) scale(0.04180 -0.04180)" fill="currentColor"><path d="M109 738Q203 706 251.0 671.5Q299 637 299 594Q299 568 285.0 539.5Q271 511 240 511Q233 511 228.0 517.0Q223 523 210.0 561.5Q197 600 171.0 638.0Q145 676 99 722ZM568 612Q437 600 353 603L350 627Q579 657 795 753Q825 726 850.0 699.0Q875 672 878.0 666.5Q881 661 881 656Q881 647 871 647Q867 647 855.5 650.5Q844 654 831.0 654.0Q818 654 772.0 643.0Q726 632 657 623V437H800L837 493Q848 509 861.5 509.0Q875 509 919.5 466.0Q964 423 964.0 414.0Q964 405 945 405H657V249H746L773 292Q778 299 783 299Q791 299 836.0 269.5Q881 240 881.0 230.5Q881 221 843 201V-48Q843 -63 844 -76L846 -97Q846 -109 808.0 -127.5Q770 -146 758 -146Q753 -146 753 -135V-52H480V-118Q480 -122 479.0 -125.0Q478 -128 458.0 -140.5Q438 -153 418.5 -158.0Q399 -163 394.5 -163.0Q390 -163 391 -153Q396 -119 396 -78V209Q396 251 393 294Q452 275 495 249H568V405H388Q361 405 346 398L325 442Q346 437 375 437H568ZM753 -21V218H480V-21ZM377 115Q227 -72 201 -132Q196 -143 189.0 -143.0Q182 -143 160.0 -115.0Q138 -87 124 -60Q170 -19 170 41V370H90Q75 370 58 364L31 409Q48 404 73 404H170L193 440Q202 453 211.5 453.0Q221 453 243 436L283 404Q301 389 301.0 379.0Q301 369 255 349V44L364 128Z"></path></g>
+    </symbol>
+    <symbol id="huaSmall" viewBox="0 0 100 100">
+      <g transform="translate(13.741 71.501) scale(0.07288 -0.07288)" fill="currentColor"><path d="M109 738Q203 706 251.0 671.5Q299 637 299 594Q299 568 285.0 539.5Q271 511 240 511Q233 511 228.0 517.0Q223 523 210.0 561.5Q197 600 171.0 638.0Q145 676 99 722ZM568 612Q437 600 353 603L350 627Q579 657 795 753Q825 726 850.0 699.0Q875 672 878.0 666.5Q881 661 881 656Q881 647 871 647Q867 647 855.5 650.5Q844 654 831.0 654.0Q818 654 772.0 643.0Q726 632 657 623V437H800L837 493Q848 509 861.5 509.0Q875 509 919.5 466.0Q964 423 964.0 414.0Q964 405 945 405H657V249H746L773 292Q778 299 783 299Q791 299 836.0 269.5Q881 240 881.0 230.5Q881 221 843 201V-48Q843 -63 844 -76L846 -97Q846 -109 808.0 -127.5Q770 -146 758 -146Q753 -146 753 -135V-52H480V-118Q480 -122 479.0 -125.0Q478 -128 458.0 -140.5Q438 -153 418.5 -158.0Q399 -163 394.5 -163.0Q390 -163 391 -153Q396 -119 396 -78V209Q396 251 393 294Q452 275 495 249H568V405H388Q361 405 346 398L325 442Q346 437 375 437H568ZM753 -21V218H480V-21ZM377 115Q227 -72 201 -132Q196 -143 189.0 -143.0Q182 -143 160.0 -115.0Q138 -87 124 -60Q170 -19 170 41V370H90Q75 370 58 364L31 409Q48 404 73 404H170L193 440Q202 453 211.5 453.0Q221 453 243 436L283 404Q301 389 301.0 379.0Q301 369 255 349V44L364 128Z"></path></g>
+    </symbol>
+  </defs>
+</svg>
+
+<div style="background: {{bg}}; color: {{fg}}; min-height: 940px; padding: 56px; box-sizing: border-box; display: flex; flex-direction: column; gap: 38px;">
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline;">
+    <div class="lbl" style="color: {{muted}}">Dialect Money &middot; identity</div>
+    <div class="lbl" style="color: {{muted}}">Chosen direction &middot; 话</div>
+  </div>
+
+  <div style="display: flex; gap: 52px; align-items: center;">
+    <div style="width: 290px; height: 290px; flex-shrink: 0; border-radius: 22.5%; background: {{tile}}; display: flex; align-items: center; justify-content: center; border: 1px solid {{hair}};">
+      <svg style="width: 228px; height: 228px; color: {{brass}}" role="img" aria-label="Dialect Money"><title>Dialect Money</title><use href="#hua"></use></svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <div class="wm" style="font-size: 60px; line-height: 1;">Dialect Money</div>
+      <div style="font-size: 16.5px; line-height: 1.55; color: {{muted}}; max-width: 360px; text-wrap: pretty;">
+        话 &mdash; speech, words. Built on the 讠 speech radical, so the mark
+        <em>is</em> the idea of talking. Set in Songti, the classic Chinese
+        serif, and drawn as outlines so the logo never depends on a font
+        being installed.
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; padding-top: 4px;">
+        <div style="width: 26px; height: 1px; background: {{accent}};"></div>
+        <div class="lbl" style="color: {{accent}}">Ring drops below 48px</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 1px; background: {{hair}};"></div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px;">
+    <div style="border: 1px solid {{hair}}; border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 20px; background: {{tile}};">
+      <div class="lbl" style="color: {{muted}}">Horizontal &middot; logo.svg</div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <svg style="width: 44px; height: 44px; color: {{brass}}; flex-shrink: 0;"><use href="#hua"></use></svg>
+        <div class="wm" style="font-size: 23px; line-height: 1; white-space: nowrap;">Dialect Money</div>
+      </div>
+    </div>
+
+    <div style="border: 1px solid {{hair}}; border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 20px; background: {{tile}};">
+      <div class="lbl" style="color: {{muted}}">Stacked</div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 11px;">
+        <svg style="width: 46px; height: 46px; color: {{brass}}"><use href="#hua"></use></svg>
+        <div class="wm" style="font-size: 20px; line-height: 1;">Dialect Money</div>
+      </div>
+    </div>
+
+    <div style="border: 1px solid {{hair}}; border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 20px; background: {{tile}};">
+      <div class="lbl" style="color: {{muted}}">Mark &middot; mark.svg</div>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <svg style="width: 64px; height: 64px; color: {{brass}}"><use href="#hua"></use></svg>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 1px; background: {{hair}};"></div>
+
+  <div style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 26px; align-items: start;">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="lbl" style="color: {{muted}}">Two variants, one mark</div>
+      <div style="display: flex; align-items: flex-end; gap: 22px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <svg style="width: 64px; height: 64px; color: {{brass}}"><use href="#hua"></use></svg>
+          <div style="font-size: 11.5px; color: {{muted}};">48px and up</div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <svg style="width: 40px; height: 40px; color: {{brass}}"><use href="#huaSmall"></use></svg>
+          <div style="font-size: 11.5px; color: {{muted}};">under 48px</div>
+        </div>
+        <div style="display: flex; align-items: flex-end; gap: 14px; padding-bottom: 22px;">
+          <svg style="width: 32px; height: 32px; color: {{brass}}"><use href="#huaSmall"></use></svg>
+          <svg style="width: 22px; height: 22px; color: {{brass}}"><use href="#huaSmall"></use></svg>
+          <svg style="width: 16px; height: 16px; color: {{brass}}"><use href="#huaSmall"></use></svg>
+        </div>
+      </div>
+      <div style="font-size: 11.5px; color: {{muted}}; line-height: 1.5; max-width: 400px; text-wrap: pretty;">
+        话 is eight strokes. Inside the ring they silt up below about 48px, so
+        the small variant drops the ring and gives the glyph the whole tile.
+        Checked at actual pixels, not scaled down on screen.
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="lbl" style="color: {{muted}}">One colour</div>
+      <div style="display: flex; gap: 12px;">
+        <div style="width: 58px; height: 58px; border-radius: 12px; background: {{fg}}; display: flex; align-items: center; justify-content: center;">
+          <svg style="width: 46px; height: 46px; color: {{bg}}"><use href="#hua"></use></svg>
+        </div>
+        <div style="width: 58px; height: 58px; border-radius: 12px; background: {{bg}}; border: 1px solid {{hair}}; display: flex; align-items: center; justify-content: center;">
+          <svg style="width: 46px; height: 46px; color: {{fg}}"><use href="#hua"></use></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"surface":{"editor":"enum","options":["Ink","Paper"],"default":"Ink","section":"Theme"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = (this.props.surface ?? 'Ink') !== 'Paper';
+    return {
+      brass: '#b8873f',
+      bg: ink ? '#2b2621' : '#f7f4ee',
+      fg: ink ? '#f7f4ee' : '#241f1b',
+      muted: ink ? '#a2988c' : '#6d6459',
+      accent: ink ? '#d3a663' : '#8f6829',
+      hair: ink ? '#443c34' : '#ddd5c8',
+      tile: ink ? '#332d27' : '#ffffff',
+    };
+  }
+}
+</script>
+</body>
+</html>
