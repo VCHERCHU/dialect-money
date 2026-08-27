@@ -1,3 +1,10 @@
+.env
+out/
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+
 # Assembled design canvas: ~2 MB of generated editor code, rebuilt on demand
 design/*-canvas.html
 dialect-money-directions.html

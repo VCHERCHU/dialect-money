@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>问一问 · Ask · 方言理财</title>
+<meta name="description" content="Ask a money question out loud and get an answer in dialect, cited to a government source.">
+<style>
+  /* Tokens are duplicated from index.html rather than extracted to a shared
+     stylesheet, so each page stays self-contained and the repo keeps its
+     no-build-step promise. Two pages is the point at which that is still
+     cheaper than a build; a third would change the answer. */
+  :root {
+    --ink:      #1a1a17;
+    --ink-soft: #55524a;
+    --ink-faint:#8a857a;
+    --paper:    #fbf9f4;
+    --card:     #ffffff;
+    --line:     #e3ded1;
+    --accent:   #0b5c46;
+    --accent-lo:#e8f2ee;
+    --warn:     #8a4b00;
+    --warn-lo:  #fdf1e0;
+    --stop:     #9b2c1f;
+    --radius:   14px;
+    --tap:      56px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 20px/1.65 "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+          "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 44rem; margin: 0 auto; padding: 0 1.1rem 4rem; }
+
+  .back {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+    color: var(--accent); text-decoration: none; font-size: 1.05rem; font-weight: 600;
+  }
+  h1 { font-size: 2rem; margin: .5rem 0 0; letter-spacing: -.01em; }
+  h1 small {
+    display: block; font-size: .95rem; font-weight: 500; color: var(--ink-faint);
+    letter-spacing: .12em; text-transform: uppercase; margin-top: .35rem;
+  }
+  .tagline { font-size: 1.3rem; color: var(--ink-soft); margin: 1rem 0 0; }
+
+  .proto {
+    margin: 1.25rem 0 0; padding: .8rem 1rem;
+    background: var(--warn-lo); border-left: 5px solid var(--warn);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: .95rem; line-height: 1.55; color: var(--warn);
+  }
+  /* only the lead-in is a block; inline <b> mid-sentence must stay inline */
+  .proto > b:first-child { display: block; }
+
+  .pills { display: flex; gap: .6rem; flex-wrap: wrap; margin: 1.75rem 0 0; }
+  .pill {
+    flex: 1 1 8rem; min-height: var(--tap);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--card); border: 2px solid var(--line); border-radius: var(--radius);
+    font: inherit; font-size: 1.25rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; padding: .5rem;
+  }
+  .pill span { font-size: .8rem; font-weight: 500; color: var(--ink-faint); }
+  .pill[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .pill[aria-pressed="true"] span { color: rgba(255,255,255,.75); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- the microphone is the whole interface ---- */
+  .mic-area { text-align: center; margin: 2.5rem 0 0; }
+  .mic {
+    width: 150px; height: 150px; border-radius: 50%;
+    background: var(--accent); border: 0; color: #fff; cursor: pointer;
+    font: inherit; font-size: 3.4rem; line-height: 1;
+    display: inline-grid; place-items: center;
+    box-shadow: 0 6px 0 rgba(11,92,70,.25);
+  }
+  .mic[data-state="listening"] { background: var(--stop); box-shadow: 0 6px 0 rgba(155,44,31,.25); }
+  .mic[disabled] { background: var(--ink-faint); box-shadow: none; cursor: default; }
+  .mic-label { font-size: 1.35rem; font-weight: 600; margin: 1rem 0 0; }
+  .mic-hint { font-size: .95rem; color: var(--ink-faint); margin: .35rem 0 0; }
+
+  .heard {
+    margin: 1.75rem 0 0; padding: 1rem 1.1rem;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    font-size: 1.3rem;
+  }
+  .heard[hidden] { display: none; }
+  .heard b { display: block; font-size: .85rem; font-weight: 600; color: var(--ink-faint);
+             letter-spacing: .08em; text-transform: uppercase; margin-bottom: .35rem; }
+
+  /* ---- answer ---- */
+  .answer { margin: 1.5rem 0 0; }
+  .answer[hidden] { display: none; }
+  .a-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem; }
+  .a-card.refused { border-color: var(--warn); background: var(--warn-lo); }
+  .a-card h2 { font-size: 1.35rem; margin: 0 0 .8rem; line-height: 1.45; }
+  .lines { margin: 0; padding: 0; list-style: none; }
+  .lines li { padding: .5rem .7rem; margin-bottom: .3rem; border-radius: 8px; font-size: 1.2rem; line-height: 1.6; }
+  .lines li.now { background: var(--accent-lo); color: var(--accent); font-weight: 600; }
+
+  .ask-block { margin: 1.4rem 0 0; padding: 1rem; background: var(--paper); border-radius: var(--radius); }
+  .ask-block h3 { margin: 0 0 .6rem; font-size: 1.15rem; color: var(--accent); }
+  .ask-block h3 span { display: block; font-size: .8rem; font-weight: 500; color: var(--ink-faint); }
+  .ask-block ol { margin: 0; padding-left: 1.4rem; }
+  .ask-block li { font-size: 1.15rem; line-height: 1.55; margin-bottom: .5rem; }
+
+  .caution {
+    margin: 0 0 1rem; padding: .7rem .9rem;
+    background: var(--warn-lo); border-left: 4px solid var(--warn);
+    border-radius: 0 8px 8px 0; color: var(--warn);
+    font-size: 1.1rem; line-height: 1.5;
+  }
+  .caution span { display: block; margin-top: .3rem; font-size: .85rem; opacity: .85; }
+  .cite { margin: 1.1rem 0 0; font-size: .9rem; color: var(--ink-faint); }
+  .cite a { color: var(--accent); }
+  .row { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.1rem; }
+  .btn {
+    min-height: var(--tap); display: inline-flex; align-items: center; gap: .4rem;
+    padding: .6rem 1.1rem; border-radius: var(--radius);
+    border: 2px solid var(--line); background: var(--card);
+    font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--ink);
+    text-decoration: none; cursor: pointer;
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ---- fallback: type it, or tap an example ---- */
+  .fallback { margin: 2.5rem 0 0; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  .fallback h2 { font-size: 1.15rem; margin: 0 0 .3rem; }
+  .fallback p { font-size: .95rem; color: var(--ink-faint); margin: 0 0 .9rem; }
+  .typed { display: flex; gap: .6rem; flex-wrap: wrap; }
+  .typed input {
+    flex: 1 1 16rem; min-height: var(--tap); padding: .6rem .9rem;
+    font: inherit; font-size: 1.15rem; color: var(--ink);
+    background: var(--card); border: 2px solid var(--line); border-radius: var(--radius);
+  }
+  .examples { list-style: none; margin: 1.1rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .5rem; }
+  .examples button {
+    width: 100%; text-align: left; min-height: var(--tap);
+    padding: .7rem 1rem; font: inherit; font-size: 1.1rem; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); cursor: pointer;
+  }
+  .examples button i { font-style: normal; color: var(--warn); font-size: .85rem; display: block; }
+
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-faint); }
+  footer h2 { font-size: 1rem; color: var(--ink-soft); margin: 0 0 .5rem; }
+  footer ul { padding-left: 1.2rem; margin: 0 0 1rem; }
+  footer li { margin-bottom: .35rem; }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="index.html">← 回到全部题目 · All explainers</a>
+
+  <h1>问一问<small>Ask · prototype</small></h1>
+  <p class="tagline">有人卖东西给你，不懂就问。用你的话问，用你的话答。</p>
+
+  <div class="proto">
+    <b>Prototype — the dialect layer is a stand-in.</b>
+    No browser recognises Hokkien or Teochew speech, and none speaks it. Listening
+    uses your browser's Mandarin or Cantonese recognition, and answers use its
+    Mandarin or Cantonese voice. Real dialect in and out is the MERaLiON strand of
+    this project, and this page is the thing waiting on it — the interaction is
+    real, the language is not yet.
+    Answers are written by <b>glm-5.3-flash</b> through a local proxy that holds the API
+    key — a key in this page would be readable by anyone. With no proxy running,
+    the page falls back to keyword retrieval and says so.
+  </div>
+
+  <div class="pills" id="pills" role="group" aria-label="Choose a dialect"></div>
+
+  <div class="mic-area">
+    <button class="mic" id="mic" type="button" data-state="idle" aria-describedby="mic-label">🎤</button>
+    <p class="mic-label" id="mic-label">按一下，然后讲话</p>
+    <p class="mic-hint" id="mic-hint">Tap, then speak. Tap again to stop.</p>
+  </div>
+
+  <div class="heard" id="heard" hidden><b>听到 Heard</b><span id="heard-text"></span></div>
+
+  <div class="answer" id="answer" aria-live="polite" hidden></div>
+
+  <section class="fallback">
+    <h2>不方便讲话？打字或者按一个问题</h2>
+    <p>Type instead, or tap an example. Useful for testing, and for a caregiver asking on her behalf.</p>
+    <form class="typed" id="typed">
+      <input id="q" type="text" placeholder="他叫我加附加险，值得吗？" aria-label="Type your question">
+      <button class="btn primary" type="submit">问 Ask</button>
+    </form>
+    <ul class="examples" id="examples"></ul>
+  </section>
+
+  <footer>
+    <h2>How this answers</h2>
+    <ul>
+      <li><b>It only answers from the library.</b> Your question is matched against the
+        explainers on this site, all of which come from the whitelist — CPF, MAS,
+        MoneySense, IRAS, MOF, gov.sg.</li>
+      <li><b>Every answer names its source</b> and links to it.</li>
+      <li><b>It answers twice.</b> The explainer is read out immediately — already
+        human-drafted and sourced — and glm-5.3-flash's clearer version streams in line by
+        line to replace it. She never waits in silence, and the model is an
+        improvement rather than a gate. If she is still mid-sentence when the refined
+        version lands, the audio is not swapped under her: a button offers it.</li>
+      <li><b>It refuses rather than guesses.</b> A question outside the library gets
+        "I don't know", not an invented answer. A confidently wrong figure spoken in
+        Hokkien would do more damage than this product does good.</li>
+      <li><b>It explains, it never advises.</b> No answer tells you what to buy. Each
+        one ends with questions you can put to the person selling to you.</li>
+    </ul>
+    <p>
+      Retrieval is keyword scoring, and it decides what the model is allowed to
+      see. glm-5.3-flash then answers from those passages only, under a system prompt
+      that forbids naming a figure absent from them, forbids recommending
+      anything, and requires the literal token NO_ANSWER when the passages do not
+      cover the question. Retrieval finding nothing skips the model entirely —
+      there is no permitted context, so there is nothing to answer from.
+    </p>
+    <p><a href="https://github.com/VCHERCHU/dialect-money/blob/main/PROBLEM-STATEMENT.md">Read the problem statement</a>.</p>
+  </footer>
+
+</div>
+
+<script src="explainers.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var L = window.LIBRARY;
+  var synth = window.speechSynthesis || null;
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+
+  /* Same storage key as the library page, so a dialect chosen there carries
+     over. Nobody should pick their dialect twice. */
+  var KEY = 'dialect-money:dialect';
+  var chosen = (function () {
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+    return L.dialects.some(function (d) { return d.id === saved; }) ? saved : L.dialects[0].id;
+  })();
+
+  var rec = null, listening = false;
+
+  function dialect() {
+    return L.dialects.filter(function (d) { return d.id === chosen; })[0];
+  }
+
+  /* ---- retrieval -------------------------------------------------
+     Scored by total length of matched keywords, so a match on a long
+     specific term outranks a match on a short generic one. Zero score
+     is a refusal, never a best guess.
+     --------------------------------------------------------------- */
+  function retrieve(q) {
+    var query = String(q || '').toLowerCase();
+    if (!query.trim()) { return []; }
+    return L.explainers.map(function (item) {
+      var hits = item.keywords.filter(function (k) {
+        return query.indexOf(String(k).toLowerCase()) !== -1;
+      });
+      var score = hits.reduce(function (n, k) { return n + k.length; }, 0);
+      return { item: item, score: score, hits: hits };
+    }).filter(function (r) {
+      return r.score > 0;
+    }).sort(function (a, b) {
+      return b.score - a.score;
+    });
+  }
+
+  /* ---- speaking ---- */
+  /* `speaking` gates the refined answer. If she is still listening to the
+     verbatim explainer when glm-5.3-flash lands, swapping the audio mid-sentence is
+     worse than letting her finish and offering a replay.
+
+     `highlightValid` goes false when the panel is repainted while speech is
+     still running: the words being spoken no longer match the text on screen,
+     so highlighting a line would point her at the wrong one.
+
+     `speechGen` invalidates the callbacks of cancelled utterances. Chrome fires
+     onend for everything synth.cancel() discards, and those late callbacks would
+     otherwise clear the state of the speech that has just started. */
+  var speaking = false;
+  var highlightValid = true;
+  var speechGen = 0;
+  var queued = 0;
+
+  function clearHighlight() {
+    var lis = document.querySelectorAll('#answer .lines li');
+    Array.prototype.forEach.call(lis, function (li) { li.classList.remove('now'); });
+  }
+
+  function stopSpeaking() {
+    speechGen++;
+    queued = 0;
+    speaking = false;
+    if (synth) { synth.cancel(); }
+    clearHighlight();
+  }
+
+  /* Queues one line behind whatever is already playing. This is what makes
+     streaming worth having: a line can be spoken the moment it arrives, without
+     restarting the answer. */
+  function speakLine(text, idx) {
+    if (!synth || !text) { return; }
+    var gen = speechGen;
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = dialect().ttsLang;
+    u.rate = 0.85;                       // slower than default, for 70+ listeners
+    /* The list is queried here rather than captured up front: the panel is
+       repainted as lines arrive, and a captured NodeList would point at nodes
+       no longer in the document. */
+    u.onstart = function () {
+      if (gen !== speechGen) { return; }
+      clearHighlight();
+      if (!highlightValid) { return; }
+      var lis = document.querySelectorAll('#answer .lines li');
+      if (lis[idx]) { lis[idx].classList.add('now'); }
+    };
+    u.onend = function () {
+      if (gen !== speechGen) { return; }
+      queued--;
+      if (queued <= 0) { queued = 0; speaking = false; clearHighlight(); }
+    };
+    queued++;
+    speaking = true;
+    synth.speak(u);
+  }
+
+  function speak(lines) {
+    if (!synth || !lines || !lines.length) { return; }
+    stopSpeaking();
+    highlightValid = true;
+    lines.forEach(function (line, i) { speakLine(line, i); });
+  }
+
+  /* ---- rendering ---- */
+  function esc(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function refuse(q) {
+    var box = document.getElementById('answer');
+    var titles = L.explainers.map(function (i) {
+      return '<li><button type="button" data-q="' + esc(i.keywords[0]) + '">' + esc(i.titleZh) + '</button></li>';
+    }).join('');
+    box.innerHTML =
+      '<div class="a-card refused">' +
+        '<h2>这个我不知道。</h2>' +
+        '<ul class="lines">' +
+          '<li>我只讲这个网站里面有的东西，因为那些是政府的资料，可以查。</li>' +
+          '<li>没有的，我不会乱讲。你问的这个，我这里没有。</li>' +
+        '</ul>' +
+        '<p class="cite">I answer only from the library on this site. Your question is outside it, ' +
+          'so there is no sourced answer to give — and guessing is worse than saying so.</p>' +
+        '<div class="ask-block"><h3>我可以讲这些<span>What I do have</span></h3><ul class="examples">' + titles + '</ul></div>' +
+      '</div>';
+    box.hidden = false;
+    speak([
+      '这个我不知道。',
+      '我只讲这个网站里面有的东西。没有的，我不会乱讲。'
+    ]);
+  }
+
+  /* ---- the model ---------------------------------------------------
+     Retrieval decides what the model may see; the proxy holds the key and
+     enforces the prompt. Any failure leaves the verbatim explainer in place,
+     which is always safe -- it is human-drafted text.
+
+     The proxy streams newline-delimited JSON, one event per line, and does the
+     line splitting itself so this page never has to reimplement it.
+     ------------------------------------------------------------------ */
+  var seq = 0;   // guards a stale answer landing after she has asked again
+
+  function contextFor(found) {
+    return found.slice(0, 3).map(function (r) {
+      return {
+        title: r.item.titleZh,
+        source: r.item.source.name + ' — ' + r.item.source.page,
+        lines: r.item.script
+      };
+    });
+  }
+
+  function post(question, found, stream) {
+    return fetch('api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: question,
+        dialect: dialect().en,
+        context: contextFor(found),
+        stream: !!stream
+      })
+    });
+  }
+
+  /* Streaming path. `on` receives each event; resolves to the final `done`
+     event, or null if the stream could not be used at all. */
+  function streamLLM(question, found, on) {
+    return post(question, found, true).then(function (res) {
+      if (!res.ok) { return null; }
+      if (!res.body || !res.body.getReader) {
+        /* No streams in this browser -- ask once for the whole thing. */
+        return post(question, found, false).then(function (r) {
+          return r.ok ? r.json() : null;
+        });
+      }
+      var reader = res.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = '';
+      var final = null;
+
+      function handle(text) {
+        var event;
+        try { event = JSON.parse(text); } catch (e) { return; }
+        if (event.type === 'done') { final = event; }
+        on(event);
+      }
+
+      function pump() {
+        return reader.read().then(function (chunk) {
+          if (chunk.done) {
+            if (buffer.trim()) { handle(buffer); }
+            return final;
+          }
+          buffer += decoder.decode(chunk.value, { stream: true });
+          var parts = buffer.split('\n');
+          buffer = parts.pop();
+          parts.forEach(function (part) { if (part.trim()) { handle(part); } });
+          return pump();
+        });
+      }
+      return pump();
+    }).catch(function () {
+      return null;   // no proxy running (e.g. GitHub Pages), or it errored
+    });
+  }
+
+  /* One painter for every state the panel can be in, so the verbatim, streaming
+     and finished versions cannot drift apart. */
+  function paint(o) {
+    var top = o.top;
+    var ready = top.audio[chosen] === 'ready';
+    var box = document.getElementById('answer');
+
+    var badge =
+      o.origin === 'stream'  ? 'glm-5.3-flash 正在讲…… · answering line by line, from the cited source only' :
+      o.origin === 'llm'     ? 'glm-5.3-flash 讲得更清楚了 · refined by glm-5.3-flash, from the cited source only' :
+      o.origin === 'offline' ? '就念这个说明 · the explainer, verbatim — no model involved' :
+      o.refining             ? '先念这个说明…… · reading the explainer now, asking glm-5.3-flash for a clearer version' :
+                               '这个说明 · the explainer, verbatim';
+
+    /* Once refined text is on screen while older audio is still playing, the
+       replay button is how she hears the new version. */
+    var replayLabel = (o.origin === 'llm' && o.wasSpeaking)
+      ? '▶ 听更清楚的说法 Hear the clearer version'
+      : '▶ 再听一次 Again';
+
+    box.innerHTML =
+      '<div class="a-card">' +
+        '<h2>' + esc(top.titleZh) + '</h2>' +
+        (o.caution
+          ? '<p class="caution">这个可能不是你要问的。下面是我有的、最接近的说明。' +
+            '<span>glm-5.3-flash judged the retrieved passage does not answer your question, so nothing was ' +
+            'rewritten. This is the source text, unchanged.</span></p>'
+          : '') +
+        '<ul class="lines">' +
+          o.lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') +
+        '</ul>' +
+        (o.asks && o.asks.length
+          ? '<div class="ask-block"><h3>你可以这样问他<span>Questions you can ask them</span></h3><ol>' +
+              o.asks.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') +
+            '</ol></div>'
+          : '') +
+        (o.origin === 'stream' ? '' :
+        '<div class="row">' +
+          (ready ? '<button class="btn primary" id="replay" type="button">' + replayLabel + '</button>' : '') +
+          '<a class="btn" href="index.html#' + esc(top.id) + '">全部内容 Full explainer</a>' +
+        '</div>') +
+        (ready ? '' : '<p class="cite"><b>' + esc(dialect().zh) + '版还在制作中</b> — no narration in this dialect yet, so this answer is text only.</p>') +
+        '<p class="cite">' + esc(badge) + '</p>' +
+        '<p class="cite">来源 Source: <a href="' + esc(top.source.url) + '" target="_blank" rel="noopener">' +
+          esc(top.source.name) + ' — ' + esc(top.source.page) + '</a></p>' +
+        (o.runner ? '<p class="cite">也许你要问的是：<button class="btn" type="button" data-q="' +
+          esc(o.runner.keywords[0]) + '">' + esc(o.runner.titleZh) + '</button></p>' : '') +
+      '</div>';
+    box.hidden = false;
+
+    /* Repainting under live speech invalidates the highlight -- unless the
+       repaint is the stream appending the very line being spoken, where text
+       and audio stay in step. */
+    if (speaking && !o.inStep) { highlightValid = false; clearHighlight(); }
+
+    var again = document.getElementById('replay');
+    if (again) { again.addEventListener('click', function () { speak(o.lines); }); }
+  }
+
+  function answer(q) {
+    var found = retrieve(q);
+
+    /* Nothing retrieved means there is no material the model is permitted to
+       use. Refuse without calling it -- cheaper, and it closes the only door
+       through which an unsourced answer could arrive. */
+    if (!found.length) { refuse(q); return; }
+
+    var top = found[0].item;
+    var runner = found[1] ? found[1].item : null;
+    var ready = top.audio[chosen] === 'ready';
+    var token = ++seq;
+
+    /* Speak first. She hears something in under a second instead of waiting on
+       a reasoning model, and what she hears is already human-drafted and
+       sourced. Refinement is an improvement, never a gate. */
+    paint({ top: top, runner: runner, lines: top.script, asks: top.ask,
+            origin: 'verbatim', refining: true });
+    if (ready) { speak(top.script); }
+
+    var lines = [];
+    var asks = [];
+    var takeOver = null;   // decided at the first line, then held
+
+    function show(origin, extra) {
+      var o = {
+        top: top, runner: runner,
+        lines: lines.length ? lines : top.script,
+        asks: lines.length ? asks : top.ask,
+        origin: origin
+      };
+      for (var k in (extra || {})) { o[k] = extra[k]; }
+      paint(o);
+    }
+
+    streamLLM(q, found, function (event) {
+      if (token !== seq) { return; }   // a newer question has taken over
+
+      if (event.type === 'line') {
+        lines.push(event.text);
+        /* Decided once, on the first line: if she is mid-sentence on the
+           verbatim read, the refined audio waits for the button. Otherwise the
+           stream takes over the voice and each line is spoken as it lands. */
+        if (takeOver === null) { takeOver = ready && !speaking; }
+        show('stream', { inStep: takeOver });
+        if (takeOver) { speakLine(event.text, lines.length - 1); }
+        return;
+      }
+      if (event.type === 'ask') {
+        asks.push(event.text);
+        show('stream', { inStep: takeOver === true });
+      }
+    }).then(function (done) {
+      if (token !== seq) { return; }
+
+      if (!done && !lines.length) {
+        paint({ top: top, runner: runner, lines: top.script, asks: top.ask, origin: 'offline' });
+        return;
+      }
+      if (done && done.refused) {
+        paint({ top: top, runner: runner, lines: top.script, asks: top.ask,
+                origin: 'verbatim', caution: true });
+        return;
+      }
+
+      /* The one-shot fallback returns everything at once. */
+      if (done && !lines.length && done.lines && done.lines.length) {
+        lines = done.lines;
+        asks = done.ask || [];
+        var wasSpeaking = speaking;
+        paint({ top: top, runner: runner, lines: lines, asks: asks,
+                origin: 'llm', wasSpeaking: wasSpeaking });
+        if (ready && !wasSpeaking) { speak(lines); }
+        return;
+      }
+
+      paint({ top: top, runner: runner, lines: lines, asks: asks,
+              origin: 'llm', wasSpeaking: !takeOver && speaking, inStep: takeOver === true });
+    });
+  }
+
+  function ask(q) {
+    stopSpeaking();
+    var heard = document.getElementById('heard');
+    document.getElementById('heard-text').textContent = q;
+    heard.hidden = false;
+    answer(q);
+  }
+
+  /* Any button carrying data-q re-asks with that text — used by the refusal
+     list and the runner-up suggestion. */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-q]') : null;
+    if (btn) { ask(btn.getAttribute('data-q')); }
+  });
+
+  /* ---- microphone ---- */
+  function micLabel(main, hint) {
+    document.getElementById('mic-label').textContent = main;
+    document.getElementById('mic-hint').textContent = hint;
+  }
+
+  function setupMic() {
+    var mic = document.getElementById('mic');
+
+    if (!SR) {
+      mic.disabled = true;
+      mic.textContent = '🚫';
+      micLabel('这个浏览器不能听', 'This browser cannot listen. Use Chrome, or type below.');
+      return;
+    }
+
+    mic.addEventListener('click', function () {
+      if (listening) { if (rec) { rec.stop(); } return; }
+
+      stopSpeaking();
+      rec = new SR();
+      rec.lang = dialect().ttsLang;   // stand-in: Mandarin or Cantonese, never Hokkien
+      rec.interimResults = true;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = function () {
+        listening = true;
+        mic.dataset.state = 'listening';
+        mic.textContent = '■';
+        micLabel('我在听……', 'Listening. Tap again to stop.');
+      };
+      rec.onresult = function (ev) {
+        var text = '', final = false;
+        for (var i = ev.resultIndex; i < ev.results.length; i++) {
+          text += ev.results[i][0].transcript;
+          if (ev.results[i].isFinal) { final = true; }
+        }
+        document.getElementById('heard-text').textContent = text;
+        document.getElementById('heard').hidden = false;
+        if (final) { ask(text); }
+      };
+      rec.onerror = function (ev) {
+        micLabel(
+          ev.error === 'not-allowed' ? '请先允许用麦克风' : '听不到，再试一次',
+          ev.error === 'not-allowed'
+            ? 'Microphone permission was refused. Allow it in Chrome, or type below.'
+            : 'Recognition error: ' + ev.error + '. Try again, or type below.'
+        );
+      };
+      rec.onend = function () {
+        listening = false;
+        mic.dataset.state = 'idle';
+        mic.textContent = '🎤';
+        if (mic.dataset.state !== 'listening') {
+          micLabel('按一下，然后讲话', 'Tap, then speak. Tap again to stop.');
+        }
+      };
+
+      try { rec.start(); } catch (e) {
+        micLabel('开不了麦克风', 'Could not start the microphone. Type below instead.');
+      }
+    });
+  }
+
+  /* ---- dialect pills ---- */
+  function renderPills() {
+    var box = document.getElementById('pills');
+    box.innerHTML = '';
+    L.dialects.forEach(function (d) {
+      var b = document.createElement('button');
+      b.className = 'pill';
+      b.type = 'button';
+      b.setAttribute('aria-pressed', d.id === chosen ? 'true' : 'false');
+      b.innerHTML = d.zh + '<span>' + d.en + '</span>';
+      b.addEventListener('click', function () {
+        stopSpeaking();
+        chosen = d.id;
+        try { localStorage.setItem(KEY, chosen); } catch (e) { /* ignore */ }
+        renderPills();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  /* ---- examples ----
+     The last one is out of the library on purpose: tapping it shows the
+     refusal, which is the behaviour most worth demonstrating. */
+  var EXAMPLES = [
+    { q: '他叫我加附加险，值得吗？' },
+    { q: '保单上写的钱，是不是保证的？' },
+    { q: '银行的定期存款利息很高，真的吗？' },
+    { q: '签名就送电饭锅，可以要吗？' },
+    { q: '终身保险和定期保险，哪一种好？' },
+    { q: '销售员卖这个，他赚多少佣金？' },
+    { q: '我要不要买比特币？', note: 'Outside the library — shows the refusal' }
+  ];
+
+  function renderExamples() {
+    var ul = document.getElementById('examples');
+    EXAMPLES.forEach(function (ex) {
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.innerHTML = esc(ex.q) + (ex.note ? '<i>' + ex.note + '</i>' : '');
+      b.addEventListener('click', function () { ask(ex.q); });
+      li.appendChild(b);
+      ul.appendChild(li);
+    });
+  }
+
+  document.getElementById('typed').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = document.getElementById('q').value;
+    if (v.trim()) { ask(v); }
+  });
+
+  renderPills();
+  renderExamples();
+  setupMic();
+  window.addEventListener('pagehide', stopSpeaking);
+})();
+</script>
+</body>
+</html>

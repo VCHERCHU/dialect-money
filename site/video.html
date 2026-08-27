@@ -73,6 +73,7 @@
   }
   .dot.done { background: rgba(251,249,244,.55); }
   .dot.now  { background: var(--accent); }
+  .hint.draft { color: #f0c98a; }
   .dialect-tag {
     flex: 0 0 auto; font-size: .95rem; font-weight: 600;
     color: var(--dim); letter-spacing: .02em;
@@ -213,10 +214,12 @@
   <div id="endCard" hidden></div>
 
   <div class="proto">
-    <b>Prototype — placeholder voice.</b>
-    No real Hokkien or Teochew text-to-speech exists behind this yet; playback
-    borrows your browser's Mandarin or Cantonese voice so the shape of the
-    experience can be judged. Scripts are drafts.
+    <b>Prototype — draft text, stand-in voice.</b>
+    Hokkien captions are colloquial Hokkien and can be narrated by MERaLiON,
+    A*STAR's Singapore Hokkien model, once the clips are rendered into
+    site/audio/. Until then — and for Teochew always — playback borrows your
+    browser's Mandarin or Cantonese voice so the shape of the experience can be
+    judged. Scripts are drafts, unchecked by a native speaker.
   </div>
 
 </div>
@@ -278,7 +281,37 @@
      Institutions Directory. Whether an institution is licensed is the only
      thing that can be said about a specific commercial offer without
      advising — and the FID is the only place this product says it from. */
-  var script = item.script.concat([L.verify.zh]);
+  /* ---- what this dialect actually says ---------------------------
+     Mirrors dialectContent() in index.html: Hokkien has its own
+     colloquial script because MERaLiON needs that register, while
+     Teochew and Cantonese share the written Chinese. `clips` is
+     parallel to `script` and names the pre-rendered file per line;
+     the shared closing MAS line has one clip, not six copies.
+     Keep this in step with index.html.
+     --------------------------------------------------------------- */
+  var hok = item.hokkien;
+  var useHokkien = chosen === 'hokkien' && hok && hok.script &&
+                   hok.script.length && L.verify.hokkien;
+
+  var script = useHokkien
+    ? hok.script.concat([L.verify.hokkien.script])
+    : item.script.concat([L.verify.zh]);
+
+  /* Clips exist only for a dialect with a real voice behind it. */
+  var clips = (useHokkien && dialect.narration === 'meralion')
+    ? hok.script.map(function (_, n) { return item.id + '.' + chosen + '.' + n; })
+                .concat(['verify.' + chosen])
+    : null;
+
+  /* The browser-voice stand-in speaks the Mandarin, even with Hokkien on
+     screen: a zh-CN voice reading Hokkien Han characters gives Mandarin
+     readings of Hokkien words, which is worse than an honest stand-in.
+     Line-for-line with `script`, so the captions still track. */
+  var spokenScript = item.script.concat([L.verify.zh]);
+
+  /* Draft warning, shown once on the title card rather than over every
+     line. Nobody who speaks Hokkien has checked this text. */
+  var draftDialect = useHokkien && !hok.checked ? dialect.zh : null;
 
   /* ---- state ----
      `gen` guards every async callback. cancel() fires onend on some
@@ -290,6 +323,7 @@
   var started = false;
   var slow = false;
   var timer = null;
+  var clipAudio = null;   // the pre-rendered clip currently playing, if any
 
   var stage = document.getElementById('stage');
   var controls = document.getElementById('controls');
@@ -339,6 +373,10 @@
     gen++;
     if (timer) { clearTimeout(timer); timer = null; }
     if (synth) { synth.cancel(); }
+    /* A clip outlives gen++ on its own — it is not driven by a timer or by
+       the speech queue, so it has to be stopped by hand or it keeps talking
+       over the line the viewer just skipped to. */
+    if (clipAudio) { clipAudio.pause(); clipAudio = null; }
   }
 
   /* ---- progress dots: one per line, no numbers to read ---- */
@@ -358,14 +396,18 @@
     endCard.hidden = true;
     stage.style.flex = '';                 // the stage owns the screen again
     stage.innerHTML =
-      '<h1 class="title-zh">' + esc(item.titleZh) + '</h1>' +
+      '<h1 class="title-zh">' + esc(useHokkien ? (hok.title || item.titleZh) : item.titleZh) + '</h1>' +
       '<p class="title-en">' + esc(item.titleEn) + ' · ' + esc(item.source.name) + '</p>' +
       '<span class="big-start"><i>&#9654;</i>' + esc(dialect.zh) + '讲一遍</span>' +
       '<p class="hint">' +
         (narrated
           ? '按一下就开始。听的时候，<b>按屏幕可以暂停</b>。'
           : '<b>' + esc(dialect.zh) + '版的配音还在制作中。</b>字会一句一句出来，暂时没有声音。') +
-      '</p>';
+      '</p>' +
+      (draftDialect
+        ? '<p class="hint draft"><b>' + esc(draftDialect) +
+          '的字是初稿</b>，还没有给讲' + esc(draftDialect) + '的人检查过。</p>'
+        : '');
   }
 
   function drawLine() {
@@ -473,16 +515,50 @@
       go(i + 1);
     }
 
+    /* A real clip for this line, if one was rendered. On any failure —
+       missing, truncated, stalled, or blocked — fall through to the
+       browser voice rather than leaving the viewer on a silent caption. */
+    if (clips) {
+      var el = new Audio('audio/' + clips[i] + '.mp3');
+      var handedOver = false;
+
+      function toVoice() {
+        if (handedOver || mine !== gen) { return; }
+        handedOver = true;
+        el.pause();
+        clipAudio = null;
+        speakLine(text, advance, mine);
+      }
+
+      clipAudio = el;
+      var guard = setTimeout(toVoice, 6000);   // never started: treat as missing
+      el.addEventListener('playing', function () { clearTimeout(guard); });
+      el.addEventListener('ended', function () { clearTimeout(guard); advance(); });
+      el.addEventListener('error', function () { clearTimeout(guard); toVoice(); });
+      var kick = el.play();
+      if (kick && kick.catch) { kick.catch(function () { clearTimeout(guard); toVoice(); }); }
+      return;
+    }
+
+    speakLine(text, advance, mine);
+  }
+
+  /* The browser-voice path, shared by the no-clips case and by every
+     fallback out of the clip path. Speaks the Mandarin line at the same
+     index — see spokenScript above for why. */
+  function speakLine(text, advance, mine) {
+    var spoken = spokenScript[i] || text;
+
     if (narrated) {
-      var u = new SpeechSynthesisUtterance(text);
+      var u = new SpeechSynthesisUtterance(spoken);
       u.lang = dialect.ttsLang;
       u.rate = slow ? 0.7 : 0.85;   // 0.85 matches the library; 0.7 is the 慢一点 tap
       u.onend = advance;
       u.onerror = advance;          // a voice that fails must not end the video
       synth.speak(u);
-      timer = setTimeout(advance, lineMs(text) * 2 + 4000);   // watchdog, generous
+      timer = setTimeout(advance, lineMs(spoken) * 2 + 4000);   // watchdog, generous
     } else {
-      timer = setTimeout(advance, lineMs(text));
+      timer = setTimeout(advance, lineMs(spoken));
     }
   }
 

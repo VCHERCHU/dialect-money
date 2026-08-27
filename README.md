@@ -13,9 +13,9 @@ Cantonese, for seniors who are locked out of it by English text on websites.
 
 ## Where this stands
 
-Problem definition, plus a clickable prototype on the `develop` branch. Nothing
-should be built *for real* until assumption 1 — distribution — has been tested
-against a real person.
+Problem definition, plus a clickable prototype live at
+<https://vcherchu.github.io/dialect-money/>. Nothing should be built *for real*
+until assumption 1 — distribution — has been tested against a real person.
 
 ## The prototype
 
@@ -69,17 +69,92 @@ What is honestly faked, and labelled as such in the UI:
 - **The scripts.** Drafts, no specific rates or figures quoted, and not through
   the human accuracy check the problem statement requires.
 
+## The chat assistant
+
+`site/ask.html` plus `server/app.py`. She asks out loud; the answer comes back
+spoken, cited, or refused. This is the strand the project owner is building; a
+teammate owns video generation, and another owns MERaLiON for Chinese-to-Hokkien.
+
+How an answer is produced:
+
+1. **Retrieval** — keyword scoring over the explainer corpus picks up to three
+   passages. This decides everything the model is allowed to see.
+2. **Refusal before the model** — nothing retrieved means no permitted context,
+   so it says "I don't know" without spending a call. This closes the only door
+   an unsourced answer could arrive through.
+3. **Speak first.** The retrieved explainer is read out immediately, in under a
+   second. It is already human-drafted and sourced, so there is no reason to make
+   her wait for a model to approve it.
+4. **glm-5.3-flash refines, streaming.** It answers from those passages only, under a
+   system prompt that forbids any figure not in them, forbids recommending
+   anything, and requires the literal token `NO_ANSWER` when they don't cover the
+   question. The proxy streams newline-delimited JSON, one event per line, and
+   splits lines itself so the page never reimplements that. Each line appears —
+   and is spoken — as it lands. Refinement is an improvement, never a gate: if she
+   is still mid-sentence on the verbatim read, the audio is not swapped under her
+   and a button offers the clearer version instead.
+5. **Fallback** — any proxy failure keeps the verbatim explainer, labelled
+   *offline* in the UI. Always safe: that text is human-drafted.
+
+```bash
+cp .env.example .env      # then paste your OPENCODE_API_KEY
+python server/app.py      # http://127.0.0.1:8766
+```
+
+The proxy exists for one reason: **the API key must never reach the browser.**
+This site is public, so a key in client-side JS is a key anyone can read. Pages
+cannot run the proxy, so the deployed page always uses the keyword fallback.
+
+Rough edges worth knowing:
+
+- **Streaming did not fix the wait, and was never going to.** Every model here
+  thinks for seconds and then emits the whole answer inside about one. Streamed on
+  the same rider question: `kimi-k3` first line at 20.0s, done 21.9s;
+  `glm-5.3-flash` first line at 10.2s, done 11.6s. Streaming buys a second or two
+  of a ten-to-twenty-second wait. **Reading the explainer first is what actually
+  removes her wait.** Keep both, but do not mistake which one is load-bearing.
+- **Model choice moves the number more than streaming does.** Same prompt,
+  one-shot, measured on this endpoint:
+
+  | Model | Time | Notes |
+  | --- | --- | --- |
+  | `glm-5.3-flash` | 13.4s | **current default** — fastest measured |
+  | `deepseek-v4-flash` | 14.7s | |
+  | `qwen3.7-plus` | 17.0s | most consistent separator |
+  | `kimi-k3` | 20.4s | |
+
+  Swap with `OPENCODE_MODEL` in `.env`.
+- **Telling the questions apart from the answer is the fragile seam.** Asking for
+  one `ASK:` separator line was not robust: `glm-5.3-flash` alternates between
+  `问：` and `ASK:` between runs and sometimes omits it, and one observed run
+  produced an answer with the questions silently swallowed by the five-line cap —
+  no error, just the most valuable part of the product missing. The prompt now
+  asks for a `问:` prefix on *every* question line, and the parser accepts either
+  shape. Per-line prefixes also survive streaming, where a line already spoken
+  cannot be reclassified after the fact. Verified 3/3 runs on `glm-5.3-flash`, in
+  both streaming and one-shot mode.
+- **The spoken line and the highlighted line can diverge.** When refined text
+  replaces verbatim text under live speech, the words being spoken no longer match
+  what is on screen, so line highlighting switches off rather than pointing at the
+  wrong line.
+- **Retrieval runs in the browser** and the client posts the passages it wants
+  answered from. Fine locally, wrong in production — a client could post any
+  context and have it read back in a trusted voice.
+- **Cloudflare rejects urllib's default User-Agent** with `403 error code: 1010`.
+  The proxy sends an ordinary one.
+- Speech in and out are still browser Mandarin/Cantonese stand-ins. No browser
+  recognises or speaks Hokkien; that is the MERaLiON dependency.
+
 ## Deploy
 
 Live at <https://vcherchu.github.io/dialect-money/>.
 
-Pushing to `develop` or `main` under `site/**` deploys it — that is the whole
-release process. `.github/workflows/deploy-pages.yml` publishes `./site` as the
-site root, so a README-only commit produces no deploy run. That is expected, not
-a broken pipeline.
+Pushing to `main` under `site/**` deploys it — that is the whole release
+process. `.github/workflows/deploy-pages.yml` publishes `./site` as the site
+root, so a README-only commit produces no deploy run. That is expected, not a
+broken pipeline.
 
-`develop` is in the trigger list only because the prototype lives there. Remove
-it when develop merges, or the two branches will overwrite each other's deploys.
+Only `main` deploys. Work on a branch, merge, and the deploy follows.
 
 ```bash
 gh run list --repo VCHERCHU/dialect-money --workflow deploy-pages.yml --limit 1
@@ -105,3 +180,88 @@ and format at once.
 ---
 
 Coursework for Product Thinking, Institute of Digital Government.
+
+---
+
+## Pipeline (work in progress)
+
+A first pass at the build described above: crawl one whitelisted page, summarise
+it, translate it into Hokkien, and narrate it.
+
+```
+EN summary ──▶ Mandarin ──▶ Hokkien (漢字 + Tâi-lô) ──▶ audio
+                   │                                      │
+        human-checkable review              MERaLiON, Singapore Hokkien
+```
+
+```sh
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+cp .env.example .env          # add your LLM key
+.venv/bin/python run.py https://www.moneysense.gov.sg/<page> --tts hokkien
+```
+
+Every stage writes its own file to `out/`, so each can be reviewed alone. The
+Mandarin file matters most: it is the one a literate reviewer can actually check
+before anything is spoken aloud.
+
+### Why Mandarin in the middle
+
+Models are much stronger English→Mandarin than English→Hokkien, and the Mandarin
+version is a checkpoint a human can read. Two hops do compound error, so
+`pipeline/integrity.py` re-checks every figure from the English script against
+both translations and refuses to pass if one went missing. That is the
+100%-traceability counter-metric, enforced mechanically.
+
+### Narration
+
+`--tts script` writes a Han + Tâi-lô script for a **human** Hokkien speaker.
+`--tts hokkien` uses [MERaLiON-OmniVoice-Hokkien-TTS](https://huggingface.co/MERaLiON/MERaLiON-OmniVoice-Hokkien-TTS),
+A*STAR's **Singapore** Hokkien model — not Taiwanese, so no Quanzhou/Zhangzhou
+accent mismatch. It runs locally on CPU: no API key, no per-character cost,
+nothing leaving the machine. Its licence is the MERaLiON-3 Public Licence, not a
+standard OSS licence — read it before publishing beyond coursework.
+
+Apple Silicon note: this model hard-crashes (SIGBUS) on MPS at both float16 and
+float32. CPU float32 works; ~11s for a first clip, ~5s once warm.
+
+### Narrating the prototype site
+
+The prototype used to show one shared written-Chinese script for all three
+dialects, on the grounds that written dialect is not standardised in Singapore.
+That still holds for Teochew and Cantonese. Hokkien is now the exception: it has
+its own colloquial script (白話) in `site/explainers.js`, because that is the
+register MERaLiON needs — feeding it Mandarin produces a literary reading, not
+speech. The Mandarin stays alongside as the checkpoint a reviewer can read.
+
+`scripts/render_site_audio.py` narrates those Hokkien lines into
+`site/audio/<id>.hokkien.<line>.mp3`, one clip per line so the app can keep
+highlighting the line being read:
+
+```sh
+python3 scripts/render_site_audio.py --dry-run   # list the clips, no model load
+python3 scripts/render_site_audio.py             # render them (needs ffmpeg)
+```
+
+Commit the `.mp3` files — Pages serves them as static assets. The site does not
+depend on them: a clip that is missing, truncated or slow to load falls back to
+reading the Mandarin version in the browser's voice, so not having run this
+never leaves a listener in silence.
+
+**Nothing in the Hokkien text or audio has been checked by a native Singapore
+Hokkien speaker.** The app labels it as a draft on every card. That check is
+assumption 2, and it should happen before this is shown to anyone.
+
+### MCP server
+
+`mcp_server.py` exposes the Hokkien voice as MCP tools (`speak_hokkien`,
+`hokkien_status`), so it is callable from Claude Code or any MCP client. Because
+the server is long-lived it keeps the model in memory between calls, which is
+where the cold/warm difference above comes from.
+
+```sh
+claude mcp add hokkien-tts -- "$PWD/.venv/bin/python" "$PWD/mcp_server.py"
+```
+
+**Input must be Hokkien in Han characters, not Mandarin.** Mandarin does not
+error — it produces a literary reading (讀書音): real Hokkien phonology wrapped
+around Mandarin vocabulary, which sounds like a broadcast rather than a person.
