@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>方言理财 · Dialect Money</title>
+<meta name="description" content="Authoritative Singapore money guidance, spoken in Hokkien, Teochew and Cantonese.">
+<style>
+  /* ---------------------------------------------------------------
+     Sizing is the accessibility story here. Body text starts at
+     20px and tap targets never go below 56px, because the audience
+     is 70+. Do not shrink these to fit more on screen.
+     --------------------------------------------------------------- */
+  :root {
+    --ink:      #1a1a17;
+    --ink-soft: #55524a;
+    --ink-faint:#8a857a;
+    --paper:    #fbf9f4;
+    --card:     #ffffff;
+    --line:     #e3ded1;
+    --accent:   #0b5c46;
+    --accent-lo:#e8f2ee;
+    --warn:     #8a4b00;
+    --warn-lo:  #fdf1e0;
+    --radius:   14px;
+    --tap:      56px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 20px/1.65 "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+          "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 44rem; margin: 0 auto; padding: 0 1.1rem 4rem; }
+
+  /* ---- header ---- */
+  header { padding: 2rem 0 1.25rem; }
+  .brand { font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+  .brand small {
+    display: block; font-size: .95rem; font-weight: 500;
+    color: var(--ink-faint); letter-spacing: .12em; text-transform: uppercase;
+    margin-top: .35rem;
+  }
+  .tagline { font-size: 1.35rem; color: var(--ink-soft); margin: 1rem 0 0; }
+  .principle {
+    margin: 1rem 0 0; padding: .7rem 1rem;
+    background: var(--accent-lo); border-radius: var(--radius);
+    color: var(--accent); font-size: 1.15rem; font-weight: 600;
+  }
+  .principle em { display: block; font-size: .85rem; font-weight: 500; font-style: normal; opacity: .8; }
+
+  /* ---- prototype notice: stays visible, deliberately ---- */
+  .proto {
+    margin: 1.25rem 0 0; padding: .8rem 1rem;
+    background: var(--warn-lo); border-left: 5px solid var(--warn);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: .95rem; line-height: 1.55; color: var(--warn);
+  }
+  .proto b { display: block; }
+
+  /* ---- dialect chooser ---- */
+  .chooser { margin: 2rem 0 .5rem; }
+  .chooser h2 { font-size: 1.1rem; color: var(--ink-soft); margin: 0 0 .6rem; font-weight: 600; }
+  .pills { display: flex; gap: .6rem; flex-wrap: wrap; }
+  .pill {
+    flex: 1 1 8rem; min-height: var(--tap);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--card); border: 2px solid var(--line); border-radius: var(--radius);
+    font: inherit; font-size: 1.3rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; padding: .5rem;
+  }
+  .pill span { font-size: .8rem; font-weight: 500; color: var(--ink-faint); letter-spacing: .04em; }
+  .pill[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .pill[aria-pressed="true"] span { color: rgba(255,255,255,.75); }
+  .pill:focus-visible, button:focus-visible, a:focus-visible {
+    outline: 3px solid var(--accent); outline-offset: 2px;
+  }
+
+  .count { margin: 1.5rem 0 .75rem; font-size: .95rem; color: var(--ink-faint); }
+
+  /* ---- explainer cards ---- */
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden;
+  }
+  .card.playing { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-lo); }
+  .card-head {
+    width: 100%; display: flex; gap: 1rem; align-items: flex-start; text-align: left;
+    background: none; border: 0; font: inherit; color: inherit;
+    padding: 1.1rem; cursor: pointer; min-height: var(--tap);
+  }
+  .play {
+    flex: 0 0 auto; width: 60px; height: 60px; border-radius: 50%;
+    background: var(--accent); color: #fff; display: grid; place-items: center;
+    font-size: 1.5rem; line-height: 1;
+  }
+  .card.playing .play { background: var(--warn); }
+  .card-head h3 { margin: 0; font-size: 1.35rem; line-height: 1.45; font-weight: 600; }
+  .meta { margin: .4rem 0 0; font-size: .9rem; color: var(--ink-faint); }
+  .meta .queued { color: var(--warn); font-weight: 600; }
+
+  .body { padding: 0 1.1rem 1.25rem; border-top: 1px solid var(--line); }
+  .body[hidden] { display: none; }
+
+  .lines { margin: 1.1rem 0 0; padding: 0; list-style: none; }
+  .lines li {
+    padding: .5rem .7rem; margin: 0 0 .3rem; border-radius: 8px;
+    font-size: 1.2rem; line-height: 1.6;
+  }
+  .lines li.now { background: var(--accent-lo); color: var(--accent); font-weight: 600; }
+
+  .ask { margin: 1.5rem 0 0; padding: 1rem; background: var(--paper); border-radius: var(--radius); }
+  .ask h4 { margin: 0 0 .6rem; font-size: 1.15rem; color: var(--accent); }
+  .ask h4 span { display: block; font-size: .8rem; font-weight: 500; color: var(--ink-faint); }
+  .ask ol { margin: 0; padding-left: 1.4rem; }
+  .ask li { font-size: 1.15rem; line-height: 1.55; margin-bottom: .5rem; }
+
+  .row { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.25rem; }
+  .btn {
+    min-height: var(--tap); display: inline-flex; align-items: center; gap: .5rem;
+    padding: .6rem 1.1rem; border-radius: var(--radius);
+    border: 2px solid var(--line); background: var(--card);
+    font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--ink);
+    text-decoration: none; cursor: pointer;
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .src { margin-top: 1rem; font-size: .9rem; color: var(--ink-faint); }
+  .src a { color: var(--accent); }
+
+  /* ---- footer / pipeline ---- */
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-faint); }
+  footer h2 { font-size: 1rem; color: var(--ink-soft); margin: 0 0 .5rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.25rem; padding: 0; list-style: none; }
+  .chips a {
+    display: inline-block; padding: .3rem .7rem; border: 1px solid var(--line);
+    border-radius: 999px; background: var(--card); color: var(--ink-soft); text-decoration: none;
+  }
+  footer p { margin: .5rem 0; }
+  footer a { color: var(--accent); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card, .pill, .btn { transition: border-color .15s, background .15s, box-shadow .15s; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1 class="brand">方言理财<small>Dialect Money · prototype</small></h1>
+    <p class="tagline">政府的理财资料，用你听得懂的话讲一遍。</p>
+    <p class="principle">
+      这里只解释，不推荐产品。
+      <em>We explain what is being sold to you. We never tell you what to buy.</em>
+    </p>
+    <div class="proto">
+      <b>Prototype — placeholder voice.</b>
+      There is no real Hokkien or Teochew text-to-speech behind this yet. Play uses
+      your browser's Mandarin or Cantonese voice as a stand-in so the shape of the
+      experience can be judged. Scripts are drafts and have not been through the
+      human accuracy check the problem statement requires.
+    </div>
+  </header>
+
+  <section class="chooser">
+    <h2>选一个方言 · Choose a dialect</h2>
+    <div class="pills" id="pills" role="group" aria-label="Choose a dialect"></div>
+  </section>
+
+  <p class="count" id="count"></p>
+
+  <main id="list"></main>
+
+  <footer>
+    <h2>Sources — the whitelist</h2>
+    <ul class="chips" id="chips"></ul>
+    <p>
+      The crawler reads these and nothing else. Every explainer cites the page it
+      came from. In this prototype those links land on each source's home page —
+      a fabricated deep link would be worse than an honest one.
+    </p>
+    <p id="crawl"></p>
+    <p>
+      Coursework prototype for Product Thinking, Institute of Digital Government.
+      <a href="https://github.com/VCHERCHU/dialect-money/blob/main/PROBLEM-STATEMENT.md">Read the problem statement</a>.
+    </p>
+  </footer>
+
+</div>
+
+<script src="explainers.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var L = window.LIBRARY;
+  var synth = window.speechSynthesis || null;
+
+  /* Chosen dialect is the only piece of state worth remembering between
+     visits — a senior should not re-pick it every time. */
+  var KEY = 'dialect-money:dialect';
+  var chosen = (function () {
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+    return L.dialects.some(function (d) { return d.id === saved; }) ? saved : L.dialects[0].id;
+  })();
+
+  var playing = null;   // { id, utterances } while speaking
+
+  function dialect() {
+    return L.dialects.filter(function (d) { return d.id === chosen; })[0];
+  }
+
+  /* ---- dialect chooser ---- */
+  function renderPills() {
+    var box = document.getElementById('pills');
+    box.innerHTML = '';
+    L.dialects.forEach(function (d) {
+      var b = document.createElement('button');
+      b.className = 'pill';
+      b.type = 'button';
+      b.setAttribute('aria-pressed', d.id === chosen ? 'true' : 'false');
+      b.innerHTML = d.zh + '<span>' + d.en + '</span>';
+      b.addEventListener('click', function () {
+        stop();
+        chosen = d.id;
+        try { localStorage.setItem(KEY, chosen); } catch (e) { /* ignore */ }
+        renderPills();
+        renderList();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  /* ---- playback -------------------------------------------------
+     Spoken line by line rather than as one blob, so the line being
+     read can be highlighted. onboundary is too unreliable across
+     browsers to use for this.
+     --------------------------------------------------------------- */
+  function stop() {
+    if (synth) { synth.cancel(); }
+    if (playing) {
+      var card = document.getElementById('card-' + playing.id);
+      if (card) {
+        card.classList.remove('playing');
+        card.querySelector('.play').textContent = '▶';
+        Array.prototype.forEach.call(card.querySelectorAll('.lines li'), function (li) {
+          li.classList.remove('now');
+        });
+      }
+      playing = null;
+    }
+  }
+
+  function play(item) {
+    stop();
+    if (!synth) {
+      alert('This browser has no speech support. Read the script below instead.');
+      return;
+    }
+    var card = document.getElementById('card-' + item.id);
+    var lis = card.querySelectorAll('.lines li');
+    card.classList.add('playing');
+    card.querySelector('.play').textContent = '■';
+    playing = { id: item.id };
+
+    item.script.forEach(function (line, i) {
+      var u = new SpeechSynthesisUtterance(line);
+      u.lang = dialect().ttsLang;
+      u.rate = 0.85;                       // slower than default, for 70+ listeners
+      u.onstart = function () {
+        if (!playing || playing.id !== item.id) { return; }
+        Array.prototype.forEach.call(lis, function (li) { li.classList.remove('now'); });
+        if (lis[i]) { lis[i].classList.add('now'); }
+      };
+      if (i === item.script.length - 1) { u.onend = stop; }
+      synth.speak(u);
+    });
+  }
+
+  /* ---- cards ---- */
+  function statusLabel(item) {
+    var s = item.audio[chosen];
+    return s === 'ready'
+      ? dialect().zh + '版 · ' + Math.floor(item.seconds / 60) + '分' + (item.seconds % 60) + '秒'
+      : '<span class="queued">' + dialect().zh + '版还在制作中</span>';
+  }
+
+  function shareLink(item) {
+    var text = '方言理财：' + item.titleZh + '\n' + location.href.split('#')[0] + '#' + item.id;
+    return 'https://wa.me/?text=' + encodeURIComponent(text);
+  }
+
+  function card(item) {
+    var ready = item.audio[chosen] === 'ready';
+    var el = document.createElement('article');
+    el.className = 'card';
+    el.id = 'card-' + item.id;
+
+    var head = document.createElement('button');
+    head.className = 'card-head';
+    head.type = 'button';
+    head.setAttribute('aria-expanded', 'false');
+    head.setAttribute('aria-controls', 'body-' + item.id);
+    head.innerHTML =
+      '<span class="play" aria-hidden="true">' + (ready ? '▶' : '⋯') + '</span>' +
+      '<span><h3>' + item.titleZh + '</h3>' +
+      '<p class="meta">' + statusLabel(item) + ' · ' + item.source.name + '</p></span>';
+
+    var body = document.createElement('div');
+    body.className = 'body';
+    body.id = 'body-' + item.id;
+    body.hidden = true;
+    body.innerHTML =
+      '<ul class="lines">' +
+        item.script.map(function (l) { return '<li>' + l + '</li>'; }).join('') +
+      '</ul>' +
+      '<div class="ask"><h4>你可以这样问他<span>Questions you can ask them</span></h4><ol>' +
+        item.ask.map(function (q) { return '<li>' + q + '</li>'; }).join('') +
+      '</ol></div>' +
+      '<div class="row">' +
+        (ready ? '<button class="btn primary" type="button" data-play="' + item.id + '">▶ 听 Listen</button>' : '') +
+        '<a class="btn" href="' + shareLink(item) + '" target="_blank" rel="noopener">↪ 分享 Share</a>' +
+      '</div>' +
+      '<p class="src">来源 Source: <a href="' + item.source.url + '" target="_blank" rel="noopener">' +
+        item.source.name + ' — ' + item.source.page + '</a> · 更新 ' + item.published + '</p>';
+
+    /* Tapping the header plays when audio exists — the primary action for
+       someone who cannot read the card. It also expands the script for the
+       helper reading over their shoulder. */
+    head.addEventListener('click', function () {
+      var open = body.hidden;
+      body.hidden = !open;
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!ready) { return; }
+      if (playing && playing.id === item.id) { stop(); } else { play(item); }
+    });
+
+    body.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('[data-play]') : null;
+      if (!btn) { return; }
+      if (playing && playing.id === item.id) { stop(); } else { play(item); }
+    });
+
+    el.appendChild(head);
+    el.appendChild(body);
+    return el;
+  }
+
+  function renderList() {
+    stop();
+    var list = document.getElementById('list');
+    list.innerHTML = '';
+    L.explainers.forEach(function (item) { list.appendChild(card(item)); });
+
+    var ready = L.explainers.filter(function (i) { return i.audio[chosen] === 'ready'; }).length;
+    document.getElementById('count').textContent =
+      ready + ' of ' + L.explainers.length + ' explainers available in ' + dialect().en +
+      ' · ' + L.dialects.length + ' dialects · auto-published, nothing to sign up for';
+  }
+
+  function renderFooter() {
+    var chips = document.getElementById('chips');
+    L.whitelist.forEach(function (s) {
+      var li = document.createElement('li');
+      li.innerHTML = '<a href="' + s.url + '" target="_blank" rel="noopener">' + s.name + '</a>';
+      chips.appendChild(li);
+    });
+    document.getElementById('crawl').textContent = 'Last crawl: ' + L.lastCrawl + '.';
+  }
+
+  renderPills();
+  renderList();
+  renderFooter();
+
+  /* Deep link from a shared WhatsApp message opens that explainer. */
+  if (location.hash) {
+    var target = document.getElementById('card-' + location.hash.slice(1));
+    if (target) {
+      target.scrollIntoView();
+      target.querySelector('.card-head').focus();
+    }
+  }
+
+  window.addEventListener('pagehide', stop);
+})();
+</script>
+</body>
+</html>
