@@ -23,7 +23,8 @@ Static site, no build step, no dependencies. Two files carry it:
 
 | File | Role |
 | --- | --- |
-| `site/index.html` | The whole app — markup, styles and logic |
+| `site/index.html` | The library — browse, choose a dialect, read along |
+| `site/video.html` | Video mode — one spoken line at a time, full screen |
 | `site/explainers.js` | Data only: dialects, the source whitelist, the explainer library |
 
 ```bash
@@ -33,6 +34,12 @@ python -m http.server 8766 --bind 127.0.0.1 --directory site
 
 What it demonstrates:
 
+- **Video mode** (`video.html?id=…&d=…`) is the senior's path, and the one every
+  shared link opens. One line of the script on a dark stage in the largest type
+  the screen allows, spoken aloud, advancing on its own. The whole screen is the
+  pause button. Progress is dots rather than "3 / 5", and each control is a shape
+  with a word under it — nothing on screen has to be read to be used. It ends on
+  the questions she can ask, not on a summary.
 - **Audio-first.** Every card is a 60px play button. Tapping the card plays; the
   line being spoken is highlighted for whoever is reading along.
 - **Dialect switch** — Hokkien, Teochew, Cantonese — remembered between visits.
@@ -42,8 +49,15 @@ What it demonstrates:
   Tan can put to the agent or teller. This is where the stated outcome —
   *confident enough to ask* — actually lives.
 - **Share via WhatsApp**, because that is the only channel that plausibly reaches
-  her. The deep link opens straight to that explainer.
+  her. The deep link opens video mode for that explainer in the chosen dialect —
+  a play button, not a list.
 - **Every card cites its source** and links to it.
+- **One source for institutions.** v1 cannot say whether an offer is worth buying,
+  but it can say whether the firm selling it is licensed. Every explainer therefore
+  closes on the same line — *check this company against the MAS register* — and
+  links to the [MAS Financial Institutions Directory](https://eservices.mas.gov.sg/fid/institution/print),
+  never a company site and never another list. A firm absent from the directory is
+  reported as not found there, which is not a verdict either way.
 
 What is honestly faked, and labelled as such in the UI:
 
@@ -72,8 +86,9 @@ gh run list --repo VCHERCHU/dialect-money --workflow deploy-pages.yml --limit 1
 
 ## The shape of the idea
 
-A site that crawls **whitelisted sources only** (CPF, MAS, MoneySense, IRAS, MOF,
-gov.sg), drafts short explainers, narrates them in dialect, and auto-publishes
+A site that crawls **whitelisted sources only** (CPF, MAS, the MAS Financial
+Institutions Directory, MoneySense, IRAS, MOF, gov.sg), drafts short explainers,
+narrates them in dialect, and auto-publishes
 them to a browsable library. No login, no generate button, every video citing the
 page it came from.
 

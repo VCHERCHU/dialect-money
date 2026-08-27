@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>方言理财 · 看视频</title>
+<meta name="description" content="Full-screen dialect explainer — one spoken line at a time, in very large type.">
+<style>
+  /* ---------------------------------------------------------------
+     VIDEO MODE
+
+     The library page is a page: it scrolls, it has a header, it
+     assumes someone will look around. This is not a page. It is one
+     line of text at a time on a dark stage, spoken aloud, advancing
+     on its own — because the viewer cannot read, cannot scroll to
+     find the next thing, and did not choose to be here. A helper
+     sent her a link and she tapped it.
+
+     Three rules hold this file together:
+       1. One line on screen. Never two.
+       2. The whole stage is the tap target — not a control in a
+          corner. The entire screen pauses and resumes.
+       3. Nothing on screen has to be read to be used. Progress is
+          dots, not "3 / 5". Controls are shapes with a word under
+          them, not words alone.
+     --------------------------------------------------------------- */
+  :root {
+    --stage:   #14140f;
+    --stage-2: #23231a;
+    --paper:   #fbf9f4;
+    --dim:     #a8a397;
+    --accent:  #6fd3ad;   /* lifted off the library's #0b5c46 — that green
+                             is unreadable on a dark stage */
+    --warn:    #f0b46a;
+    --tap:     64px;      /* larger than the library's 56px: there are no
+                             neighbours to mis-tap here, so targets can be huge */
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--stage);
+    color: var(--paper);
+    font: 20px/1.6 "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+          "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .screen {
+    min-height: 100%;
+    display: flex; flex-direction: column;
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  }
+
+  /* ---- top strip: where we are, and the way out ---- */
+  .top {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: .75rem;
+    padding: .6rem 1rem;
+  }
+  .back {
+    min-width: var(--tap); min-height: var(--tap);
+    display: grid; place-items: center;
+    background: none; border: 0; border-radius: 50%;
+    color: var(--paper); font: inherit; font-size: 1.9rem;
+    cursor: pointer; opacity: .75;
+  }
+  .dots { display: flex; gap: .4rem; flex: 1 1 auto; align-items: center; }
+  .dot {
+    height: 6px; flex: 1 1 0; border-radius: 3px;
+    background: rgba(251,249,244,.22);
+  }
+  .dot.done { background: rgba(251,249,244,.55); }
+  .dot.now  { background: var(--accent); }
+  .dialect-tag {
+    flex: 0 0 auto; font-size: .95rem; font-weight: 600;
+    color: var(--dim); letter-spacing: .02em;
+  }
+
+  /* ---- the stage: the whole thing is one button ---- */
+  .stage {
+    flex: 1 1 auto;
+    display: flex; flex-direction: column; justify-content: center;
+    width: 100%; max-width: 40rem; margin: 0 auto;
+    padding: 1rem 1.4rem 2rem; text-align: left;
+    background: none; border: 0; color: inherit; font: inherit;
+    cursor: pointer;
+  }
+  .stage:focus-visible { outline: 3px solid var(--accent); outline-offset: -6px; }
+
+  /* Title card. Shown before anything plays and never again — she needs to
+     know what she is about to hear before she commits to it. */
+  .title-zh {
+    font-size: clamp(1.75rem, 6.4vw, 2.6rem);
+    line-height: 1.4; font-weight: 700; margin: 0;
+  }
+  .title-en { margin: .9rem 0 0; font-size: 1rem; color: var(--dim); }
+
+  /* The line being spoken. This is the largest type in the project and it
+     should stay that way. */
+  .line {
+    font-size: clamp(1.9rem, 7.2vw, 3.1rem);
+    line-height: 1.42; font-weight: 600;
+    margin: 0; max-width: 22ch;
+  }
+  /* The line just gone. Not for the senior — for the daughter watching over
+     her shoulder who lost the thread. Deliberately small. */
+  .line-prev {
+    margin: 0 0 1.1rem; font-size: 1.05rem; line-height: 1.5;
+    color: rgba(251,249,244,.34); max-width: 34ch;
+  }
+
+  .hint { margin: 2rem 0 0; font-size: 1rem; color: var(--dim); }
+  .hint b { color: var(--accent); font-weight: 600; }
+
+  .big-start {
+    margin: 2rem 0 0; align-self: flex-start;
+    min-height: 76px; display: inline-flex; align-items: center; gap: .8rem;
+    padding: .8rem 1.8rem .8rem 1.4rem; border-radius: 999px;
+    background: var(--accent); color: #06251b;
+    font-size: 1.5rem; font-weight: 700;
+  }
+  .big-start i { font-style: normal; font-size: 1.7rem; }
+
+  /* Paused: a shape first, a sentence second. */
+  .paused {
+    margin: 1.75rem 0 0; display: flex; align-items: center; gap: .8rem;
+    font-size: 1.15rem; color: var(--warn); font-weight: 600;
+  }
+  .paused i {
+    font-style: normal; width: 46px; height: 46px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 1.3rem;
+    background: rgba(240,180,106,.16); color: var(--warn);
+  }
+
+  /* ---- bottom controls ---- */
+  .controls {
+    flex: 0 0 auto;
+    display: flex; gap: .5rem; justify-content: center;
+    padding: .5rem 1rem 1.2rem;
+    background: var(--stage-2);
+  }
+  .ctl {
+    flex: 1 1 0; max-width: 8rem; min-height: var(--tap);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: .1rem; padding: .5rem .3rem;
+    background: none; border: 0; border-radius: 12px;
+    color: var(--paper); font: inherit; cursor: pointer;
+  }
+  .ctl i { font-style: normal; font-size: 1.5rem; line-height: 1; }
+  .ctl span { font-size: .82rem; color: var(--dim); }
+  .ctl[disabled] { opacity: .3; cursor: default; }
+  .ctl[aria-pressed="true"] { background: rgba(111,211,173,.16); }
+  .ctl[aria-pressed="true"] i, .ctl[aria-pressed="true"] span { color: var(--accent); }
+  .ctl:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- the end card: this is what the whole video is for ---- */
+  .end { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1.4rem 3rem; }
+  .end h2 { margin: 0 0 .3rem; font-size: 1.6rem; color: var(--accent); font-weight: 700; }
+  .end h2 span { display: block; font-size: .9rem; font-weight: 500; color: var(--dim); margin-top: .25rem; }
+  .end ol { margin: 1.2rem 0 0; padding-left: 1.6rem; }
+  .end li { font-size: 1.5rem; line-height: 1.5; margin-bottom: 1rem; font-weight: 600; }
+  .end .row { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.8rem; }
+  .end .btn {
+    min-height: var(--tap); display: inline-flex; align-items: center; gap: .5rem;
+    padding: .7rem 1.2rem; border-radius: 12px;
+    border: 2px solid rgba(251,249,244,.22); background: none;
+    color: var(--paper); font: inherit; font-size: 1.1rem; font-weight: 600;
+    text-decoration: none; cursor: pointer;
+  }
+  .end .btn.primary { background: var(--accent); border-color: var(--accent); color: #06251b; }
+  .end .src { margin-top: 1.6rem; font-size: .95rem; color: var(--dim); }
+  .end .src a { color: var(--accent); }
+
+  /* ---- honesty notice — carried over from the library on purpose ---- */
+  .proto {
+    margin: 1.6rem 1rem 2rem; padding: .8rem 1rem;
+    border-left: 4px solid var(--warn); border-radius: 0 10px 10px 0;
+    background: rgba(240,180,106,.09);
+    font-size: .9rem; line-height: 1.55; color: var(--warn);
+  }
+  .proto b { display: block; }
+
+  [hidden] { display: none !important; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .line, .title-zh { animation: rise .32s ease-out; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .dot, .ctl, .btn { transition: background .15s, opacity .15s; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="top">
+    <button class="back" type="button" id="back" aria-label="回去 Back to library">&lsaquo;</button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <div class="dialect-tag" id="dialectTag"></div>
+  </div>
+
+  <button class="stage" type="button" id="stage" aria-live="polite"></button>
+
+  <div class="controls" id="controls" hidden>
+    <button class="ctl" type="button" id="prev"><i>&#8630;</i><span>上一句</span></button>
+    <button class="ctl" type="button" id="toggle"><i>&#10073;&#10073;</i><span>停</span></button>
+    <button class="ctl" type="button" id="next"><i>&#8631;</i><span>下一句</span></button>
+    <button class="ctl" type="button" id="slow" aria-pressed="false"><i>&#128034;</i><span>慢一点</span></button>
+  </div>
+
+  <div id="endCard" hidden></div>
+
+  <div class="proto">
+    <b>Prototype — placeholder voice.</b>
+    No real Hokkien or Teochew text-to-speech exists behind this yet; playback
+    borrows your browser's Mandarin or Cantonese voice so the shape of the
+    experience can be judged. Scripts are drafts.
+  </div>
+
+</div>
+
+<script src="explainers.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var L = window.LIBRARY;
+  var synth = window.speechSynthesis || null;
+
+  /* Everything below is interpolated into innerHTML. Today explainers.js is
+     in-repo and trusted, so none of it is an injection site — but the whole
+     design has a crawler writing that file from whitelisted pages, and on the
+     day it does, every concatenation here becomes one. Escaping while it is
+     cheap. Entity-only markup (&#9654; and the like) is written literally and
+     never passes through this. */
+  function esc(v) {
+    return String(v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;',
+               '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---- what are we playing, and in what -------------------------
+     Both come off the URL so a WhatsApp link can carry a specific
+     explainer in a specific dialect. Dialect falls back to the one
+     the library saved, so the two screens never disagree.
+     --------------------------------------------------------------- */
+  var KEY = 'dialect-money:dialect';
+  var params = new URLSearchParams(location.search);
+
+  function knownDialect(id) {
+    return L.dialects.some(function (d) { return d.id === id; }) ? id : null;
+  }
+  function savedDialect() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }  // private mode
+  }
+
+  var chosen = knownDialect(params.get('d')) || knownDialect(savedDialect()) || L.dialects[0].id;
+  var item = L.explainers.filter(function (e) { return e.id === params.get('id'); })[0]
+          || L.explainers[0];
+  var dialect = L.dialects.filter(function (d) { return d.id === chosen; })[0];
+
+  /* Write it back. The library reads this key and nothing else, so without
+     this a Cantonese link followed by a tap on Back lands her in whatever
+     dialect was saved last — the two screens disagreeing about the one piece
+     of state they share. */
+  try { localStorage.setItem(KEY, chosen); } catch (e) { /* private mode */ }
+
+  /* Narration for this dialect may not be published yet. The library shows
+     that as 还在制作中 rather than hiding the card, and video mode keeps the
+     same promise: the captions still run, on a timer, with the gap named. */
+  var narrated = item.audio[chosen] === 'ready' && !!synth;
+
+  /* Every video closes on the same spoken line, appended here rather than
+     copied into each script: check the firm against the MAS Financial
+     Institutions Directory. Whether an institution is licensed is the only
+     thing that can be said about a specific commercial offer without
+     advising — and the FID is the only place this product says it from. */
+  var script = item.script.concat([L.verify.zh]);
+
+  /* ---- state ----
+     `gen` guards every async callback. cancel() fires onend on some
+     browsers, so a stale utterance can otherwise advance past the line
+     the viewer just skipped to. Every seek bumps gen; callbacks compare. */
+  var i = -1;              // -1 = title card, script.length = end card
+  var gen = 0;
+  var paused = false;
+  var started = false;
+  var slow = false;
+  var timer = null;
+
+  var stage = document.getElementById('stage');
+  var controls = document.getElementById('controls');
+  var dotsBox = document.getElementById('dots');
+  var endCard = document.getElementById('endCard');
+  var toggle = document.getElementById('toggle');
+
+  document.getElementById('dialectTag').textContent = dialect.zh;
+  document.title = item.titleZh + ' · 方言理财';
+
+  /* ---- two ways in ----------------------------------------------
+     Standalone, which is how a shared WhatsApp link opens this, and
+     framed, which is how the library opens it without losing the
+     helper's place in the list. Framed, every way out has to close
+     the overlay — loading index.html inside the frame would leave a
+     library nested in a video, which is nonsense.
+     --------------------------------------------------------------- */
+  var framed = window.parent !== window;
+
+  /* Framed, the overlay draws its own close control in the top-left corner.
+     Two exits in one corner is one too many, and ours would sit under the
+     dialect tag if moved. Hide it and leave the space clear. */
+  if (framed) {
+    document.getElementById('back').hidden = true;
+    document.querySelector('.top').style.paddingLeft = '4.25rem';
+  }
+
+  function leave() {
+    hardStop();
+    if (framed) {
+      parent.postMessage({ dialectMoney: 'close', id: item.id }, location.origin);
+      return;
+    }
+    location.href = 'index.html#' + item.id;
+  }
+
+  /* ---- how long a line stays up when nothing is speaking ---------
+     Read aloud, Chinese runs roughly four characters a second; at rate
+     0.85 it is nearer three. Floor it at 2.6s so a very short line does
+     not flash past someone who is 72.
+     --------------------------------------------------------------- */
+  function lineMs(text) {
+    return Math.max(2600, text.length * (slow ? 420 : 330));
+  }
+
+  function hardStop() {
+    gen++;
+    if (timer) { clearTimeout(timer); timer = null; }
+    if (synth) { synth.cancel(); }
+  }
+
+  /* ---- progress dots: one per line, no numbers to read ---- */
+  function renderDots() {
+    dotsBox.innerHTML = '';
+    script.forEach(function (_, n) {
+      var d = document.createElement('span');
+      d.className = 'dot' + (n < i ? ' done' : n === i ? ' now' : '');
+      dotsBox.appendChild(d);
+    });
+  }
+
+  /* ---- screens --------------------------------------------------- */
+
+  function drawTitle() {
+    controls.hidden = true;
+    endCard.hidden = true;
+    stage.style.flex = '';                 // the stage owns the screen again
+    stage.innerHTML =
+      '<h1 class="title-zh">' + esc(item.titleZh) + '</h1>' +
+      '<p class="title-en">' + esc(item.titleEn) + ' · ' + esc(item.source.name) + '</p>' +
+      '<span class="big-start"><i>&#9654;</i>' + esc(dialect.zh) + '讲一遍</span>' +
+      '<p class="hint">' +
+        (narrated
+          ? '按一下就开始。听的时候，<b>按屏幕可以暂停</b>。'
+          : '<b>' + esc(dialect.zh) + '版的配音还在制作中。</b>字会一句一句出来，暂时没有声音。') +
+      '</p>';
+  }
+
+  function drawLine() {
+    controls.hidden = false;
+    endCard.hidden = true;
+    stage.style.flex = '';
+    /* The previous line is for the sighted helper who lost the thread, and it
+       sits inside the stage's aria-live region — so it must be hidden from
+       screen readers, or every line is announced twice. */
+    stage.innerHTML =
+      (i > 0 ? '<p class="line-prev" aria-hidden="true">' + esc(script[i - 1]) + '</p>' : '') +
+      '<p class="line">' + esc(script[i]) + '</p>' +
+      (paused ? '<p class="paused"><i>&#9654;</i>停了 — 按一下继续</p>' : '');
+    renderDots();
+  }
+
+  /* The end card is the point of the whole thing. The stated outcome is
+     "confident enough to ask", so the video does not end on a summary — it
+     ends on the three questions she can put to the agent, in the largest
+     type the screen allows. */
+  function drawEnd() {
+    hardStop();
+    controls.hidden = true;
+    /* Stop the stage claiming the leftover height. It grows to fill the screen
+       while a line is playing, which is right — but on the end screen that
+       pushes the questions below the fold on a phone, and the questions are
+       the only reason the video exists. */
+    stage.style.flex = '0 0 auto';
+    stage.innerHTML =
+      '<p class="line" style="font-size:clamp(1.5rem,5.4vw,2.2rem)">' +
+      '听完了。<br>下次他跟你讲这个，你可以这样问他。</p>';
+    renderDots();
+
+    endCard.hidden = false;
+    endCard.className = 'end';
+    endCard.innerHTML =
+      '<h2>你可以这样问他<span>Questions you can ask them</span></h2>' +
+      '<ol>' +
+        item.ask.concat([L.verify.ask]).map(function (q) {
+          return '<li>' + esc(q) + '</li>';
+        }).join('') +
+      '</ol>' +
+      '<div class="row">' +
+        '<a class="btn primary" href="' + esc(L.verify.url) + '" target="_blank" rel="noopener">' +
+          '&#9873; ' + esc(L.verify.labelZh) + '</a>' +
+        '<button class="btn" type="button" id="again">&#8630; 再听一次</button>' +
+        '<a class="btn" id="share" href="#" target="_blank" rel="noopener">&#8618; 分享 Share</a>' +
+        '<a class="btn" href="index.html">&#9776; 其他题目</a>' +
+      '</div>' +
+      '<p class="src">' + esc(L.verify.labelEn) + '</p>' +
+      '<p class="src">来源 Source: <a href="' + esc(item.source.url) + '" target="_blank" rel="noopener">' +
+        esc(item.source.name) + ' — ' + esc(item.source.page) + '</a> · 更新 ' + esc(item.published) +
+      '</p>';
+
+    /* Share the video link, not the library — the helper who forwards this
+       wants her to land on a play button, not on a list. */
+    document.getElementById('share').href = 'https://wa.me/?text=' +
+      encodeURIComponent('方言理财：' + item.titleZh + '\n' + location.href.split('#')[0]);
+
+    /* Framed, "other topics" closes the overlay and hands the helper back to
+       the list they were already looking at. Standalone it stays a plain link. */
+    if (framed) {
+      var out = endCard.querySelector('a[href="index.html"]');
+      out.addEventListener('click', function (e) { e.preventDefault(); leave(); });
+    }
+
+    document.getElementById('again').addEventListener('click', function () {
+      endCard.hidden = true;
+      paused = false;
+      go(0);
+    });
+    /* No scrollIntoView here. The collapsed stage already puts the questions
+       high on the screen, and scrolling to them clipped the closing line above.
+       She starts at the top of the end screen and reads down. */
+    window.scrollTo(0, 0);
+  }
+
+  /* ---- playback -------------------------------------------------- */
+
+  /* One line: speak it if we have a voice, and in either case arm a timer
+     to move on. The timer is not only a fallback for a missing voice —
+     Chrome drops utterances silently when a tab is backgrounded, and a
+     video that stops dead is worse than one that runs on captions. */
+  function go(n) {
+    hardStop();
+    var mine = gen;
+
+    if (n < 0) { i = -1; started = false; drawTitle(); renderDots(); return; }
+
+    /* Any seek counts as started, arrow keys included. Without this, an arrow
+       key on the title card began playback while `started` stayed false, and
+       the next tap on the stage restarted from line 0 instead of pausing. */
+    started = true;
+
+    if (n >= script.length) { i = n; drawEnd(); return; }
+
+    i = n;
+    paused = false;
+    syncToggle();
+    drawLine();
+
+    var text = script[i];
+    function advance() {
+      if (mine !== gen || paused) { return; }
+      go(i + 1);
+    }
+
+    if (narrated) {
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = dialect.ttsLang;
+      u.rate = slow ? 0.7 : 0.85;   // 0.85 matches the library; 0.7 is the 慢一点 tap
+      u.onend = advance;
+      u.onerror = advance;          // a voice that fails must not end the video
+      synth.speak(u);
+      timer = setTimeout(advance, lineMs(text) * 2 + 4000);   // watchdog, generous
+    } else {
+      timer = setTimeout(advance, lineMs(text));
+    }
+  }
+
+  function syncToggle() {
+    toggle.querySelector('i').innerHTML = paused ? '&#9654;' : '&#10073;&#10073;';
+    toggle.querySelector('span').textContent = paused ? '继续' : '停';
+    document.getElementById('prev').disabled = i <= 0;
+  }
+
+  function pause() {
+    if (paused || i < 0 || i >= script.length) { return; }
+    hardStop();
+    paused = true;
+    syncToggle();
+    drawLine();
+  }
+
+  function resume() {
+    if (!paused) { return; }
+    paused = false;
+    go(i);           // re-speak the line from its start rather than resume
+                     // mid-sentence: half a sentence is no use to someone
+                     // who cannot re-read the first half
+  }
+
+  /* ---- input ----------------------------------------------------- */
+
+  stage.addEventListener('click', function () {
+    /* The first tap is also the user gesture browsers require before any
+       speech is allowed — which is why the title card exists at all. */
+    if (!started) { go(0); return; }
+    if (i >= script.length) { return; }
+    if (paused) { resume(); } else { pause(); }
+  });
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (paused) { resume(); } else { pause(); }
+  });
+  document.getElementById('prev').addEventListener('click', function (e) {
+    e.stopPropagation();
+    go(Math.max(0, i - 1));
+  });
+  document.getElementById('next').addEventListener('click', function (e) {
+    e.stopPropagation();
+    go(i + 1);
+  });
+  document.getElementById('slow').addEventListener('click', function (e) {
+    e.stopPropagation();
+    slow = !slow;
+    this.setAttribute('aria-pressed', slow ? 'true' : 'false');
+    if (i >= 0 && i < script.length) { go(i); }   // hear the change at once
+  });
+  document.getElementById('back').addEventListener('click', leave);
+
+  /* Keyboard, for the helper on a laptop checking a script before it ships. */
+  document.addEventListener('keydown', function (e) {
+    /* A focused control owns Space and Enter. Without this guard the handler
+       below preventDefault()s their activation, and every button and link on
+       the end card is keyboard-dead. The stage is itself a button, so it is
+       the one exception. */
+    var t = e.target;
+    if (t !== stage && t.closest && t.closest('a, button')) { return; }
+
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      if (!started) { go(0); }
+      else if (paused) { resume(); }
+      else { pause(); }
+    } else if (e.key === 'ArrowRight') { go(i + 1); }
+    else if (e.key === 'ArrowLeft') { go(Math.max(0, i - 1)); }
+    else if (e.key === 'Escape') { leave(); }
+  });
+
+  window.addEventListener('pagehide', hardStop);
+
+  drawTitle();
+  renderDots();
+})();
+</script>
+</body>
+</html>
