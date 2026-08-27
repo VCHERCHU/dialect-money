@@ -71,12 +71,14 @@ How an answer is produced:
 3. **Speak first.** The retrieved explainer is read out immediately, in under a
    second. It is already human-drafted and sourced, so there is no reason to make
    her wait for a model to approve it.
-4. **kimi-k3 refines.** It answers from those passages only, under a system prompt
-   that forbids any figure not in them, forbids recommending anything, and
-   requires the literal token `NO_ANSWER` when they don't cover the question. The
-   clearer version replaces the text when it lands — an improvement, never a gate.
-   If she is still mid-sentence, the audio is not swapped under her; the button
-   becomes *hear the clearer version* instead.
+4. **qwen3.7-plus refines, streaming.** It answers from those passages only, under a
+   system prompt that forbids any figure not in them, forbids recommending
+   anything, and requires the literal token `NO_ANSWER` when they don't cover the
+   question. The proxy streams newline-delimited JSON, one event per line, and
+   splits lines itself so the page never reimplements that. Each line appears —
+   and is spoken — as it lands. Refinement is an improvement, never a gate: if she
+   is still mid-sentence on the verbatim read, the audio is not swapped under her
+   and a button offers the clearer version instead.
 5. **Fallback** — any proxy failure keeps the verbatim explainer, labelled
    *offline* in the UI. Always safe: that text is human-drafted.
 
@@ -91,10 +93,25 @@ cannot run the proxy, so the deployed page always uses the keyword fallback.
 
 Rough edges worth knowing:
 
-- **kimi-k3 is a reasoning model — still 20 to 30 seconds per answer.** That is no
-  longer dead air, because the explainer is read out first, but it does mean the
-  refined wording arrives long after she has started listening. Streaming would
-  close the gap properly.
+- **Streaming did not fix the wait, and was never going to.** Measured against the
+  same rider question: the first line arrives at 20.0s and the whole answer is
+  done by 21.9s. The models think for ~18 seconds and then emit everything in
+  about one. Streaming buys roughly 2 seconds of a 22-second wait; **reading the
+  explainer first is what actually removes her wait.** Keep both, but do not
+  mistake which one is load-bearing.
+- **Model choice moves the number more than streaming does.** Same prompt,
+  one-shot, measured on this endpoint:
+
+  | Model | Time | Notes |
+  | --- | --- | --- |
+  | `glm-5.3-flash` | 13.4s | fastest measured, but writes `问：` instead of `ASK:` |
+  | `deepseek-v4-flash` | 14.7s | |
+  | `qwen3.7-plus` | 17.0s | current default; obeys `ASK:` |
+  | `kimi-k3` | 20.4s | |
+
+  Swap with `OPENCODE_MODEL` in `.env`. The marker regex accepts `ASK:`, `问：` and
+  `问题：` precisely because a swap otherwise turns her follow-up questions into
+  spoken answer lines.
 - **The spoken line and the highlighted line can diverge.** When refined text
   replaces verbatim text under live speech, the words being spoken no longer match
   what is on screen, so line highlighting switches off rather than pointing at the

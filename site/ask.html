@@ -165,7 +165,7 @@
     Mandarin or Cantonese voice. Real dialect in and out is the MERaLiON strand of
     this project, and this page is the thing waiting on it — the interaction is
     real, the language is not yet.
-    Answers are written by <b>kimi-k3</b> through a local proxy that holds the API
+    Answers are written by <b>qwen3.7-plus</b> through a local proxy that holds the API
     key — a key in this page would be readable by anyone. With no proxy running,
     the page falls back to keyword retrieval and says so.
   </div>
@@ -200,9 +200,10 @@
         MoneySense, IRAS, MOF, gov.sg.</li>
       <li><b>Every answer names its source</b> and links to it.</li>
       <li><b>It answers twice.</b> The explainer is read out immediately — already
-        human-drafted and sourced — and kimi-k3's clearer version replaces the text
-        when it arrives, 20 to 30 seconds later. She never waits in silence, and the
-        model is an improvement rather than a gate.</li>
+        human-drafted and sourced — and qwen3.7-plus's clearer version streams in line by
+        line to replace it. She never waits in silence, and the model is an
+        improvement rather than a gate. If she is still mid-sentence when the refined
+        version lands, the audio is not swapped under her: a button offers it.</li>
       <li><b>It refuses rather than guesses.</b> A question outside the library gets
         "I don't know", not an invented answer. A confidently wrong figure spoken in
         Hokkien would do more damage than this product does good.</li>
@@ -211,7 +212,7 @@
     </ul>
     <p>
       Retrieval is keyword scoring, and it decides what the model is allowed to
-      see. kimi-k3 then answers from those passages only, under a system prompt
+      see. qwen3.7-plus then answers from those passages only, under a system prompt
       that forbids naming a figure absent from them, forbids recommending
       anything, and requires the literal token NO_ANSWER when the passages do not
       cover the question. Retrieval finding nothing skips the model entirely —
@@ -269,14 +270,20 @@
 
   /* ---- speaking ---- */
   /* `speaking` gates the refined answer. If she is still listening to the
-     verbatim explainer when kimi-k3 lands, swapping the audio mid-sentence is
+     verbatim explainer when qwen3.7-plus lands, swapping the audio mid-sentence is
      worse than letting her finish and offering a replay.
 
      `highlightValid` goes false when the panel is repainted while speech is
      still running: the words being spoken no longer match the text on screen,
-     so highlighting a line would point her at the wrong one. */
+     so highlighting a line would point her at the wrong one.
+
+     `speechGen` invalidates the callbacks of cancelled utterances. Chrome fires
+     onend for everything synth.cancel() discards, and those late callbacks would
+     otherwise clear the state of the speech that has just started. */
   var speaking = false;
   var highlightValid = true;
+  var speechGen = 0;
+  var queued = 0;
 
   function clearHighlight() {
     var lis = document.querySelectorAll('#answer .lines li');
@@ -284,34 +291,47 @@
   }
 
   function stopSpeaking() {
+    speechGen++;
+    queued = 0;
     speaking = false;
     if (synth) { synth.cancel(); }
     clearHighlight();
   }
 
+  /* Queues one line behind whatever is already playing. This is what makes
+     streaming worth having: a line can be spoken the moment it arrives, without
+     restarting the answer. */
+  function speakLine(text, idx) {
+    if (!synth || !text) { return; }
+    var gen = speechGen;
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = dialect().ttsLang;
+    u.rate = 0.85;                       // slower than default, for 70+ listeners
+    /* The list is queried here rather than captured up front: the panel is
+       repainted as lines arrive, and a captured NodeList would point at nodes
+       no longer in the document. */
+    u.onstart = function () {
+      if (gen !== speechGen) { return; }
+      clearHighlight();
+      if (!highlightValid) { return; }
+      var lis = document.querySelectorAll('#answer .lines li');
+      if (lis[idx]) { lis[idx].classList.add('now'); }
+    };
+    u.onend = function () {
+      if (gen !== speechGen) { return; }
+      queued--;
+      if (queued <= 0) { queued = 0; speaking = false; clearHighlight(); }
+    };
+    queued++;
+    speaking = true;
+    synth.speak(u);
+  }
+
   function speak(lines) {
     if (!synth || !lines || !lines.length) { return; }
     stopSpeaking();
-    speaking = true;
     highlightValid = true;
-    lines.forEach(function (line, i) {
-      var u = new SpeechSynthesisUtterance(line);
-      u.lang = dialect().ttsLang;
-      u.rate = 0.85;                       // slower than default, for 70+ listeners
-      /* The list is queried here rather than captured up front: the panel is
-         repainted when the refined answer arrives, and a captured NodeList
-         would point at nodes no longer in the document. */
-      u.onstart = function () {
-        clearHighlight();
-        if (!highlightValid) { return; }
-        var lis = document.querySelectorAll('#answer .lines li');
-        if (lis[i]) { lis[i].classList.add('now'); }
-      };
-      if (i === lines.length - 1) {
-        u.onend = function () { speaking = false; clearHighlight(); };
-      }
-      synth.speak(u);
-    });
+    lines.forEach(function (line, i) { speakLine(line, i); });
   }
 
   /* ---- rendering ---- */
@@ -344,42 +364,91 @@
 
   /* ---- the model ---------------------------------------------------
      Retrieval decides what the model may see; the proxy holds the key and
-     enforces the prompt. Any failure returns null and the panel keeps the
-     verbatim explainer, which is always safe -- it is human-drafted text.
+     enforces the prompt. Any failure leaves the verbatim explainer in place,
+     which is always safe -- it is human-drafted text.
+
+     The proxy streams newline-delimited JSON, one event per line, and does the
+     line splitting itself so this page never has to reimplement it.
      ------------------------------------------------------------------ */
   var seq = 0;   // guards a stale answer landing after she has asked again
 
-  function askLLM(question, found) {
-    var context = found.slice(0, 3).map(function (r) {
+  function contextFor(found) {
+    return found.slice(0, 3).map(function (r) {
       return {
         title: r.item.titleZh,
         source: r.item.source.name + ' — ' + r.item.source.page,
         lines: r.item.script
       };
     });
+  }
+
+  function post(question, found, stream) {
     return fetch('api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: question, dialect: dialect().en, context: context })
-    }).then(function (res) {
+      body: JSON.stringify({
+        question: question,
+        dialect: dialect().en,
+        context: contextFor(found),
+        stream: !!stream
+      })
+    });
+  }
+
+  /* Streaming path. `on` receives each event; resolves to the final `done`
+     event, or null if the stream could not be used at all. */
+  function streamLLM(question, found, on) {
+    return post(question, found, true).then(function (res) {
       if (!res.ok) { return null; }
-      return res.json();
+      if (!res.body || !res.body.getReader) {
+        /* No streams in this browser -- ask once for the whole thing. */
+        return post(question, found, false).then(function (r) {
+          return r.ok ? r.json() : null;
+        });
+      }
+      var reader = res.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = '';
+      var final = null;
+
+      function handle(text) {
+        var event;
+        try { event = JSON.parse(text); } catch (e) { return; }
+        if (event.type === 'done') { final = event; }
+        on(event);
+      }
+
+      function pump() {
+        return reader.read().then(function (chunk) {
+          if (chunk.done) {
+            if (buffer.trim()) { handle(buffer); }
+            return final;
+          }
+          buffer += decoder.decode(chunk.value, { stream: true });
+          var parts = buffer.split('\n');
+          buffer = parts.pop();
+          parts.forEach(function (part) { if (part.trim()) { handle(part); } });
+          return pump();
+        });
+      }
+      return pump();
     }).catch(function () {
       return null;   // no proxy running (e.g. GitHub Pages), or it errored
     });
   }
 
-  /* One painter for every state the panel can be in, so the verbatim and the
-     refined version cannot drift apart. */
+  /* One painter for every state the panel can be in, so the verbatim, streaming
+     and finished versions cannot drift apart. */
   function paint(o) {
     var top = o.top;
     var ready = top.audio[chosen] === 'ready';
     var box = document.getElementById('answer');
 
     var badge =
-      o.origin === 'llm'     ? 'kimi-k3 讲得更清楚了 · refined by kimi-k3, from the cited source only' :
+      o.origin === 'stream'  ? 'qwen3.7-plus 正在讲…… · answering line by line, from the cited source only' :
+      o.origin === 'llm'     ? 'qwen3.7-plus 讲得更清楚了 · refined by qwen3.7-plus, from the cited source only' :
       o.origin === 'offline' ? '就念这个说明 · the explainer, verbatim — no model involved' :
-      o.refining             ? '先念这个说明…… · reading the explainer now, asking kimi-k3 for a clearer version' :
+      o.refining             ? '先念这个说明…… · reading the explainer now, asking qwen3.7-plus for a clearer version' :
                                '这个说明 · the explainer, verbatim';
 
     /* Once refined text is on screen while older audio is still playing, the
@@ -393,7 +462,7 @@
         '<h2>' + esc(top.titleZh) + '</h2>' +
         (o.caution
           ? '<p class="caution">这个可能不是你要问的。下面是我有的、最接近的说明。' +
-            '<span>kimi-k3 judged the retrieved passage does not answer your question, so nothing was ' +
+            '<span>qwen3.7-plus judged the retrieved passage does not answer your question, so nothing was ' +
             'rewritten. This is the source text, unchanged.</span></p>'
           : '') +
         '<ul class="lines">' +
@@ -404,10 +473,11 @@
               o.asks.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') +
             '</ol></div>'
           : '') +
+        (o.origin === 'stream' ? '' :
         '<div class="row">' +
           (ready ? '<button class="btn primary" id="replay" type="button">' + replayLabel + '</button>' : '') +
           '<a class="btn" href="index.html#' + esc(top.id) + '">全部内容 Full explainer</a>' +
-        '</div>' +
+        '</div>') +
         (ready ? '' : '<p class="cite"><b>' + esc(dialect().zh) + '版还在制作中</b> — no narration in this dialect yet, so this answer is text only.</p>') +
         '<p class="cite">' + esc(badge) + '</p>' +
         '<p class="cite">来源 Source: <a href="' + esc(top.source.url) + '" target="_blank" rel="noopener">' +
@@ -417,9 +487,10 @@
       '</div>';
     box.hidden = false;
 
-    /* Repainting under live speech invalidates the highlight -- the spoken
-       words and the visible lines are no longer the same text. */
-    if (speaking) { highlightValid = false; clearHighlight(); }
+    /* Repainting under live speech invalidates the highlight -- unless the
+       repaint is the stream appending the very line being spoken, where text
+       and audio stay in step. */
+    if (speaking && !o.inStep) { highlightValid = false; clearHighlight(); }
 
     var again = document.getElementById('replay');
     if (again) { again.addEventListener('click', function () { speak(o.lines); }); }
@@ -438,31 +509,71 @@
     var ready = top.audio[chosen] === 'ready';
     var token = ++seq;
 
-    /* Speak first. She hears something in under a second instead of waiting
-       20-30 seconds on a reasoning model, and what she hears is already
-       human-drafted and sourced. Refinement is an improvement, never a gate. */
+    /* Speak first. She hears something in under a second instead of waiting on
+       a reasoning model, and what she hears is already human-drafted and
+       sourced. Refinement is an improvement, never a gate. */
     paint({ top: top, runner: runner, lines: top.script, asks: top.ask,
             origin: 'verbatim', refining: true });
     if (ready) { speak(top.script); }
 
-    askLLM(q, found).then(function (res) {
+    var lines = [];
+    var asks = [];
+    var takeOver = null;   // decided at the first line, then held
+
+    function show(origin, extra) {
+      var o = {
+        top: top, runner: runner,
+        lines: lines.length ? lines : top.script,
+        asks: lines.length ? asks : top.ask,
+        origin: origin
+      };
+      for (var k in (extra || {})) { o[k] = extra[k]; }
+      paint(o);
+    }
+
+    streamLLM(q, found, function (event) {
       if (token !== seq) { return; }   // a newer question has taken over
 
-      if (!res) {
+      if (event.type === 'line') {
+        lines.push(event.text);
+        /* Decided once, on the first line: if she is mid-sentence on the
+           verbatim read, the refined audio waits for the button. Otherwise the
+           stream takes over the voice and each line is spoken as it lands. */
+        if (takeOver === null) { takeOver = ready && !speaking; }
+        show('stream', { inStep: takeOver });
+        if (takeOver) { speakLine(event.text, lines.length - 1); }
+        return;
+      }
+      if (event.type === 'ask') {
+        asks.push(event.text);
+        show('stream', { inStep: takeOver === true });
+      }
+    }).then(function (done) {
+      if (token !== seq) { return; }
+
+      if (!done && !lines.length) {
         paint({ top: top, runner: runner, lines: top.script, asks: top.ask, origin: 'offline' });
         return;
       }
-      if (res.refused) {
+      if (done && done.refused) {
         paint({ top: top, runner: runner, lines: top.script, asks: top.ask,
                 origin: 'verbatim', caution: true });
         return;
       }
 
-      var wasSpeaking = speaking;
-      paint({ top: top, runner: runner, lines: res.lines, asks: res.ask,
-              origin: 'llm', wasSpeaking: wasSpeaking });
-      /* Only take over the audio if she is not mid-sentence. */
-      if (ready && !wasSpeaking) { speak(res.lines); }
+      /* The one-shot fallback returns everything at once. */
+      if (done && !lines.length && done.lines && done.lines.length) {
+        lines = done.lines;
+        asks = done.ask || [];
+        var wasSpeaking = speaking;
+        paint({ top: top, runner: runner, lines: lines, asks: asks,
+                origin: 'llm', wasSpeaking: wasSpeaking });
+        if (ready && !wasSpeaking) { speak(lines); }
+        return;
+      }
+
+      paint({ top: top, runner: runner, lines: lines, asks: asks,
+              origin: 'llm', wasSpeaking: !takeOver && speaking, inStep: takeOver === true });
     });
   }
 
