@@ -1,0 +1,40 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Sent to you" },
+    { "id": "page-2", "name": "Options reviewed" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html",            "title": "Sent to you — home",              "page": "page-1", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
+    { "file": "SentEmpty.dc.html",       "title": "Nothing sent yet",                "page": "page-1", "x": 470,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "ProductThinking.dc.html", "title": "The 4Cs behind the design",       "page": "page-1", "x": 0,    "y": 984,  "w": 1240, "h": 860 },
+    { "file": "AppIcon.dc.html",         "title": "App icon",                        "page": "page-1", "x": 0,    "y": 1984, "w": 880,  "h": 600 },
+    { "file": "Logo.dc.html",            "title": "Logo",                            "page": "page-1", "x": 960,  "y": 1984, "w": 880,  "h": 660 },
+
+    { "file": "OptionA.dc.html",         "title": "Option A — Question-first",        "page": "page-2", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
+    { "file": "OptionB.dc.html",         "title": "Option B — One at a time",         "page": "page-2", "x": 470,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "OptionC.dc.html",         "title": "Option C — Sent to you (chosen)",  "page": "page-2", "x": 940,  "y": 0,    "w": 390,  "h": 844 }
+  ],
+  "annotations": [
+    {
+      "id": "chosen",
+      "x": 0, "y": -260, "w": 860, "page": "page-1",
+      "text": "SENT TO YOU — the chosen direction, built out\n\nNot a library, an inbox. Newest first, each item showing who sent it, shaped like the WhatsApp messages she already opens. The new one carries everything she needs — question, dialect, duration, one green button — and the ones she has heard go quiet with a tick.\n\nOUTCOME — she asks a real question instead of nodding. This direction serves it by designing the helper IN rather than around: the handover is the product, not an afterthought.\nASSUMPTION — it attacks risk 1, distribution, head-on. Every other assumption is downstream of it.\nCONFIRM — forward rate. Did the helper send a second one?\nCOUNTER-METRIC — the MAS register rail stays pinned to the bottom of every screen. It is the only thing this product says about a specific commercial offer."
+    },
+    {
+      "id": "empty-note",
+      "x": 940, "y": -260, "w": 400, "page": "page-1",
+      "text": "The empty state is this direction's honest cost, so it is drawn, not deferred.\n\nAn inbox nobody has sent to is a dead end — the exact failure mode of betting on distribution. So it does two things: routes her to the library anyway, and states the ask to her helper in words she can say out loud.\n\n女儿 and 义工 are role labels, not real accounts. Sender identity is a feature this direction needs and the product does not have yet."
+    },
+    {
+      "id": "brand-note",
+      "x": 0, "y": 2676, "w": 420, "page": "page-1",
+      "text": "The mark is one shape doing two jobs: a coin and a speech bubble, with the three spoken lines inside it. Built only from the app's own #0b5c46 and #fbf9f4 — no new colours invented.\n\nNo text and no emoji in the icon: it has to work for someone who does not read. Drawn as SVG on a 64 grid, so it is production-ready at any size."
+    },
+    {
+      "id": "reviewed",
+      "x": 0, "y": -200, "w": 860, "page": "page-2",
+      "text": "The three directions this design was chosen from — kept for the record.\n\nOPTION A — Question-first. The list, tightened. Judged on: does a second explainer get opened in the same sitting? Cost: still six decisions for someone who cannot read them.\n\nOPTION B — One at a time. The home screen IS this week's explainer. Judged on completion rate. Cost: whoever picks the topic holds real editorial power, and five explainers get buried.\n\nOPTION C — Sent to you. CHOSEN. Judged on forward rate. It is the only one of the three that tests the riskiest assumption instead of working around it."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

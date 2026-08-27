@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #0b5c46; text-decoration: none; }
+    a:hover { color: #08402f; }
+  </style>
+</helmet>
+
+<div style="width: 880px; height: 600px; background: #fbf9f4; color: #1a1a17; display: flex; flex-direction: column; gap: 26px; padding: 32px; overflow: hidden">
+
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 22px; font-weight: 700">App icon</div>
+    <div style="font-size: 14px; line-height: 1.55; color: #55524a; max-width: 68ch">
+      A coin that speaks: the circle reads as both a coin and a speech bubble, and the three
+      bars inside are the spoken lines. Ground is the app&#39;s own <strong style="font-weight: 600">#0b5c46</strong>.
+    </div>
+  </div>
+
+  <!-- true-size row: judge legibility at the sizes iOS and Android actually render -->
+  <div style="display: flex; align-items: flex-end; gap: 34px">
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="180" height="180" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+        <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">180 · App Store</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="120" height="120" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+        <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">120 · home screen</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="87" height="87" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+        <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">87 · settings</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="60" height="60" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+        <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">60</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="40" height="40" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+        <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">40 · favicon</div>
+    </div>
+
+  </div>
+
+  <!-- variants the icon has to survive -->
+  <div style="display: flex; align-items: flex-end; gap: 30px">
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="88" height="88" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="32" fill="#0b5c46"></circle>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+        <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">Android round</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="88" height="88" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="#14140f"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#6fd3ad"></path>
+        <circle cx="32" cy="29" r="18" fill="#6fd3ad"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#14140f"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#14140f"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#14140f"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">Dark / video mode</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+      <svg width="88" height="88" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="none" stroke="#1a1a17" stroke-width="2.5"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#1a1a17"></path>
+        <circle cx="32" cy="29" r="18" fill="#1a1a17"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#fbf9f4"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#fbf9f4"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#fbf9f4"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">One colour · stamp</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; filter: grayscale(1)">
+      <svg width="88" height="88" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+        <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+        <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+        <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+        <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      </svg>
+      <div style="font-size: 12px; color: #8a857a">Greyscale check</div>
+    </div>
+
+  </div>
+
+  <div style="font-size: 13px; line-height: 1.6; color: #8a857a; max-width: 80ch">
+    The bars keep their weight down to 40px because they are the only detail; the tail is what
+    stops it reading as a wifi or record symbol. No text in the icon — it has to work for
+    someone who does not read.
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

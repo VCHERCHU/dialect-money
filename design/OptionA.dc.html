@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #0b5c46; text-decoration: none; }
+    a:hover { color: #08402f; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #fbf9f4; color: #1a1a17; display: flex; flex-direction: column; overflow: hidden">
+
+  <!-- dialect bar: persistent, not a section she has to find -->
+  <div style="display: flex; align-items: center; gap: 8px; padding: 14px 16px 12px; background: #ffffff; border-bottom: 1px solid #e3ded1">
+    <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true" style="flex: 0 0 auto">
+      <rect x="0" y="0" width="64" height="64" rx="15" fill="#0b5c46"></rect>
+      <path d="M19 41 L13 51 L28 44 Z" fill="#fbf9f4"></path>
+      <circle cx="32" cy="29" r="18" fill="#fbf9f4"></circle>
+      <rect x="22" y="24" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      <rect x="22" y="30" width="20" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+      <rect x="22" y="36" width="12" height="3.2" rx="1.6" fill="#0b5c46"></rect>
+    </svg>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 1px">
+      <div style="font-size: 19px; font-weight: 700; letter-spacing: -0.01em">方言理财</div>
+      <div style="font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #8a857a">Dialect Money</div>
+    </div>
+    <div style="display: flex; gap: 5px">
+      <div style="min-width: 52px; height: 44px; display: flex; align-items: center; justify-content: center; background: #0b5c46; color: #ffffff; border-radius: 12px; font-size: 15px; font-weight: 600">福建话</div>
+      <div style="min-width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #ffffff; border: 2px solid #e3ded1; color: #55524a; border-radius: 12px; font-size: 13px; font-weight: 600">潮州</div>
+      <div style="min-width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #ffffff; border: 2px solid #e3ded1; color: #55524a; border-radius: 12px; font-size: 13px; font-weight: 600">广东</div>
+    </div>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 14px; padding: 16px 16px 0">
+
+    <div style="font-size: 15px; font-weight: 600; color: #0b5c46; background: #e8f2ee; border-radius: 14px; padding: 10px 14px; line-height: 1.5">
+      这里只解释，不推荐产品。
+    </div>
+
+    <div style="font-size: 13px; font-weight: 600; color: #8a857a; letter-spacing: 0.02em">有人要卖东西给你？先听一听</div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+
+      <div style="display: flex; gap: 14px; align-items: center; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 16px">
+        <div style="flex: 0 0 auto; width: 60px; height: 60px; border-radius: 50%; background: #0b5c46; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5 L19 12 L8 19 Z" fill="#ffffff"></path></svg>
+        </div>
+        <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 5px">
+          <div style="font-size: 19px; font-weight: 600; line-height: 1.45; text-wrap: pretty">加了附加险，看病真的不用自己付钱？</div>
+          <div style="font-size: 12px; color: #8a857a">1分35秒 · MoneySense</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 14px; align-items: center; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 16px">
+        <div style="flex: 0 0 auto; width: 60px; height: 60px; border-radius: 50%; background: #0b5c46; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5 L19 12 L8 19 Z" fill="#ffffff"></path></svg>
+        </div>
+        <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 5px">
+          <div style="font-size: 19px; font-weight: 600; line-height: 1.45; text-wrap: pretty">保单上的大数目，是保证的还是估计的？</div>
+          <div style="font-size: 12px; color: #8a857a">1分20秒 · MoneySense</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 14px; align-items: center; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; padding: 16px">
+        <div style="flex: 0 0 auto; width: 60px; height: 60px; border-radius: 50%; background: #0b5c46; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5 L19 12 L8 19 Z" fill="#ffffff"></path></svg>
+        </div>
+        <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 5px">
+          <div style="font-size: 19px; font-weight: 600; line-height: 1.45; text-wrap: pretty">销售员卖这份保单，他赚多少？</div>
+          <div style="font-size: 12px; color: #8a857a">1分5秒 · MAS</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 48px; border: 2px dashed #e3ded1; border-radius: 14px; font-size: 15px; font-weight: 600; color: #55524a">
+      还有 3 题
+    </div>
+
+  </div>
+
+  <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-top: 1px solid #e3ded1; background: #fdf1e0">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto">
+      <path d="M6 3 L6 21" stroke="#8a4b00" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M6 4 L17 4 L17 12 L6 12" stroke="#8a4b00" stroke-width="2" stroke-linejoin="round" fill="none"></path>
+    </svg>
+    <div style="flex: 1 1 auto; font-size: 13px; line-height: 1.5; color: #8a4b00; font-weight: 600">卖给你的公司，在MAS的名册里吗？</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

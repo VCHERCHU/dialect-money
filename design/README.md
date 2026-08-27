@@ -1,0 +1,26 @@
+# Design source
+
+The screens behind the prototype, as editable source rather than flattened images.
+
+Each `.dc.html` is one artboard; `canvas.json` places them and splits them across two
+pages. They are assembled into a single browsable canvas by Claude Design — the
+assembled file is ~2 MB of editor code and is deliberately **not** committed
+(see `.gitignore`).
+
+| File | What it is |
+| --- | --- |
+| `Main.dc.html` | The chosen direction, built out — the inbox home screen |
+| `SentEmpty.dc.html` | Its empty state, which is where this direction fails if it fails |
+| `ProductThinking.dc.html` | The 4Cs, Five Whys and outcome metrics the design is judged on |
+| `AppIcon.dc.html` | The mark at true 180/120/87/60/40px, plus round, dark, one-colour and greyscale |
+| `Logo.dc.html` | Horizontal, stacked and reversed lockups, and the smallest usable size |
+| `OptionA.dc.html` · `OptionB.dc.html` · `OptionC.dc.html` | The three directions reviewed; C was chosen |
+
+Colours and type are lifted from `site/index.html` and `site/video.html` rather than
+invented — `#0b5c46`, `#fbf9f4`, `#1a1a17`, the dark stage's `#14140f` / `#6fd3ad`,
+14px radii, and the same CJK font stack.
+
+Two things in here are not real data: the `女儿` / `义工` senders stand in for a
+sender identity the product does not have yet, and the fifth "why" on the
+product-thinking board is a synthesis of assumption 1, not a quote from
+[PROBLEM-STATEMENT.md](../PROBLEM-STATEMENT.md).
