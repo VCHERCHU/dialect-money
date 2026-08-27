@@ -31,11 +31,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # enablement: true turns Pages on for the repo on the first run, so the
-      # workflow does not fail before Pages has been configured by hand.
+      # Pages itself cannot be created by this workflow — the default
+      # GITHUB_TOKEN is refused ("Resource not accessible by integration"), so
+      # enablement: true does not help. It was turned on once out of band:
+      #   gh api -X POST repos/VCHERCHU/dialect-money/pages -f build_type=workflow
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       # Publish only site/, so the prototype lives at the domain root
       # (https://vcherchu.github.io/dialect-money/) rather than under /site/.
