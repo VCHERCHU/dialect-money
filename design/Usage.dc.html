@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Familjen+Grotesk:wght@400;500;600&family=Noto+Serif+SC:wght@500&display=swap">
+  <style>
+    body { margin: 0; font-family: "Familjen Grotesk", system-ui, sans-serif; }
+    a { color: #8f6829; } a:hover { color: #6f4f1c; }
+    .wm { font-family: "Newsreader", Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+    .lbl { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; color: #6d6459; }
+    .cap { font-size: 11.5px; color: #6d6459; line-height: 1.5; }
+    .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; }
+  </style>
+</helmet>
+
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hua" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width="5"></circle>
+      <g transform="translate(29.204 62.331) scale(0.04180 -0.04180)" fill="currentColor"><path d="M109 738Q203 706 251.0 671.5Q299 637 299 594Q299 568 285.0 539.5Q271 511 240 511Q233 511 228.0 517.0Q223 523 210.0 561.5Q197 600 171.0 638.0Q145 676 99 722ZM568 612Q437 600 353 603L350 627Q579 657 795 753Q825 726 850.0 699.0Q875 672 878.0 666.5Q881 661 881 656Q881 647 871 647Q867 647 855.5 650.5Q844 654 831.0 654.0Q818 654 772.0 643.0Q726 632 657 623V437H800L837 493Q848 509 861.5 509.0Q875 509 919.5 466.0Q964 423 964.0 414.0Q964 405 945 405H657V249H746L773 292Q778 299 783 299Q791 299 836.0 269.5Q881 240 881.0 230.5Q881 221 843 201V-48Q843 -63 844 -76L846 -97Q846 -109 808.0 -127.5Q770 -146 758 -146Q753 -146 753 -135V-52H480V-118Q480 -122 479.0 -125.0Q478 -128 458.0 -140.5Q438 -153 418.5 -158.0Q399 -163 394.5 -163.0Q390 -163 391 -153Q396 -119 396 -78V209Q396 251 393 294Q452 275 495 249H568V405H388Q361 405 346 398L325 442Q346 437 375 437H568ZM753 -21V218H480V-21ZM377 115Q227 -72 201 -132Q196 -143 189.0 -143.0Q182 -143 160.0 -115.0Q138 -87 124 -60Q170 -19 170 41V370H90Q75 370 58 364L31 409Q48 404 73 404H170L193 440Q202 453 211.5 453.0Q221 453 243 436L283 404Q301 389 301.0 379.0Q301 369 255 349V44L364 128Z"></path></g>
+    </symbol>
+    <symbol id="huaSmall" viewBox="0 0 100 100">
+      <g transform="translate(13.741 71.501) scale(0.07288 -0.07288)" fill="currentColor"><path d="M109 738Q203 706 251.0 671.5Q299 637 299 594Q299 568 285.0 539.5Q271 511 240 511Q233 511 228.0 517.0Q223 523 210.0 561.5Q197 600 171.0 638.0Q145 676 99 722ZM568 612Q437 600 353 603L350 627Q579 657 795 753Q825 726 850.0 699.0Q875 672 878.0 666.5Q881 661 881 656Q881 647 871 647Q867 647 855.5 650.5Q844 654 831.0 654.0Q818 654 772.0 643.0Q726 632 657 623V437H800L837 493Q848 509 861.5 509.0Q875 509 919.5 466.0Q964 423 964.0 414.0Q964 405 945 405H657V249H746L773 292Q778 299 783 299Q791 299 836.0 269.5Q881 240 881.0 230.5Q881 221 843 201V-48Q843 -63 844 -76L846 -97Q846 -109 808.0 -127.5Q770 -146 758 -146Q753 -146 753 -135V-52H480V-118Q480 -122 479.0 -125.0Q478 -128 458.0 -140.5Q438 -153 418.5 -158.0Q399 -163 394.5 -163.0Q390 -163 391 -153Q396 -119 396 -78V209Q396 251 393 294Q452 275 495 249H568V405H388Q361 405 346 398L325 442Q346 437 375 437H568ZM753 -21V218H480V-21ZM377 115Q227 -72 201 -132Q196 -143 189.0 -143.0Q182 -143 160.0 -115.0Q138 -87 124 -60Q170 -19 170 41V370H90Q75 370 58 364L31 409Q48 404 73 404H170L193 440Q202 453 211.5 453.0Q221 453 243 436L283 404Q301 389 301.0 379.0Q301 369 255 349V44L364 128Z"></path></g>
+    </symbol>
+  </defs>
+</svg>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs>
+    <symbol id="usNo" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="#a8563a"></circle>
+      <path d="M8 8 l8 8 M16 8 l-8 8" fill="none" stroke="#f7f4ee" stroke-width="2.4" stroke-linecap="round"></path>
+    </symbol>
+  </defs>
+</svg>
+
+<div style="background: #f7f4ee; color: #241f1b; min-height: 940px; padding: 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 26px;">
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline;">
+    <div class="lbl">Palette, type &amp; rules</div>
+    <div class="lbl">v1</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px;">
+    <div class="lbl">Palette</div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px;">
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="height: 68px; border-radius: 8px; background: #b8873f;"></div>
+        <div style="font-size: 12px; font-weight: 600;">Brass</div>
+        <div class="mono" style="color: #6d6459;">#b8873f</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="height: 68px; border-radius: 8px; background: #2b2621;"></div>
+        <div style="font-size: 12px; font-weight: 600;">Ink</div>
+        <div class="mono" style="color: #6d6459;">#2b2621</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="height: 68px; border-radius: 8px; background: #f7f4ee; border: 1px solid #ddd5c8;"></div>
+        <div style="font-size: 12px; font-weight: 600;">Paper</div>
+        <div class="mono" style="color: #6d6459;">#f7f4ee</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="height: 68px; border-radius: 8px; background: #2f5d4e;"></div>
+        <div style="font-size: 12px; font-weight: 600;">Jade</div>
+        <div class="mono" style="color: #6d6459;">#2f5d4e</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="height: 68px; border-radius: 8px; background: #6d6459;"></div>
+        <div style="font-size: 12px; font-weight: 600;">Muted</div>
+        <div class="mono" style="color: #6d6459;">#6d6459</div>
+      </div>
+    </div>
+    <div class="cap" style="max-width: 580px; text-wrap: pretty;">
+      Brass carries the mark, and only the mark. Jade is for links and states,
+      never the mark. Every text pair here clears 4.5:1 &mdash; on a product
+      built for eyes that are 72 years old, that floor is not negotiable.
+      Government blue was the obvious choice and is deliberately skipped: this
+      has to feel like a person talking, not another portal.
+    </div>
+  </div>
+
+  <div style="height: 1px; background: #ddd5c8;"></div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px;">
+    <div class="lbl">Type</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div class="wm" style="font-size: 32px; line-height: 1.05;">Newsreader</div>
+        <div class="cap">Wordmark and headings. Editorial warmth with enough
+          weight to read as authoritative. Falls back to Georgia.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 32px; font-weight: 500; line-height: 1.05;">Familjen Grotesk</div>
+        <div class="cap">Interface and labels. Open apertures hold up at the
+          large sizes an older reader needs. Falls back to system-ui.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 1px; background: #ddd5c8;"></div>
+
+  <div style="display: grid; grid-template-columns: 0.78fr 1.22fr; gap: 24px; align-items: start;">
+    <div style="display: flex; flex-direction: column; gap: 13px;">
+      <div class="lbl">Clear space</div>
+      <div style="position: relative; width: 142px; height: 142px; border: 1px dashed #b8ae9e; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+        <div style="position: absolute; inset: 35px; border: 1px dashed #cbc1b0;"></div>
+        <svg style="width: 72px; height: 72px; color: #b8873f"><use href="#hua"></use></svg>
+      </div>
+      <div class="cap">Half the ring's diameter, every side.</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 13px;">
+      <div class="lbl" style="color: #a8563a;">Never do this</div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="position: relative; height: 78px; border-radius: 8px; border: 2px solid #a8563a; background: linear-gradient(135deg, #d94f4f, #7b3fb8); display: flex; align-items: center; justify-content: center;">
+            <svg style="width: 44px; height: 44px; color: #f7f4ee"><use href="#hua"></use></svg>
+            <svg style="width: 19px; height: 19px; position: absolute; top: -8px; right: -8px;"><use href="#usNo"></use></svg>
+          </div>
+          <div class="cap">Never on a gradient.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="position: relative; height: 78px; border-radius: 8px; border: 2px solid #a8563a; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <svg style="width: 36px; height: 36px; color: #b8873f; transform: scaleX(1.9);"><use href="#hua"></use></svg>
+            <svg style="width: 19px; height: 19px; position: absolute; top: -8px; right: -8px;"><use href="#usNo"></use></svg>
+          </div>
+          <div class="cap">Never stretch. The ring is round.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="position: relative; height: 78px; border-radius: 8px; border: 2px solid #a8563a; background: #b09c7d; display: flex; align-items: center; justify-content: center;">
+            <svg style="width: 44px; height: 44px; color: #a8935f"><use href="#hua"></use></svg>
+            <svg style="width: 19px; height: 19px; position: absolute; top: -8px; right: -8px;"><use href="#usNo"></use></svg>
+          </div>
+          <div class="cap">Never on a close tone &mdash; 1.1:1 here.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-left: 2px solid #8f6829; padding: 3px 0 3px 15px;">
+    <div class="cap" style="text-wrap: pretty;">
+      <strong style="color: #241f1b; font-weight: 600;">Who sees this icon.</strong>
+      The brief puts distribution through &ldquo;secondary users&rdquo; &mdash; a
+      daughter, a volunteer &mdash; because Mdm Tan &ldquo;does not browse,
+      search or install anything&rdquo;. So the icon is usually
+      <em>first</em> seen on a helper's phone. But she does use WhatsApp and
+      answers video calls, so it is <em>recognised</em> on hers. Design for
+      both, and do not mistake her for someone who is not there.
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

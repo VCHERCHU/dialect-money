@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; font-family: "Familjen Grotesk", system-ui, sans-serif; }
+    a { color: #8f6829; } a:hover { color: #6f4f1c; }
+    .lbl { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; font-weight: 600; color: #6d6459; }
+    .cap { font-size: 11.5px; color: #6d6459; line-height: 1.5; }
+    .tile { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  </style>
+</helmet>
+
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hua" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width="5"></circle>
+      <g transform="translate(29.204 62.331) scale(0.04180 -0.04180)" fill="currentColor"><path d="M109 738Q203 706 251.0 671.5Q299 637 299 594Q299 568 285.0 539.5Q271 511 240 511Q233 511 228.0 517.0Q223 523 210.0 561.5Q197 600 171.0 638.0Q145 676 99 722ZM568 612Q437 600 353 603L350 627Q579 657 795 753Q825 726 850.0 699.0Q875 672 878.0 666.5Q881 661 881 656Q881 647 871 647Q867 647 855.5 650.5Q844 654 831.0 654.0Q818 654 772.0 643.0Q726 632 657 623V437H800L837 493Q848 509 861.5 509.0Q875 509 919.5 466.0Q964 423 964.0 414.0Q964 405 945 405H657V249H746L773 292Q778 299 783 299Q791 299 836.0 269.5Q881 240 881.0 230.5Q881 221 843 201V-48Q843 -63 844 -76L846 -97Q846 -109 808.0 -127.5Q770 -146 758 -146Q753 -146 753 -135V-52H480V-118Q480 -122 479.0 -125.0Q478 -128 458.0 -140.5Q438 -153 418.5 -158.0Q399 -163 394.5 -163.0Q390 -163 391 -153Q396 -119 396 -78V209Q396 251 393 294Q452 275 495 249H568V405H388Q361 405 346 398L325 442Q346 437 375 437H568ZM753 -21V218H480V-21ZM377 115Q227 -72 201 -132Q196 -143 189.0 -143.0Q182 -143 160.0 -115.0Q138 -87 124 -60Q170 -19 170 41V370H90Q75 370 58 364L31 409Q48 404 73 404H170L193 440Q202 453 211.5 453.0Q221 453 243 436L283 404Q301 389 301.0 379.0Q301 369 255 349V44L364 128Z"></path></g>
+    </symbol>
+    <symbol id="huaSmall" viewBox="0 0 100 100">
+      <g transform="translate(13.741 71.501) scale(0.07288 -0.07288)" fill="currentColor"><path d="M109 738Q203 706 251.0 671.5Q299 637 299 594Q299 568 285.0 539.5Q271 511 240 511Q233 511 228.0 517.0Q223 523 210.0 561.5Q197 600 171.0 638.0Q145 676 99 722ZM568 612Q437 600 353 603L350 627Q579 657 795 753Q825 726 850.0 699.0Q875 672 878.0 666.5Q881 661 881 656Q881 647 871 647Q867 647 855.5 650.5Q844 654 831.0 654.0Q818 654 772.0 643.0Q726 632 657 623V437H800L837 493Q848 509 861.5 509.0Q875 509 919.5 466.0Q964 423 964.0 414.0Q964 405 945 405H657V249H746L773 292Q778 299 783 299Q791 299 836.0 269.5Q881 240 881.0 230.5Q881 221 843 201V-48Q843 -63 844 -76L846 -97Q846 -109 808.0 -127.5Q770 -146 758 -146Q753 -146 753 -135V-52H480V-118Q480 -122 479.0 -125.0Q478 -128 458.0 -140.5Q438 -153 418.5 -158.0Q399 -163 394.5 -163.0Q390 -163 391 -153Q396 -119 396 -78V209Q396 251 393 294Q452 275 495 249H568V405H388Q361 405 346 398L325 442Q346 437 375 437H568ZM753 -21V218H480V-21ZM377 115Q227 -72 201 -132Q196 -143 189.0 -143.0Q182 -143 160.0 -115.0Q138 -87 124 -60Q170 -19 170 41V370H90Q75 370 58 364L31 409Q48 404 73 404H170L193 440Q202 453 211.5 453.0Q221 453 243 436L283 404Q301 389 301.0 379.0Q301 369 255 349V44L364 128Z"></path></g>
+    </symbol>
+  </defs>
+</svg>
+
+<div style="background:#f7f4ee;color:#241f1b;min-height:940px;padding:48px;box-sizing:border-box;display:flex;flex-direction:column;gap:28px;">
+
+  <div style="display:flex;justify-content:space-between;align-items:baseline;">
+    <div class="lbl">Icon &amp; exported assets</div>
+    <div class="lbl">512 &rarr; 16</div>
+  </div>
+
+  <div style="display:flex;gap:30px;align-items:center;">
+    <div class="tile" style="width:200px;height:200px;background:#2b2621;border-radius:22.5%;"><svg style="width:160px;height:160px;color:#b8873f"><use href="#hua"></use></svg></div>
+    <div class="tile" style="width:200px;height:200px;background:#b8873f;border-radius:22.5%;">
+      <svg style="width:160px;height:160px;color:#2b2621"><use href="#hua"></use></svg>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="lbl">Master</div>
+      <div class="cap" style="max-width:172px;text-wrap:pretty;">
+        Dark tile is primary. Glyph drawn as outlines, so nothing depends on
+        Songti being installed on the viewer's machine.
+      </div>
+    </div>
+  </div>
+
+  <div style="height:1px;background:#ddd5c8;"></div>
+
+  <div style="display:flex;flex-direction:column;gap:15px;">
+    <div class="lbl">True sizes &mdash; checked at actual pixels</div>
+    <div style="display:flex;align-items:flex-end;gap:24px;"><div style="display:flex;flex-direction:column;align-items:center;gap:8px;"><div class="tile" style="width:120px;height:120px;background:#2b2621;border-radius:22.5%;"><svg style="width:96px;height:96px;color:#b8873f"><use href="#hua"></use></svg></div><div class="cap">120</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:8px;"><div class="tile" style="width:87px;height:87px;background:#2b2621;border-radius:22.5%;"><svg style="width:70px;height:70px;color:#b8873f"><use href="#hua"></use></svg></div><div class="cap">87</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:8px;"><div class="tile" style="width:60px;height:60px;background:#2b2621;border-radius:22.5%;"><svg style="width:48px;height:48px;color:#b8873f"><use href="#hua"></use></svg></div><div class="cap">60</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:8px;"><div class="tile" style="width:40px;height:40px;background:#2b2621;border-radius:22.5%;"><svg style="width:30px;height:30px;color:#b8873f"><use href="#huaSmall"></use></svg></div><div class="cap">40 &middot; no ring</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:8px;"><div class="tile" style="width:29px;height:29px;background:#2b2621;border-radius:22.5%;"><svg style="width:22px;height:22px;color:#b8873f"><use href="#huaSmall"></use></svg></div><div class="cap">29 &middot; no ring</div></div></div>
+    <div class="cap" style="max-width:600px;text-wrap:pretty;">
+      话 is eight strokes. Inside the ring they merge below about 48px, so the
+      small variant drops the ring and gives the glyph the whole tile. This is
+      the real tradeoff of a character mark, and it is why two variants exist.
+    </div>
+  </div>
+
+  <div style="height:1px;background:#ddd5c8;"></div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div class="lbl">Files generated for the site</div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 26px;">
+      <div class="cap"><strong>logo.svg</strong> &mdash; horizontal lockup, outlined</div>
+      <div class="cap"><strong>favicon-16/32/48/64.png</strong></div>
+      <div class="cap"><strong>logo-on-dark.svg</strong> &mdash; for ink backgrounds</div>
+      <div class="cap"><strong>favicon.ico</strong> &mdash; 16/32/48 bundled</div>
+      <div class="cap"><strong>mark.svg</strong> / <strong>mark-small.svg</strong></div>
+      <div class="cap"><strong>apple-touch-icon.png</strong> &mdash; 180, square</div>
+      <div class="cap"><strong>icon-tile.svg</strong> &mdash; mark on ink tile</div>
+      <div class="cap"><strong>icon-512.png</strong>, <strong>mark-512-transparent.png</strong></div>
+      <div class="cap"><strong>og-card.png</strong> &mdash; 1200&times;630 link preview</div>
+      <div class="cap"><strong>make-assets.py</strong> &mdash; regenerates all of it</div>
+    </div>
+  </div>
+
+  <div style="border-left:2px solid #8f6829;padding:3px 0 3px 15px;">
+    <div class="cap" style="text-wrap:pretty;">
+      <strong style="color:#241f1b;font-weight:600;">The og-card matters most.</strong>
+      The brief's riskiest assumption is distribution &mdash; someone has to put
+      a link in front of a senior. That link lands in WhatsApp, and the
+      1200&times;630 card is what the helper sees before deciding to send it.
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
