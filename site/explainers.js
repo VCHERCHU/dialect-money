@@ -92,6 +92,138 @@ window.LIBRARY = {
     url: 'https://eservices.mas.gov.sg/fid/institution/print'
   },
 
+  /* ---------------------------------------------------------------
+     ART — one drawn situation per explainer.
+
+     This is what a viewer who cannot read uses instead of a title:
+     a man holding out a paper, a gift with a price tag, a coin stack
+     beside a clock. Every consumer draws it inside
+     <svg viewBox="0 0 120 80">, so the strings hold shapes only.
+
+     It lives here rather than in a page because all three pages need
+     it now. ask.html's own note says two pages is the point at which
+     duplication is still cheaper than a build and "a third would
+     change the answer" — this is the third.
+
+     Palette is fixed to the dark stage: mint #6fd3ad for her and for
+     the thing being explained, grey #a8a397 for whoever is selling,
+     amber #f0b46a for the catch, paper #fbf9f4 for documents. An
+     explainer with no entry falls back to 'ip-rider', which is the
+     wedge for all of them anyway.
+     --------------------------------------------------------------- */
+  art: {
+    'ip-rider':
+      '<circle cx="24" cy="24" r="10" fill="#a8a397"/>' +
+      '<rect x="12" y="38" width="24" height="34" rx="11" fill="#a8a397"/>' +
+      '<rect x="44" y="22" width="32" height="42" rx="3" fill="#fbf9f4"/>' +
+      '<rect x="49" y="30" width="22" height="3" rx="1.5" fill="#14140f"/>' +
+      '<rect x="49" y="38" width="22" height="3" rx="1.5" fill="#14140f"/>' +
+      '<rect x="49" y="46" width="13" height="3" rx="1.5" fill="#14140f"/>' +
+      '<circle cx="96" cy="23" r="11" fill="#6fd3ad"/>' +
+      '<rect x="82" y="39" width="28" height="33" rx="12" fill="#6fd3ad"/>',
+
+    'guaranteed-or-not':
+      '<rect x="20" y="16" width="34" height="52" rx="4" fill="#6fd3ad"/>' +
+      '<rect x="66" y="16" width="34" height="52" rx="4" fill="none" stroke="#f0b46a" stroke-width="3" stroke-dasharray="7 6"/>' +
+      '<rect x="27" y="30" width="20" height="4" rx="2" fill="#14140f"/>' +
+      '<rect x="27" y="42" width="14" height="4" rx="2" fill="#14140f"/>',
+
+    'fd-promo-rate':
+      '<ellipse cx="42" cy="60" rx="26" ry="8" fill="#6fd3ad"/>' +
+      '<ellipse cx="42" cy="50" rx="26" ry="8" fill="#6fd3ad"/>' +
+      '<ellipse cx="42" cy="40" rx="26" ry="8" fill="#fbf9f4"/>' +
+      '<circle cx="88" cy="30" r="18" fill="none" stroke="#f0b46a" stroke-width="3.4"/>' +
+      '<path d="M88 20 L88 30 L96 34" stroke="#f0b46a" stroke-width="3.4" stroke-linecap="round" fill="none"/>',
+
+    'free-gift':
+      '<rect x="26" y="32" width="48" height="36" rx="4" fill="#6fd3ad"/>' +
+      '<rect x="26" y="22" width="48" height="12" rx="4" fill="#fbf9f4"/>' +
+      '<rect x="45" y="22" width="10" height="46" fill="#14140f"/>' +
+      '<path d="M84 30 L102 30 L106 44 L88 50 Z" fill="#f0b46a"/>' +
+      '<circle cx="90" cy="35" r="2.6" fill="#14140f"/>',
+
+    'whole-life-vs-term':
+      '<path d="M8 44 a26 26 0 0 1 52 0 Z" fill="#6fd3ad"/>' +
+      '<path d="M34 44 L34 68" stroke="#6fd3ad" stroke-width="4" stroke-linecap="round"/>' +
+      '<path d="M64 44 a24 24 0 0 1 48 0 Z" fill="none" stroke="#f0b46a" stroke-width="3.2" stroke-dasharray="8 6"/>' +
+      '<path d="M88 44 L88 66" stroke="#f0b46a" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 5"/>',
+
+    'how-the-adviser-is-paid':
+      '<circle cx="46" cy="24" r="12" fill="#a8a397"/>' +
+      '<rect x="30" y="42" width="32" height="30" rx="12" fill="#a8a397"/>' +
+      '<circle cx="86" cy="46" r="15" fill="#f0b46a"/>' +
+      '<circle cx="86" cy="46" r="8" fill="none" stroke="#14140f" stroke-width="2.6"/>' +
+      '<path d="M62 50 L72 47" stroke="#a8a397" stroke-width="6" stroke-linecap="round"/>'
+  },
+
+  /* ---------------------------------------------------------------
+     SYM / BEATS — a picture per LINE, not per explainer.
+
+     `art` above answers "what is this explainer about" on a card or a
+     title screen. This answers "what is being said right now", so a
+     viewer who reads nothing still follows the argument: someone is
+     selling you this, you pay every year, the payment rises with age,
+     more claims push it up again, so know what you are buying.
+
+     BEATS[id] is line-for-line with script (and with hokkien.script,
+     which is the same length by construction). The appended MAS line
+     has no entry and uses SYM.shield.
+     --------------------------------------------------------------- */
+  sym: {
+    'sell':
+      '<circle cx="24" cy="24" r="10" fill="#a8a397"/><rect x="12" y="38" width="24" height="34" rx="11" fill="#a8a397"/><rect x="44" y="22" width="32" height="42" rx="3" fill="#fbf9f4"/><rect x="49" y="30" width="22" height="3" rx="1.5" fill="#14140f"/><rect x="49" y="38" width="22" height="3" rx="1.5" fill="#14140f"/><rect x="49" y="46" width="13" height="3" rx="1.5" fill="#14140f"/><circle cx="96" cy="23" r="11" fill="#6fd3ad"/><rect x="82" y="39" width="28" height="33" rx="12" fill="#6fd3ad"/>',
+    'coin-out':
+      '<circle cx="38" cy="40" r="19" fill="#f0b46a"/><circle cx="38" cy="40" r="10" fill="none" stroke="#14140f" stroke-width="3.2"/><path d="M66 40 L102 40" stroke="#fbf9f4" stroke-width="4.5" stroke-linecap="round"/><path d="M91 30 L102 40 L91 50" stroke="#fbf9f4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    'coin-up':
+      '<circle cx="30" cy="50" r="16" fill="#f0b46a"/><circle cx="30" cy="50" r="8" fill="none" stroke="#14140f" stroke-width="3"/><path d="M62 62 L62 24" stroke="#f0b46a" stroke-width="5" stroke-linecap="round"/><path d="M52 34 L62 24 L72 34" stroke="#f0b46a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="86" y="18" width="14" height="46" rx="3" fill="#6fd3ad"/>',
+    'crowd':
+      '<circle cx="20" cy="30" r="8" fill="#a8a397"/><rect x="10" y="42" width="20" height="26" rx="9" fill="#a8a397"/><circle cx="46" cy="26" r="9" fill="#a8a397"/><rect x="35" y="39" width="22" height="29" rx="10" fill="#a8a397"/><circle cx="74" cy="30" r="8" fill="#a8a397"/><rect x="64" y="42" width="20" height="26" rx="9" fill="#a8a397"/><circle cx="100" cy="26" r="9" fill="#f0b46a"/><rect x="89" y="39" width="22" height="29" rx="10" fill="#f0b46a"/>',
+    'think':
+      '<circle cx="28" cy="32" r="13" fill="#6fd3ad"/><rect x="12" y="50" width="32" height="24" rx="12" fill="#6fd3ad"/><path d="M58 8 L108 8 a5 5 0 0 1 5 5 L113 36 a5 5 0 0 1 -5 5 L72 41 L62 50 L64 41 L58 41 a5 5 0 0 1 -5 -5 L53 13 a5 5 0 0 1 5 -5 Z" fill="#fbf9f4"/><path d="M78 19 a5.4 5.4 0 1 1 5.4 5.4 L83.4 28" stroke="#14140f" stroke-width="3.2" stroke-linecap="round" fill="none"/><circle cx="83.4" cy="33" r="2.1" fill="#14140f"/>',
+    'two-cols':
+      '<rect x="20" y="16" width="34" height="52" rx="4" fill="#6fd3ad"/><rect x="66" y="16" width="34" height="52" rx="4" fill="none" stroke="#f0b46a" stroke-width="3" stroke-dasharray="7 6"/><rect x="27" y="30" width="20" height="4" rx="2" fill="#14140f"/><rect x="27" y="42" width="14" height="4" rx="2" fill="#14140f"/>',
+    'estimate':
+      '<circle cx="40" cy="40" r="19" fill="none" stroke="#f0b46a" stroke-width="3.6" stroke-dasharray="8 6"/><path d="M78 22 L78 58" stroke="#a8a397" stroke-width="3.6" stroke-linecap="round"/><path d="M69 31 L78 22 L87 31" stroke="#a8a397" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M69 49 L78 58 L87 49" stroke="#a8a397" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    'ask':
+      '<circle cx="20" cy="24" r="11" fill="#6fd3ad"/><rect x="7" y="38" width="26" height="30" rx="11" fill="#6fd3ad"/><path d="M42 10 L86 10 a5 5 0 0 1 5 5 L91 34 a5 5 0 0 1 -5 5 L56 39 L46 48 L48 39 L42 39 a5 5 0 0 1 -5 -5 L37 15 a5 5 0 0 1 5 -5 Z" fill="#fbf9f4"/><path d="M60 19 a4.8 4.8 0 1 1 4.8 4.8 L64.8 27" stroke="#14140f" stroke-width="2.9" stroke-linecap="round" fill="none"/><circle cx="64.8" cy="32" r="1.9" fill="#14140f"/><path d="M98 26 L110 26 M105.5 21 L110 26 L105.5 31" stroke="#a8a397" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="112" cy="52" r="9" fill="#a8a397"/>',
+    'poster-rate':
+      '<rect x="22" y="12" width="76" height="46" rx="4" fill="#fbf9f4"/><rect x="56" y="58" width="8" height="18" fill="#a8a397"/><path d="M38 48 L38 28" stroke="#f0b46a" stroke-width="5" stroke-linecap="round"/><path d="M31 35 L38 28 L45 35" stroke="#f0b46a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="64" cy="28" r="5" fill="none" stroke="#14140f" stroke-width="3"/><circle cx="82" cy="44" r="5" fill="none" stroke="#14140f" stroke-width="3"/><path d="M60 48 L86 24" stroke="#14140f" stroke-width="3" stroke-linecap="round"/>',
+    'clock':
+      '<circle cx="60" cy="40" r="26" fill="none" stroke="#6fd3ad" stroke-width="5"/><path d="M60 22 L60 40 L74 48" stroke="#6fd3ad" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M96 18 L104 10 M96 62 L104 70" stroke="#f0b46a" stroke-width="4" stroke-linecap="round"/>',
+    'lock':
+      '<circle cx="36" cy="46" r="17" fill="#f0b46a"/><circle cx="36" cy="46" r="9" fill="none" stroke="#14140f" stroke-width="3"/><rect x="70" y="38" width="36" height="28" rx="5" fill="#6fd3ad"/><path d="M77 38 L77 27 a11 11 0 0 1 22 0 L99 38" stroke="#6fd3ad" stroke-width="4.6" fill="none"/><circle cx="88" cy="52" r="4.2" fill="#14140f"/>',
+    'percent-drop':
+      '<path d="M14 22 L44 22 L44 38 L74 38 L74 54 L100 54" stroke="#f0b46a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M91 45 L100 54 L91 63" stroke="#f0b46a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    'gift':
+      '<rect x="30" y="32" width="52" height="38" rx="4" fill="#6fd3ad"/><rect x="30" y="21" width="52" height="13" rx="4" fill="#fbf9f4"/><rect x="50" y="21" width="11" height="49" fill="#14140f"/>',
+    'gift-ok':
+      '<rect x="22" y="32" width="50" height="38" rx="4" fill="#6fd3ad"/><rect x="22" y="21" width="50" height="13" rx="4" fill="#fbf9f4"/><rect x="41" y="21" width="11" height="49" fill="#14140f"/><path d="M84 44 L94 54 L110 34" stroke="#f0b46a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    'gift-price':
+      '<rect x="24" y="32" width="48" height="36" rx="4" fill="#6fd3ad"/><rect x="24" y="21" width="48" height="13" rx="4" fill="#fbf9f4"/><rect x="43" y="21" width="10" height="47" fill="#14140f"/><path d="M82 28 L104 28 L108 44 L86 50 Z" fill="#f0b46a"/><circle cx="89" cy="34" r="2.8" fill="#14140f"/>',
+    'years':
+      '<rect x="12" y="28" width="16" height="32" rx="2.5" fill="#6fd3ad"/><rect x="32" y="28" width="16" height="32" rx="2.5" fill="#6fd3ad"/><rect x="52" y="28" width="16" height="32" rx="2.5" fill="#6fd3ad"/><rect x="72" y="28" width="16" height="32" rx="2.5" fill="#6fd3ad"/><path d="M98 40 L112 40 L114 52 L100 56 Z" fill="#f0b46a"/>',
+    'umbrellas':
+      '<path d="M8 44 a26 26 0 0 1 52 0 Z" fill="#6fd3ad"/><path d="M34 44 L34 68" stroke="#6fd3ad" stroke-width="4" stroke-linecap="round"/><path d="M64 44 a24 24 0 0 1 48 0 Z" fill="none" stroke="#f0b46a" stroke-width="3.2" stroke-dasharray="8 6"/><path d="M88 44 L88 66" stroke="#f0b46a" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 5"/>',
+    'coin-compare':
+      '<circle cx="36" cy="40" r="23" fill="#f0b46a"/><circle cx="36" cy="40" r="12" fill="none" stroke="#14140f" stroke-width="3.4"/><circle cx="92" cy="48" r="13" fill="#6fd3ad"/><circle cx="92" cy="48" r="6.5" fill="none" stroke="#14140f" stroke-width="2.8"/>',
+    'coin-save':
+      '<rect x="22" y="34" width="48" height="34" rx="6" fill="#6fd3ad"/><rect x="37" y="26" width="18" height="9" rx="3.5" fill="#fbf9f4"/><circle cx="46" cy="52" r="9" fill="#f0b46a"/><path d="M90 58 L90 32" stroke="#a8a397" stroke-width="4" stroke-linecap="round" stroke-dasharray="7 5"/><path d="M82 39 L90 31 L98 39" stroke="#a8a397" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    'commission':
+      '<circle cx="44" cy="24" r="12" fill="#a8a397"/><rect x="28" y="42" width="32" height="30" rx="12" fill="#a8a397"/><circle cx="88" cy="46" r="15" fill="#f0b46a"/><circle cx="88" cy="46" r="8" fill="none" stroke="#14140f" stroke-width="2.6"/><path d="M62 50 L74 47" stroke="#a8a397" stroke-width="6" stroke-linecap="round"/>',
+    'commission-high':
+      '<circle cx="30" cy="28" r="12" fill="#a8a397"/><rect x="14" y="45" width="32" height="27" rx="12" fill="#a8a397"/><circle cx="70" cy="56" r="11" fill="#f0b46a"/><circle cx="96" cy="42" r="15" fill="#f0b46a"/><path d="M58 28 L58 12" stroke="#f0b46a" stroke-width="4" stroke-linecap="round"/><path d="M51 19 L58 12 L65 19" stroke="#f0b46a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    'shield':
+      '<path d="M60 8 L96 22 L96 42 c0 18 -15 30 -36 34 c-21 -4 -36 -16 -36 -34 L24 22 Z" fill="none" stroke="#f0b46a" stroke-width="5"/><circle cx="54" cy="38" r="13" fill="none" stroke="#f0b46a" stroke-width="5"/><path d="M64 48 L76 60" stroke="#f0b46a" stroke-width="5" stroke-linecap="round"/>'
+  },
+
+  beats: {
+    'ip-rider': ['sell', 'coin-out', 'coin-up', 'crowd', 'think'],
+    'guaranteed-or-not': ['two-cols', 'estimate', 'sell', 'ask'],
+    'fd-promo-rate': ['poster-rate', 'clock', 'lock', 'percent-drop', 'think'],
+    'free-gift': ['gift', 'gift-ok', 'gift-price', 'years', 'ask'],
+    'whole-life-vs-term': ['umbrellas', 'coin-compare', 'coin-save', 'think'],
+    'how-the-adviser-is-paid': ['commission', 'commission-high', 'ask']
+  },
   lastCrawl: '2026-08-26',
 
   explainers: [

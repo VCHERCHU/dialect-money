@@ -116,6 +116,24 @@
   /* ---- the picture that replaces a read title ----
      One drawn situation per explainer. She recognises "a man is showing me a
      paper" without reading anything. */
+  /* The beat picture is now the main event, not an ornament above the text:
+     it gets the space the caption used to have. */
+  .beat { align-self: center; margin: 0 0 1.2rem; }
+  .beat svg { display: block; width: min(84vw, 340px); height: auto; }
+
+  /* Captions are OFF by default. She cannot read them, and leaving them on
+     made the screen look like a page. The helper turns them on from the
+     controls; screen readers get the line regardless, from .sr below. */
+  .cap { margin: 0; }
+  .cap[hidden] { display: none; }
+
+  /* Present for assistive tech, invisible on screen — so going wordless
+     never costs a screen-reader user the script. */
+  .sr {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+
   .art { align-self: flex-start; margin: 0 0 1.6rem; }
   .art svg { display: block; width: min(72vw, 290px); height: auto; }
   .art-sm svg { width: 54px; }
@@ -300,6 +318,7 @@
     <button class="ctl" type="button" id="prev" aria-label="上一句"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5 L8 12 L18 19 Z" fill="currentColor"></path><rect x="4" y="5" width="3" height="14" rx="1.5" fill="currentColor"></rect></svg></button>
     <button class="ctl main" type="button" id="toggle" aria-label="停"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4.5" height="16" rx="2.2" fill="currentColor"></rect><rect x="13.5" y="4" width="4.5" height="16" rx="2.2" fill="currentColor"></rect></svg></button>
     <button class="ctl" type="button" id="next" aria-label="下一句"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5 L16 12 L6 19 Z" fill="currentColor"></path><rect x="17" y="5" width="3" height="14" rx="1.5" fill="currentColor"></rect></svg></button>
+    <button class="ctl" type="button" id="caps" aria-pressed="false" aria-label="字幕 Captions"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3" stroke="currentColor" stroke-width="2" fill="none"/><path d="M7 11 L11 11 M7 15 L15 15 M14 11 L17 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     <button class="ctl" type="button" id="slow" aria-pressed="false" aria-label="慢一点"><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 19 a11 8 0 0 1 22 0 Z" fill="currentColor"></path><path d="M11 19 a5 5.6 0 0 1 4 -6.4" stroke="#14140f" stroke-width="1.5" fill="none"></path><path d="M19 19 a5 5.6 0 0 0 -4 -6.4" stroke="#14140f" stroke-width="1.5" fill="none"></path><path d="M25.6 15.6 a4 4 0 0 1 4.6 2.9 a3.4 3.4 0 0 1 -4.2 2.3 Z" fill="currentColor"></path><rect x="6.5" y="19" width="3.6" height="5.4" rx="1.8" fill="currentColor"></rect><rect x="19" y="19" width="3.6" height="5.4" rx="1.8" fill="currentColor"></rect></svg></button>
   </div>
 
@@ -405,54 +424,23 @@
      line. Nobody who speaks Hokkien has checked this text. */
   var draftDialect = useHokkien && !hok.checked ? dialect.zh : null;
 
-  /* ---- one drawn situation per explainer -------------------------
-     This is what replaces a title she cannot read. Keyed by explainer
-     id; a new explainer with no picture falls back to the selling
-     scene, which is the wedge for all of them anyway.
+  /* ---- the picture that replaces a read title ------------------
+     The set moved to explainers.js when ask.html and index.html
+     needed it too — see the note there. A missing entry falls back
+     to the selling scene rather than rendering an empty frame.
      --------------------------------------------------------------- */
-  var ART = {
-    'ip-rider':
-      '<circle cx="24" cy="24" r="10" fill="#a8a397"/>' +
-      '<rect x="12" y="38" width="24" height="34" rx="11" fill="#a8a397"/>' +
-      '<rect x="44" y="22" width="32" height="42" rx="3" fill="#fbf9f4"/>' +
-      '<rect x="49" y="30" width="22" height="3" rx="1.5" fill="#14140f"/>' +
-      '<rect x="49" y="38" width="22" height="3" rx="1.5" fill="#14140f"/>' +
-      '<rect x="49" y="46" width="13" height="3" rx="1.5" fill="#14140f"/>' +
-      '<circle cx="96" cy="23" r="11" fill="#6fd3ad"/>' +
-      '<rect x="82" y="39" width="28" height="33" rx="12" fill="#6fd3ad"/>',
-    'guaranteed-or-not':
-      '<rect x="20" y="16" width="34" height="52" rx="4" fill="#6fd3ad"/>' +
-      '<rect x="66" y="16" width="34" height="52" rx="4" fill="none" stroke="#f0b46a" stroke-width="3" stroke-dasharray="7 6"/>' +
-      '<rect x="27" y="30" width="20" height="4" rx="2" fill="#14140f"/>' +
-      '<rect x="27" y="42" width="14" height="4" rx="2" fill="#14140f"/>',
-    'fd-promo-rate':
-      '<ellipse cx="42" cy="60" rx="26" ry="8" fill="#6fd3ad"/>' +
-      '<ellipse cx="42" cy="50" rx="26" ry="8" fill="#6fd3ad"/>' +
-      '<ellipse cx="42" cy="40" rx="26" ry="8" fill="#fbf9f4"/>' +
-      '<circle cx="88" cy="30" r="18" fill="none" stroke="#f0b46a" stroke-width="3.4"/>' +
-      '<path d="M88 20 L88 30 L96 34" stroke="#f0b46a" stroke-width="3.4" stroke-linecap="round" fill="none"/>',
-    'free-gift':
-      '<rect x="26" y="32" width="48" height="36" rx="4" fill="#6fd3ad"/>' +
-      '<rect x="26" y="22" width="48" height="12" rx="4" fill="#fbf9f4"/>' +
-      '<rect x="45" y="22" width="10" height="46" fill="#14140f"/>' +
-      '<path d="M84 30 L102 30 L106 44 L88 50 Z" fill="#f0b46a"/>' +
-      '<circle cx="90" cy="35" r="2.6" fill="#14140f"/>',
-    'whole-life-vs-term':
-      '<path d="M8 44 a26 26 0 0 1 52 0 Z" fill="#6fd3ad"/>' +
-      '<path d="M34 44 L34 68" stroke="#6fd3ad" stroke-width="4" stroke-linecap="round"/>' +
-      '<path d="M64 44 a24 24 0 0 1 48 0 Z" fill="none" stroke="#f0b46a" stroke-width="3.2" stroke-dasharray="8 6"/>' +
-      '<path d="M88 44 L88 66" stroke="#f0b46a" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 5"/>',
-    'how-the-adviser-is-paid':
-      '<circle cx="46" cy="24" r="12" fill="#a8a397"/>' +
-      '<rect x="30" y="42" width="32" height="30" rx="12" fill="#a8a397"/>' +
-      '<circle cx="86" cy="46" r="15" fill="#f0b46a"/>' +
-      '<circle cx="86" cy="46" r="8" fill="none" stroke="#14140f" stroke-width="2.6"/>' +
-      '<path d="M62 50 L72 47" stroke="#a8a397" stroke-width="6" stroke-linecap="round"/>'
-  };
+  /* The picture for the line being spoken. The appended MAS line has no
+     beat of its own and always gets the shield. */
+  function beatSvg(n) {
+    var list = (L.beats && L.beats[item.id]) || [];
+    var key = n < list.length ? list[n] : 'shield';
+    var d = (L.sym && (L.sym[key] || L.sym.shield)) || '';
+    return '<svg viewBox="0 0 120 80" aria-hidden="true">' + d + '</svg>';
+  }
 
   function artSvg() {
-    return '<svg viewBox="0 0 120 80" aria-hidden="true">' +
-           (ART[item.id] || ART['ip-rider']) + '</svg>';
+    var d = (L.art && (L.art[item.id] || L.art['ip-rider'])) || '';
+    return '<svg viewBox="0 0 120 80" aria-hidden="true">' + d + '</svg>';
   }
 
   /* Six bars, so she can SEE that it is talking. */
@@ -473,6 +461,7 @@
   var paused = false;
   var started = false;
   var slow = false;
+  var caps = false;        // captions off: pictures carry the line
   var timer = null;
   var clipAudio = null;   // the pre-rendered clip currently playing, if any
 
@@ -552,8 +541,9 @@
        breathing target, and the outlined bars when there is no voice yet. */
     stage.innerHTML =
       '<span class="art">' + artSvg() + '</span>' +
-      '<h1 class="title-zh" style="font-size:clamp(1.25rem,4.6vw,1.7rem)">' +
-        esc(useHokkien ? (hok.title || item.titleZh) : item.titleZh) + '</h1>' +
+      /* The title is in the document title and available to screen readers;
+         on screen the picture says it. */
+      '<h1 class="sr">' + esc(useHokkien ? (hok.title || item.titleZh) : item.titleZh) + '</h1>' +
       '<span class="start-wrap">' +
         (narrated ? '<span class="halo"></span><span class="halo b"></span>' : '') +
         '<span class="start-btn">' +
@@ -581,8 +571,14 @@
       '<span class="sound' + (paused ? ' still' : '') + '" aria-hidden="true">' +
         SPEAKER + BARS +
       '</span>' +
-      (i > 0 ? '<p class="line-prev" aria-hidden="true">' + esc(script[i - 1]) + '</p>' : '') +
-      '<p class="line' + (paused ? ' dim' : '') + '">' + esc(script[i]) + '</p>' +
+      '<span class="beat">' + beatSvg(i) + '</span>' +
+      /* The line always reaches assistive tech; it only reaches the screen
+         when the helper asks for it. */
+      '<p class="sr">' + esc(script[i]) + '</p>' +
+      '<div class="cap"' + (caps ? '' : ' hidden') + ' aria-hidden="true">' +
+        (i > 0 ? '<p class="line-prev">' + esc(script[i - 1]) + '</p>' : '') +
+        '<p class="line' + (paused ? ' dim' : '') + '">' + esc(script[i]) + '</p>' +
+      '</div>' +
       (paused
         ? '<span class="resume-mark" aria-hidden="true"><div>' +
           '<svg width="52" height="52" viewBox="0 0 24 24"><path d="M8 4 L20 12 L8 20 Z" fill="#f0b46a"/></svg>' +
@@ -627,8 +623,11 @@
     /* The questions stay as words — they ARE the outcome. Numbering them lets
        her point at one instead of reading all three. Every exit is a shape;
        the label survives only for screen readers, via aria-label. */
+    /* The questions are the outcome, so they may not simply disappear with
+       the captions: with captions off they are SPOKEN instead (see below),
+       and they stay in the DOM for screen readers either way. */
     endCard.innerHTML =
-      '<ul class="qs">' +
+      '<ul class="qs' + (caps ? '' : ' sr') + '">' +
         item.ask.concat([L.verify.ask]).map(function (q, n) {
           return '<li><b>' + (n + 1) + '</b><span>' + esc(q) + '</span></li>';
         }).join('') +
@@ -667,6 +666,11 @@
       '<p class="src">来源 Source: <a href="' + esc(item.source.url) + '" target="_blank" rel="noopener">' +
         esc(item.source.name) + ' — ' + esc(item.source.page) + '</a> · 更新 ' + esc(item.published) +
       '</p>';
+
+    /* With the captions off, nothing on screen states the questions — so say
+       them. This is the one place the video must not go silent: the whole
+       point is that she leaves able to ask one. */
+    if (!caps) { speakAsks(); }
 
     /* Share the video link, not the library — the helper who forwards this
        wants her to land on a play button, not on a list. */
@@ -768,6 +772,21 @@
     }
   }
 
+  /* The three questions, read aloud. item.ask is written Chinese in every
+     dialect, so this is the browser voice even where the lines had real
+     clips — an honest stand-in rather than silence. */
+  function speakAsks() {
+    if (!synth) { return; }
+    var mine = gen;
+    item.ask.concat([L.verify.ask]).forEach(function (q) {
+      if (mine !== gen) { return; }
+      var u = new SpeechSynthesisUtterance(q);
+      u.lang = dialect.ttsLang;
+      u.rate = slow ? 0.7 : 0.85;
+      synth.speak(u);
+    });
+  }
+
   function syncToggle() {
     /* The shape says which way it will go, so nothing is written under it. */
     toggle.innerHTML = paused
@@ -818,6 +837,13 @@
   document.getElementById('next').addEventListener('click', function (e) {
     e.stopPropagation();
     go(i + 1);
+  });
+  document.getElementById('caps').addEventListener('click', function (e) {
+    e.stopPropagation();
+    caps = !caps;
+    this.setAttribute('aria-pressed', caps ? 'true' : 'false');
+    if (i >= 0 && i < script.length) { drawLine(); }
+    else if (i >= script.length) { drawEnd(); }
   });
   document.getElementById('slow').addEventListener('click', function (e) {
     e.stopPropagation();
