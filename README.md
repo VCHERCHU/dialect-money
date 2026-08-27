@@ -55,6 +55,22 @@ What is honestly faked, and labelled as such in the UI:
 - **The scripts.** Drafts, no specific rates or figures quoted, and not through
   the human accuracy check the problem statement requires.
 
+## Deploy
+
+Live at <https://vcherchu.github.io/dialect-money/>.
+
+Pushing to `develop` or `main` under `site/**` deploys it — that is the whole
+release process. `.github/workflows/deploy-pages.yml` publishes `./site` as the
+site root, so a README-only commit produces no deploy run. That is expected, not
+a broken pipeline.
+
+`develop` is in the trigger list only because the prototype lives there. Remove
+it when develop merges, or the two branches will overwrite each other's deploys.
+
+```bash
+gh run list --repo VCHERCHU/dialect-money --workflow deploy-pages.yml --limit 1
+```
+
 ## The shape of the idea
 
 A site that crawls **whitelisted sources only** (CPF, MAS, MoneySense, IRAS, MOF,
