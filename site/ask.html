@@ -165,7 +165,7 @@
     Mandarin or Cantonese voice. Real dialect in and out is the MERaLiON strand of
     this project, and this page is the thing waiting on it — the interaction is
     real, the language is not yet.
-    Answers are written by <b>qwen3.7-plus</b> through a local proxy that holds the API
+    Answers are written by <b>glm-5.3-flash</b> through a local proxy that holds the API
     key — a key in this page would be readable by anyone. With no proxy running,
     the page falls back to keyword retrieval and says so.
   </div>
@@ -200,7 +200,7 @@
         MoneySense, IRAS, MOF, gov.sg.</li>
       <li><b>Every answer names its source</b> and links to it.</li>
       <li><b>It answers twice.</b> The explainer is read out immediately — already
-        human-drafted and sourced — and qwen3.7-plus's clearer version streams in line by
+        human-drafted and sourced — and glm-5.3-flash's clearer version streams in line by
         line to replace it. She never waits in silence, and the model is an
         improvement rather than a gate. If she is still mid-sentence when the refined
         version lands, the audio is not swapped under her: a button offers it.</li>
@@ -212,7 +212,7 @@
     </ul>
     <p>
       Retrieval is keyword scoring, and it decides what the model is allowed to
-      see. qwen3.7-plus then answers from those passages only, under a system prompt
+      see. glm-5.3-flash then answers from those passages only, under a system prompt
       that forbids naming a figure absent from them, forbids recommending
       anything, and requires the literal token NO_ANSWER when the passages do not
       cover the question. Retrieval finding nothing skips the model entirely —
@@ -270,7 +270,7 @@
 
   /* ---- speaking ---- */
   /* `speaking` gates the refined answer. If she is still listening to the
-     verbatim explainer when qwen3.7-plus lands, swapping the audio mid-sentence is
+     verbatim explainer when glm-5.3-flash lands, swapping the audio mid-sentence is
      worse than letting her finish and offering a replay.
 
      `highlightValid` goes false when the panel is repainted while speech is
@@ -445,10 +445,10 @@
     var box = document.getElementById('answer');
 
     var badge =
-      o.origin === 'stream'  ? 'qwen3.7-plus 正在讲…… · answering line by line, from the cited source only' :
-      o.origin === 'llm'     ? 'qwen3.7-plus 讲得更清楚了 · refined by qwen3.7-plus, from the cited source only' :
+      o.origin === 'stream'  ? 'glm-5.3-flash 正在讲…… · answering line by line, from the cited source only' :
+      o.origin === 'llm'     ? 'glm-5.3-flash 讲得更清楚了 · refined by glm-5.3-flash, from the cited source only' :
       o.origin === 'offline' ? '就念这个说明 · the explainer, verbatim — no model involved' :
-      o.refining             ? '先念这个说明…… · reading the explainer now, asking qwen3.7-plus for a clearer version' :
+      o.refining             ? '先念这个说明…… · reading the explainer now, asking glm-5.3-flash for a clearer version' :
                                '这个说明 · the explainer, verbatim';
 
     /* Once refined text is on screen while older audio is still playing, the
@@ -462,7 +462,7 @@
         '<h2>' + esc(top.titleZh) + '</h2>' +
         (o.caution
           ? '<p class="caution">这个可能不是你要问的。下面是我有的、最接近的说明。' +
-            '<span>qwen3.7-plus judged the retrieved passage does not answer your question, so nothing was ' +
+            '<span>glm-5.3-flash judged the retrieved passage does not answer your question, so nothing was ' +
             'rewritten. This is the source text, unchanged.</span></p>'
           : '') +
         '<ul class="lines">' +

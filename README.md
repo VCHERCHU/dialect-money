@@ -71,7 +71,7 @@ How an answer is produced:
 3. **Speak first.** The retrieved explainer is read out immediately, in under a
    second. It is already human-drafted and sourced, so there is no reason to make
    her wait for a model to approve it.
-4. **qwen3.7-plus refines, streaming.** It answers from those passages only, under a
+4. **glm-5.3-flash refines, streaming.** It answers from those passages only, under a
    system prompt that forbids any figure not in them, forbids recommending
    anything, and requires the literal token `NO_ANSWER` when they don't cover the
    question. The proxy streams newline-delimited JSON, one event per line, and
@@ -93,25 +93,32 @@ cannot run the proxy, so the deployed page always uses the keyword fallback.
 
 Rough edges worth knowing:
 
-- **Streaming did not fix the wait, and was never going to.** Measured against the
-  same rider question: the first line arrives at 20.0s and the whole answer is
-  done by 21.9s. The models think for ~18 seconds and then emit everything in
-  about one. Streaming buys roughly 2 seconds of a 22-second wait; **reading the
-  explainer first is what actually removes her wait.** Keep both, but do not
-  mistake which one is load-bearing.
+- **Streaming did not fix the wait, and was never going to.** Every model here
+  thinks for seconds and then emits the whole answer inside about one. Streamed on
+  the same rider question: `kimi-k3` first line at 20.0s, done 21.9s;
+  `glm-5.3-flash` first line at 10.2s, done 11.6s. Streaming buys a second or two
+  of a ten-to-twenty-second wait. **Reading the explainer first is what actually
+  removes her wait.** Keep both, but do not mistake which one is load-bearing.
 - **Model choice moves the number more than streaming does.** Same prompt,
   one-shot, measured on this endpoint:
 
   | Model | Time | Notes |
   | --- | --- | --- |
-  | `glm-5.3-flash` | 13.4s | fastest measured, but writes `问：` instead of `ASK:` |
+  | `glm-5.3-flash` | 13.4s | **current default** — fastest measured |
   | `deepseek-v4-flash` | 14.7s | |
-  | `qwen3.7-plus` | 17.0s | current default; obeys `ASK:` |
+  | `qwen3.7-plus` | 17.0s | most consistent separator |
   | `kimi-k3` | 20.4s | |
 
-  Swap with `OPENCODE_MODEL` in `.env`. The marker regex accepts `ASK:`, `问：` and
-  `问题：` precisely because a swap otherwise turns her follow-up questions into
-  spoken answer lines.
+  Swap with `OPENCODE_MODEL` in `.env`.
+- **Telling the questions apart from the answer is the fragile seam.** Asking for
+  one `ASK:` separator line was not robust: `glm-5.3-flash` alternates between
+  `问：` and `ASK:` between runs and sometimes omits it, and one observed run
+  produced an answer with the questions silently swallowed by the five-line cap —
+  no error, just the most valuable part of the product missing. The prompt now
+  asks for a `问:` prefix on *every* question line, and the parser accepts either
+  shape. Per-line prefixes also survive streaming, where a line already spoken
+  cannot be reclassified after the fact. Verified 3/3 runs on `glm-5.3-flash`, in
+  both streaming and one-shot mode.
 - **The spoken line and the highlighted line can diverge.** When refined text
   replaces verbatim text under live speech, the words being spoken no longer match
   what is on screen, so line highlighting switches off rather than pointing at the

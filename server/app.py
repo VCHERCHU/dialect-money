@@ -13,7 +13,7 @@ Config comes from .env in the repo root (gitignored):
 
     OPENCODE_API_KEY=sk-...
     OPENCODE_BASE_URL=https://opencode.ai/zen/go/v1
-    OPENCODE_MODEL=qwen3.7-plus
+    OPENCODE_MODEL=glm-5.3-flash
 
 TWO MODES
     POST /api/ask with {"stream": true} answers as newline-delimited JSON, one
@@ -61,12 +61,21 @@ REFUSAL = "NO_ANSWER"
 MAX_LINES = 5
 MAX_ASKS = 3
 
-# Matches the line that separates the answer from the questions she can ask.
-# The model is a .env knob, and they do not all obey the literal marker:
-# qwen3.7-plus writes "ASK:", glm-5.3-flash writes "问：". Missing the marker is not a
-# harmless parse slip -- the questions would be spoken to her as if they were the
-# answer.
+# Telling the questions apart from the answer is the fragile seam here, and
+# getting it wrong is not cosmetic: an unrecognised separator turns her follow-up
+# questions into spoken answer lines, or -- once the answer cap is full --
+# silently drops them, which is how the most useful part of the product
+# disappears without an error.
+#
+# The model is a .env knob and they do not agree on the separator. glm-5.3-flash
+# alternates between "问：" and "ASK:" across runs and sometimes omits it
+# entirely; kimi-k3 and qwen3.7-plus write "ASK:" reliably. So the prompt asks for
+# a per-line prefix rather than a one-off separator line, and both shapes are
+# accepted: a whole line that is only the marker, or a marker prefixing each
+# question. Per-line prefixes also survive streaming, where a line already
+# emitted cannot be reclassified after the fact.
 ASK_MARKER = re.compile(r"^\s*(ASK|问|问题)\s*[:：]\s*$", re.IGNORECASE)
+ASK_PREFIX = re.compile(r"^\s*(ASK|问|问题)\s*[:：]\s*(?=\S)", re.IGNORECASE)
 
 SYSTEM = """You answer money questions for a Singaporean senior in her 70s. She speaks {dialect} and reads very little English. Someone is often trying to sell her something.
 
@@ -75,7 +84,7 @@ RULES
 2. Never recommend a product, never tell her what to buy, never say whether something is worth it. Explain what is being sold to her so she can judge.
 3. Never state a figure, rate, percentage or scheme name that is not in the source material. If she asks for a number that is not there, say you do not have it.
 4. Reply in simple Chinese. Short sentences, one idea per line, at most 5 lines. No greetings, no sign-off, no markdown.
-5. Then a line containing only ASK: followed by up to 3 questions she can put to the salesperson, one per line.
+5. Then up to 3 questions she can put to the salesperson. Put each question on its own line and begin every one of those lines with 问: -- including the first. Do not write a heading, and do not number them.
 
 SOURCE MATERIAL
 {context}"""
@@ -108,7 +117,7 @@ def open_upstream(question, dialect, passages, stream):
     """Return the open upstream response. Caller closes it."""
     key = os.environ.get("OPENCODE_API_KEY")
     base = os.environ.get("OPENCODE_BASE_URL", "https://opencode.ai/zen/go/v1")
-    model = os.environ.get("OPENCODE_MODEL", "qwen3.7-plus")
+    model = os.environ.get("OPENCODE_MODEL", "glm-5.3-flash")
     if not key:
         raise RuntimeError("OPENCODE_API_KEY is not set -- copy .env.example to .env")
 
@@ -189,6 +198,12 @@ class LineSplitter:
         if ASK_MARKER.match(raw):
             self.in_asks = True
             return
+        # A per-line prefix classifies that line on its own, whether or not a
+        # separator ever arrived.
+        prefixed = ASK_PREFIX.match(raw)
+        if prefixed:
+            self.in_asks = True
+            raw = raw[prefixed.end():]
         line = clean_line(raw)
         if not line:
             return
@@ -359,7 +374,7 @@ def main():
               "         page will fall back to keyword retrieval.", file=sys.stderr)
     handler = partial(Handler, directory=str(SITE))
     print("Dialect Money on http://127.0.0.1:{}  (model {})".format(
-        port, os.environ.get("OPENCODE_MODEL", "qwen3.7-plus")))
+        port, os.environ.get("OPENCODE_MODEL", "glm-5.3-flash")))
     ThreadingHTTPServer(("127.0.0.1", port), handler).serve_forever()
 
 
