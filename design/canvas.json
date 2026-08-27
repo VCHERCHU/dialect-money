@@ -1,7 +1,8 @@
 {
   "pages": [
     { "id": "page-1", "name": "Sent to you + Ask" },
-    { "id": "page-2", "name": "Options reviewed" }
+    { "id": "page-2", "name": "Options reviewed" },
+    { "id": "page-3", "name": "Video mode — wordless" }
   ],
   "artboards": [
     { "file": "Main.dc.html",            "title": "Sent to you — home",                "page": "page-1", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
@@ -15,7 +16,13 @@
 
     { "file": "OptionA.dc.html",         "title": "Option A — Question-first",         "page": "page-2", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
     { "file": "OptionB.dc.html",         "title": "Option B — One at a time",          "page": "page-2", "x": 470,  "y": 0,    "w": 390,  "h": 844 },
-    { "file": "OptionC.dc.html",         "title": "Option C — Sent to you (chosen)",   "page": "page-2", "x": 940,  "y": 0,    "w": 390,  "h": 844 }
+    { "file": "OptionC.dc.html",         "title": "Option C — Sent to you (chosen)",   "page": "page-2", "x": 940,  "y": 0,    "w": 390,  "h": 844 },
+
+    { "file": "VideoTitle.dc.html",      "title": "Title — a picture, not a sentence", "page": "page-3", "x": 0,    "y": 0,    "w": 390,  "h": 844 },
+    { "file": "VideoPlaying.dc.html",    "title": "Talking",                           "page": "page-3", "x": 470,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "VideoPaused.dc.html",     "title": "Stopped",                           "page": "page-3", "x": 940,  "y": 0,    "w": 390,  "h": 844 },
+    { "file": "VideoEnd.dc.html",        "title": "Now ask him",                       "page": "page-3", "x": 1410, "y": 0,    "w": 390,  "h": 900 },
+    { "file": "VideoIcons.dc.html",      "title": "The wordless vocabulary",           "page": "page-3", "x": 0,    "y": 1040, "w": 1240, "h": 780 }
   ],
   "annotations": [
     {
@@ -31,7 +38,7 @@
     {
       "id": "ask-note",
       "x": 940, "y": -340, "w": 860, "page": "page-1",
-      "text": "ASK — brought forward to match site/ask.html as it now stands\n\nThese three are the page's real states, drawn from its source rather than imagined: the mic idle with the type-or-tap way in; the listening state in --stop #9b2c1f, the one place that colour appears in the product; and the refusal.\n\nThe answer card shows what the code actually does — the line being spoken highlighted, the two-pass badge naming which pass produced the words (glm-5.3-flash 讲得更清楚了), the source page cited on the card, and 听更清楚的说法 rather than swapping audio under her mid-sentence.\n\nTHE REFUSAL IS THE MOST IMPORTANT SCREEN HERE. The counter-metric is that every claim traces to a cited page; this is what that looks like when there is no page to cite. It is styled as an answer, not an error, and it hands her what the library does have — a refusal that dead-ends is a failure.\n\nOne deliberate deviation from the source: the mic is drawn as SVG, where ask.html uses the 🎤 emoji glyph. An emoji renders differently on every platform and cannot be recoloured for the listening state."
+      "text": "ASK — brought forward to match site/ask.html as it now stands\n\nThese three are the page's real states, drawn from its source rather than imagined: the mic idle with the type-or-tap way in; the listening state in --stop #9b2c1f, the one place that colour appears in the product; and the refusal.\n\nThe answer card shows what the code actually does — the line being spoken highlighted, the two-pass badge naming which pass produced the words, the source page cited on the card, and a button to hear the clearer version rather than swapping audio under her mid-sentence.\n\nTHE REFUSAL IS THE MOST IMPORTANT SCREEN HERE. The counter-metric is that every claim traces to a cited page; this is what that looks like when there is no page to cite. It is styled as an answer, not an error, and it hands her what the library does have — a refusal that dead-ends is a failure.\n\nOne deliberate deviation from the source: the mic is drawn as SVG, where ask.html uses an emoji glyph that renders differently on every platform and cannot be recoloured for the listening state."
     },
     {
       "id": "brand-note",
@@ -42,7 +49,17 @@
       "id": "reviewed",
       "x": 0, "y": -200, "w": 860, "page": "page-2",
       "text": "The three directions this design was chosen from — kept for the record.\n\nOPTION A — Question-first. The list, tightened. Judged on: does a second explainer get opened in the same sitting? Cost: still six decisions for someone who cannot read them.\n\nOPTION B — One at a time. The home screen IS this week's explainer. Judged on completion rate. Cost: whoever picks the topic holds real editorial power, and five explainers get buried.\n\nOPTION C — Sent to you. CHOSEN. Judged on forward rate. It is the only one of the three that tests the riskiest assumption instead of working around it."
+    },
+    {
+      "id": "wordless",
+      "x": 0, "y": -320, "w": 860, "page": "page-3",
+      "text": "VIDEO MODE, WITHOUT THE WORDS\n\nvideo.html currently leans on fourteen written labels — 上一句, 停, 下一句, 慢一点, 按一下就开始, 停了, 听完了, 再听一次, 分享, 其他题目 and the rest. Every one of them asks a non-reader to read. These four screens replace them with three things she can use instead:\n\n1. A PICTURE INSTEAD OF A TITLE. Each explainer gets one drawn situation — a man holding out a paper, a gift with a price tag — so she recognises what this is about before a word is spoken.\n\n2. MOTION INSTEAD OF STATUS TEXT. Bars move while it talks and fall flat when it stops. Movement starting and stopping is the only playing-or-paused indicator anyone needs, and it is the one thing the current design does not show her at all.\n\n3. SPEECH INSTEAD OF INSTRUCTIONS. The written hint becomes a spoken prompt in her dialect on open. The product's whole premise is that she is told things out loud; the instructions should obey it too.\n\nControls keep their meaning as shapes and get bigger, because the labels were taking the room. The tortoise is drawn rather than the emoji — an emoji cannot be recoloured for a pressed state and renders differently on every phone."
+    },
+    {
+      "id": "wordless-end",
+      "x": 940, "y": -320, "w": 860, "page": "page-3",
+      "text": "THE END SCREEN IS THE OUTCOME, SO IT IS DRAWN AS AN ACT\n\n听完了。下次他跟你讲这个，你可以这样问他。 is two sentences doing what one picture can: her, a speech bubble with a question in it, an arrow, him. The arrow carries the instruction.\n\nThe three questions stay as words — they ARE the outcome the problem statement names, and numbering them in mint circles is what lets her point at one rather than read all three.\n\nFour wordless exits: hear it again, check the firm against the MAS register, send it on, more topics. The MAS check keeps the warn amber so it never reads as just another button.\n\nWhat stays a word, deliberately: the dialect name. It is the one label she reliably reads, and no picture tells Hokkien from Teochew."
     }
   ],
-  "launch": { "view": "canvas", "page": "page-1" }
+  "launch": { "view": "canvas", "page": "page-3" }
 }

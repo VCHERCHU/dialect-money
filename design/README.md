@@ -14,6 +14,11 @@ assembled file is ~2 MB of editor code and is deliberately **not** committed
 | `Ask.dc.html` | `ask.html` idle — the mic, and the type-or-tap way in |
 | `AskAnswer.dc.html` | Listening, heard, and the two-pass answer with its citation |
 | `AskRefuse.dc.html` | The refusal — the counter-metric made visible |
+| `VideoTitle.dc.html` | Video mode, wordless — a drawn situation instead of a title |
+| `VideoPlaying.dc.html` | Talking: moving bars instead of a status label |
+| `VideoPaused.dc.html` | Stopped: the bars fall flat and turn amber |
+| `VideoEnd.dc.html` | The ask, drawn as an act — her, a question, an arrow, him |
+| `VideoIcons.dc.html` | The wordless vocabulary: six situations, the controls, three sound states |
 | `ProductThinking.dc.html` | The 4Cs, Five Whys and outcome metrics the design is judged on |
 | `AppIcon.dc.html` | The mark at true 180/120/87/60/40px, plus round, dark, one-colour and greyscale |
 | `Logo.dc.html` | Horizontal, stacked and reversed lockups, and the smallest usable size |
@@ -26,7 +31,12 @@ rather than invented — `#0b5c46`, `#fbf9f4`, `#1a1a17`, the dark stage's `#141
 
 One deliberate deviation: the microphone is drawn as SVG where `ask.html` uses the 🎤
 emoji glyph. An emoji renders differently on every platform and cannot be recoloured
-for the listening state.
+for the listening state. The same reasoning applies to the tortoise on the slow control.
+
+The `Video*` boards remove all fourteen written labels from `site/video.html`'s chrome. Three
+things stay as words on purpose: the spoken lines and the three questions (they are the
+outcome, not decoration), and the dialect name — the one label she reliably reads, and no
+picture tells Hokkien from Teochew.
 
 Two things in here are not real data: the `女儿` / `义工` senders stand in for a
 sender identity the product does not have yet, and the fifth "why" on the
