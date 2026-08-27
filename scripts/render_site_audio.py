@@ -122,7 +122,18 @@ def load_library():
 
 
 def clips(library, only=None):
-    """Yield (explainer_id, line_index, han_text) for every clip to render."""
+    """Yield (stem, line_index, han_text) for every clip to render.
+
+    The shared closing line is yielded once, as `verify`, because it is
+    identical in every explainer — six copies of the same audio would be
+    six times the review surface for no gain.
+    """
+    verify = (library.get("verify") or {}).get(DIALECT) or {}
+    if verify.get("script") and not only:
+        state = "" if verify.get("checked") else "  (UNCHECKED draft)"
+        print("  %-24s 1 line%s" % ("verify (shared)", state))
+        yield "verify", None, verify["script"]
+
     for item in library["explainers"]:
         if only and item["id"] != only:
             continue
@@ -139,8 +150,11 @@ def clips(library, only=None):
             yield item["id"], index, line
 
 
-def target(explainer_id, index):
-    return AUDIO_DIR / ("%s.%s.%d.mp3" % (explainer_id, DIALECT, index))
+def target(stem, index):
+    """Path for a clip. index None means the shared closing line."""
+    if index is None:
+        return AUDIO_DIR / ("%s.%s.mp3" % (stem, DIALECT))
+    return AUDIO_DIR / ("%s.%s.%d.mp3" % (stem, DIALECT, index))
 
 
 def to_mp3(wav_path, mp3_path):

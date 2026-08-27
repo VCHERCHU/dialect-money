@@ -65,7 +65,7 @@
     padding: .1em .35em; border-radius: 4px;
   }
 
-  /* ---- dialect text that no native speaker has checked ---- */
+  /* ---- dialect text no native speaker has checked ---- */
   .unchecked {
     margin: 1.1rem 0 0; padding: .6rem .8rem;
     background: var(--warn-lo); border-left: 4px solid var(--warn);
@@ -152,6 +152,32 @@
   .src { margin-top: 1rem; font-size: .9rem; color: var(--ink-faint); }
   .src a { color: var(--accent); }
 
+  /* ---- video overlay --------------------------------------------
+     video.html is a page in its own right — a shared WhatsApp link
+     opens it directly, and that is the senior's path. On the library
+     it is lifted into an overlay instead, so the helper browsing the
+     list does not lose their place in it.
+
+     The iframe is built when Watch is tapped and destroyed on close:
+     nothing preloads, six videos do not sit in the background, and
+     closing it takes the narration with it.
+     --------------------------------------------------------------- */
+  .overlay { position: fixed; inset: 0; z-index: 50; background: #14140f; }
+  .overlay iframe { display: block; width: 100%; height: 100%; border: 0; }
+  /* Left, not right: it stands in for video.html's own back button, which
+     hides itself when framed. The dialect tag lives in the right corner. */
+  .overlay-close {
+    position: absolute; z-index: 1;
+    top: env(safe-area-inset-top); left: 0;
+    min-width: var(--tap); min-height: var(--tap);
+    display: grid; place-items: center;
+    background: none; border: 0; color: #fbf9f4;
+    font: inherit; font-size: 1.9rem; line-height: 1;
+    cursor: pointer; opacity: .8;
+  }
+  /* The list behind the overlay must not scroll under it. */
+  body.watching { overflow: hidden; }
+
   /* ---- footer / pipeline ---- */
   footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-faint); }
   footer h2 { font-size: 1rem; color: var(--ink-soft); margin: 0 0 .5rem; }
@@ -188,6 +214,9 @@
       accuracy check the problem statement requires, and no native Hokkien speaker
       has reviewed the dialect text.
     </div>
+    <p class="row">
+      <a class="btn primary" href="ask.html">🎤 有问题？直接问 · Ask a question out loud</a>
+    </p>
   </header>
 
   <section class="chooser">
@@ -207,6 +236,15 @@
       came from. In this prototype those links land on each source's home page —
       a fabricated deep link would be worse than an honest one.
     </p>
+    <p>
+      <b>Institutions are referred to through one source only.</b> Whether the firm
+      or representative selling to you is licensed is the single checkable fact
+      about a specific commercial offer, so every explainer ends on it and links to
+      the <a href="https://eservices.mas.gov.sg/fid/institution/print" target="_blank" rel="noopener">MAS
+      Financial Institutions Directory</a> — never a company site, never another
+      list. A firm absent from the directory is reported as not found there, which
+      is not a verdict either way.
+    </p>
     <p id="crawl"></p>
     <p>
       Coursework prototype for Product Thinking, Institute of Digital Government.
@@ -214,6 +252,11 @@
     </p>
   </footer>
 
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <button class="overlay-close" type="button" id="overlayClose"
+          aria-label="关掉 Close video">✕</button>
 </div>
 
 <script src="explainers.js"></script>
@@ -233,36 +276,59 @@
     return L.dialects.some(function (d) { return d.id === saved; }) ? saved : L.dialects[0].id;
   })();
 
-  var playing = null;   // { id, audio } while narrating
+  var playing = null;   // { id, utterances } while speaking
 
   function dialect() {
     return L.dialects.filter(function (d) { return d.id === chosen; })[0];
   }
 
-  /* ---- what to show for the chosen dialect ----------------------
-     Hokkien carries its own colloquial script. Teochew and Cantonese
-     share the written Chinese, because written dialect is not
-     standardised in Singapore — for those two only narration differs.
+  /* Every explainer closes on the same line — check the firm against the MAS
+     Financial Institutions Directory — appended here rather than copied into
+     each script. Whether an institution is licensed is the only thing this
+     product says about a specific commercial offer, and the FID is the only
+     place it says it from. video.html appends the same line. */
+  function fullScript(item) {
+    return item.script.concat([L.verify.zh]);
+  }
+
+  /* ---- what to show and narrate for the chosen dialect -----------
+     Hokkien carries its own colloquial script, because MERaLiON needs
+     that register as input. Teochew and Cantonese share the written
+     Chinese: written dialect is not standardised in Singapore, so for
+     those two only the narration differs.
+
+     `clips` is parallel to `lines` and names the pre-rendered file for
+     each one. The closing MAS line is shared across every explainer,
+     so it has one clip rather than six copies. video.html builds the
+     same two arrays the same way — keep them in step.
      --------------------------------------------------------------- */
-  function content(item) {
+  function dialectContent(item, id) {
     var h = item.hokkien;
-    if (chosen === 'hokkien' && h && h.script && h.script.length) {
+    var v = L.verify;
+
+    if (id === 'hokkien' && h && h.script && h.script.length && v.hokkien) {
       return {
         title: h.title || item.titleZh,
-        lines: h.script,
-        tailo: h.tailo || [],
-        ask: h.ask || item.ask,
+        lines: h.script.concat([v.hokkien.script]),
+        tailo: (h.tailo || []).concat(v.hokkien.tailo ? [v.hokkien.tailo] : []),
+        ask: (h.ask || item.ask).concat([v.hokkien.ask]),
+        clips: h.script.map(function (_, n) { return item.id + '.' + id + '.' + n; })
+                       .concat(['verify.' + id]),
         needsCheck: !h.checked
       };
     }
+
     return {
       title: item.titleZh,
-      lines: item.script,
+      lines: fullScript(item),
       tailo: [],
-      ask: item.ask,
+      ask: item.ask.concat([v.ask]),
+      clips: null,
       needsCheck: false
     };
   }
+
+  function content(item) { return dialectContent(item, chosen); }
 
   /* ---- dialect chooser ---- */
   function renderPills() {
@@ -286,15 +352,9 @@
   }
 
   /* ---- playback -------------------------------------------------
-     Narrated one line at a time rather than as one blob, so the line
-     being read can be highlighted. onboundary is too unreliable
-     across browsers to use for this, and one clip per line keeps each
-     MERaLiON generation short.
-
-     Two paths. A dialect with narration 'meralion' has pre-rendered
-     clips under site/audio/ — real Singapore Hokkien. Anything else
-     gets the browser voice as a stand-in, and so does Hokkien when a
-     clip is missing because nobody has rendered them yet.
+     Spoken line by line rather than as one blob, so the line being
+     read can be highlighted. onboundary is too unreliable across
+     browsers to use for this.
      --------------------------------------------------------------- */
   function stop() {
     if (synth) { synth.cancel(); }
@@ -313,10 +373,6 @@
       }
       playing = null;
     }
-  }
-
-  function clipSrc(item, i) {
-    return 'audio/' + item.id + '.' + chosen + '.' + i + '.mp3';
   }
 
   /* How long to wait for a clip to actually start before giving up on it.
@@ -341,13 +397,13 @@
       if (!playing || playing.id !== item.id) { return; }
       if (i >= c.lines.length) { stop(); return; }
 
-      var el = new Audio(clipSrc(item, i));
+      var el = new Audio('audio/' + c.clips[i] + '.mp3');
       playing.audio = el;
 
-      /* A file that is missing fires 'error'. A file that is truncated or
-         served over a stalling connection fires nothing at all, which would
-         otherwise leave the listener in silence indefinitely. Treat "has not
-         started" as unplayable and hand over to the browser voice. */
+      /* A missing file fires 'error'. A truncated file, or one served over a
+         stalling connection, fires nothing at all — which would leave the
+         listener in silence indefinitely. Treat "has not started" as
+         unplayable and hand over to the browser voice. */
       var guard = setTimeout(fallBack, STALL_MS);
       function disarm() { clearTimeout(guard); }
 
@@ -365,13 +421,13 @@
   }
 
   /* The browser-voice stand-in. It speaks the Mandarin script even when
-     Hokkien text is on screen: a zh-CN voice reading Hokkien Han
-     characters produces Mandarin readings of Hokkien words, which is
-     worse than an honest Mandarin stand-in. The two arrays are
-     line-for-line, so the highlight still tracks. */
+     Hokkien text is on screen: a zh-CN voice reading Hokkien Han characters
+     produces Mandarin readings of Hokkien words, which is worse than an
+     honest Mandarin stand-in. The arrays are line-for-line, so the
+     highlight still tracks. */
   function speak(item, c, highlight, from) {
     var start = from || 0;
-    var lines = item.script;
+    var lines = fullScript(item);
 
     if (!synth) {
       if (start === 0) {
@@ -409,12 +465,51 @@
 
     function speakFrom(i) { speak(item, c, highlight, i); }
 
-    if (dialect().narration === 'meralion') {
+    if (c.clips && dialect().narration === 'meralion') {
       playClips(item, c, highlight, speakFrom);
     } else {
       speakFrom(0);
     }
   }
+
+  /* ---- video overlay --------------------------------------------
+     Progressive enhancement: the Watch control stays a real link to
+     video.html, so it survives no-JS, middle-click and copy-link.
+     With JS the click is intercepted and the same URL is framed.
+     --------------------------------------------------------------- */
+  var overlay = document.getElementById('overlay');
+
+  function openVideo(item) {
+    stop();                        // the library must not talk over the video
+    var frame = document.createElement('iframe');
+    frame.title = '方言理财 · 看视频';
+    frame.setAttribute('allow', 'autoplay');
+    frame.src = videoLink(item);
+    overlay.appendChild(frame);
+    overlay.hidden = false;
+    document.body.classList.add('watching');
+    frame.focus();                 // so the first tap lands on the stage
+  }
+
+  function closeVideo() {
+    if (overlay.hidden) { return; }
+    var frame = overlay.querySelector('iframe');
+    /* Removing the frame is what stops the narration: video.html cancels
+       speech on pagehide. Blanking src would leave the utterance queue alive. */
+    if (frame) { frame.remove(); }
+    overlay.hidden = true;
+    document.body.classList.remove('watching');
+  }
+
+  /* video.html posts this when its own back button or Escape is used. */
+  window.addEventListener('message', function (e) {
+    if (e.origin !== location.origin) { return; }
+    if (e.data && e.data.dialectMoney === 'close') { closeVideo(); }
+  });
+  document.getElementById('overlayClose').addEventListener('click', closeVideo);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeVideo(); }
+  });
 
   /* ---- cards ---- */
   function statusLabel(item) {
@@ -424,9 +519,14 @@
       : '<span class="queued">' + dialect().zh + '版还在制作中</span>';
   }
 
+  /* Share the video, not the library. The helper who forwards this wants her
+     to land on a play button, not on a list she has to read. */
+  function videoLink(item) {
+    return 'video.html?id=' + item.id + '&d=' + chosen;
+  }
+
   function shareLink(item) {
-    var text = '方言理财：' + content(item).title + '\n' +
-               location.href.split('#')[0] + '#' + item.id;
+    var text = '方言理财：' + content(item).title + '\n' + location.href.split('#')[0].replace(/[^\/]*$/, '') + videoLink(item);
     return 'https://wa.me/?text=' + encodeURIComponent(text);
   }
 
@@ -470,7 +570,9 @@
         c.ask.map(function (q) { return '<li>' + q + '</li>'; }).join('') +
       '</ol></div>' +
       '<div class="row">' +
-        (ready ? '<button class="btn primary" type="button" data-play="' + item.id + '">▶ 听 Listen</button>' : '') +
+        '<a class="btn primary" data-watch href="' + videoLink(item) + '">▶ 看视频 Watch</a>' +
+        '<a class="btn" href="' + L.verify.url + '" target="_blank" rel="noopener">⚑ ' + L.verify.labelZh + '</a>' +
+        (ready ? '<button class="btn" type="button" data-play="' + item.id + '">听 Listen</button>' : '') +
         '<a class="btn" href="' + shareLink(item) + '" target="_blank" rel="noopener">↪ 分享 Share</a>' +
       '</div>' +
       '<p class="src">来源 Source: <a href="' + item.source.url + '" target="_blank" rel="noopener">' +
@@ -488,6 +590,11 @@
     });
 
     body.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('[data-watch]')) {
+        e.preventDefault();
+        openVideo(item);
+        return;
+      }
       var btn = e.target.closest ? e.target.closest('[data-play]') : null;
       if (!btn) { return; }
       if (playing && playing.id === item.id) { stop(); } else { play(item); }

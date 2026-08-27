@@ -21,6 +21,11 @@
  *   speaker has reviewed it. It is false everywhere, and the app says so.
  * - Scripts are drafts. Nothing here has been through the human check the
  *   problem statement requires, and no specific figure or rate is quoted.
+ * - `keywords` drives retrieval in ask.html. Terms are multi-character on
+ *   purpose: a single common character matches nearly every question and would
+ *   make every explainer look relevant. A real assistant would replace this
+ *   scoring with embeddings, but not the contract around it -- answer only from
+ *   what was retrieved, cite it, refuse otherwise.
  */
 
 window.LIBRARY = {
@@ -45,16 +50,54 @@ window.LIBRARY = {
     { name: 'MoneySense', url: 'https://www.moneysense.gov.sg' },
     { name: 'CPF',        url: 'https://www.cpf.gov.sg' },
     { name: 'MAS',        url: 'https://www.mas.gov.sg' },
+    { name: 'MAS FID',    url: 'https://eservices.mas.gov.sg/fid/institution/print' },
     { name: 'IRAS',       url: 'https://www.iras.gov.sg' },
     { name: 'MOF',        url: 'https://www.mof.gov.sg' },
     { name: 'gov.sg',     url: 'https://www.gov.sg' }
   ],
+
+  /* ---------------------------------------------------------------
+     WHO IS SELLING, not what is being sold.
+
+     v1 explains and does not advise, so nothing here may say whether
+     a product is worth buying. But there is one fact about any offer
+     that IS authoritative, checkable, and free of judgement: whether
+     the institution behind it is licensed by MAS at all. The MAS
+     Financial Institutions Directory is the single reference for that,
+     and it is the only source in the whitelist that speaks about
+     specific commercial firms.
+
+     Rule for every explainer and every narration: when an institution
+     or a representative is referred to, it is referred to through the
+     FID and nowhere else. No other list, no company website, no
+     recollection. If a firm is not in the FID, the honest answer is
+     "not found here" — never an implied verdict either way.
+     --------------------------------------------------------------- */
+  verify: {
+    zh:  '还有一件事，先查清楚：卖给你的这家公司，在MAS的名册里面吗？',
+    ask: '你公司的名字，让我在MAS的名册里查一查，可以吗？',
+
+    /* The Hokkien form of the same two lines. Without this the closing line —
+       the one line every explainer ends on — would drop back to Mandarin
+       mid-narration. Its clip is rendered once as audio/verify.hokkien.mp3
+       and shared by every explainer, since the line never varies. */
+    hokkien: {
+      script: '猶有一件事，先查予清楚：賣予你的這間公司，佇MAS的名冊內底無？',
+      tailo:  'Iáu ū tsi̍t kiānn sū, sing tshâ hōo tshing-tshó: bē hōo lí ê tsit king kong-si, tī MAS ê miâ-tsheh lāi-té bô?',
+      ask:    '你公司的名，予我佇MAS的名冊查一下，會使無？',
+      checked: false
+    },
+    labelZh: '查一查这家公司',
+    labelEn: 'Check the firm — MAS Financial Institutions Directory',
+    url: 'https://eservices.mas.gov.sg/fid/institution/print'
+  },
 
   lastCrawl: '2026-08-26',
 
   explainers: [
     {
       id: 'ip-rider',
+      keywords: ['附加险', '附加合约', 'rider', '住院', '看病', '医院', '自己付', '自付', '共付', 'shield', '医疗保险', '保费会涨'],
       titleZh: '加了附加险，看病真的不用自己付钱？',
       titleEn: 'Integrated Shield riders — what "no cash outlay" leaves out',
       seconds: 95,
@@ -99,6 +142,7 @@ window.LIBRARY = {
     },
     {
       id: 'guaranteed-or-not',
+      keywords: ['保证', '不保证', '估计', 'illustration', '到期', '拿回', '分红', '回报', '预估', '保单上的数字'],
       titleZh: '保单上的大数目，是保证的还是估计的？',
       titleEn: 'Guaranteed vs non-guaranteed figures on a benefit illustration',
       seconds: 80,
@@ -140,6 +184,7 @@ window.LIBRARY = {
     },
     {
       id: 'fd-promo-rate',
+      keywords: ['定期存款', '存款', '利息', '利率', '促销', '年利率', 'fixed deposit', '银行利息', '提早拿', '锁'],
       titleZh: '定期存款的高利息，为什么拿到手好像变少了？',
       titleEn: 'Fixed deposit promo rates — per annum, lock-in, and the drop-back',
       seconds: 85,
@@ -184,6 +229,7 @@ window.LIBRARY = {
     },
     {
       id: 'free-gift',
+      keywords: ['礼物', '赠品', '超市券', '电饭锅', '旅行', '签名就送', 'gift', '免费送'],
       titleZh: '签名就送礼物，礼物的钱是谁出的？',
       titleEn: 'Sign-up gifts — who actually pays for the rice cooker',
       seconds: 70,
@@ -228,6 +274,7 @@ window.LIBRARY = {
     },
     {
       id: 'whole-life-vs-term',
+      keywords: ['终身', '定期保险', '人寿', '寿险', 'term', 'whole life', '储蓄', '保额', '哪一种好'],
       titleZh: '终身保险和定期保险，差在哪里？',
       titleEn: 'Whole life vs term — what the extra premium is buying',
       seconds: 90,
@@ -269,6 +316,7 @@ window.LIBRARY = {
     },
     {
       id: 'how-the-adviser-is-paid',
+      keywords: ['佣金', '销售员', '代理', 'agent', 'commission', '赚多少', '顾问', '为什么推荐'],
       titleZh: '销售员卖这份保单，他赚多少？',
       titleEn: 'How the person selling to you is paid — and why you may ask',
       seconds: 65,
