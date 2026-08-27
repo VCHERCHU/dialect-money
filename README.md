@@ -239,8 +239,13 @@ highlighting the line being read:
 
 ```sh
 python3 scripts/render_site_audio.py --dry-run   # list the clips, no model load
-python3 scripts/render_site_audio.py             # render them (needs ffmpeg)
+python3 scripts/render_site_audio.py             # render them (~2 min on CPU)
 ```
+
+No ffmpeg needed: libsndfile writes MP3 itself, and `say_hokkien` picks the
+format from the output extension. The MCP server (`speak_hokkien`) drives the
+same `pipeline/tts.py`, so use whichever suits — the script for the whole set,
+the MCP tool for one-off lines while editing.
 
 Commit the `.mp3` files — Pages serves them as static assets. The site does not
 depend on them: a clip that is missing, truncated or slow to load falls back to
