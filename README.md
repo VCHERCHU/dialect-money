@@ -55,6 +55,49 @@ What is honestly faked, and labelled as such in the UI:
 - **The scripts.** Drafts, no specific rates or figures quoted, and not through
   the human accuracy check the problem statement requires.
 
+## The chat assistant
+
+`site/ask.html` plus `server/app.py`. She asks out loud; the answer comes back
+spoken, cited, or refused. This is the strand the project owner is building; a
+teammate owns video generation, and another owns MERaLiON for Chinese-to-Hokkien.
+
+How an answer is produced:
+
+1. **Retrieval** — keyword scoring over the explainer corpus picks up to three
+   passages. This decides everything the model is allowed to see.
+2. **Refusal before the model** — nothing retrieved means no permitted context,
+   so it says "I don't know" without spending a call. This closes the only door
+   an unsourced answer could arrive through.
+3. **kimi-k3** answers from those passages only, under a system prompt that
+   forbids any figure not in them, forbids recommending anything, and requires
+   the literal token `NO_ANSWER` when they don't cover the question.
+4. **Fallback** — any proxy failure reads the retrieved explainer verbatim
+   instead, labelled *offline* in the UI. Always safe: that text is
+   human-drafted.
+
+```bash
+cp .env.example .env      # then paste your OPENCODE_API_KEY
+python server/app.py      # http://127.0.0.1:8766
+```
+
+The proxy exists for one reason: **the API key must never reach the browser.**
+This site is public, so a key in client-side JS is a key anyone can read. Pages
+cannot run the proxy, so the deployed page always uses the keyword fallback.
+
+Rough edges worth knowing:
+
+- **kimi-k3 is a reasoning model — 20 to 30 seconds per answer.** Far too slow
+  for a 72-year-old holding a phone. The fix is probably to speak the retrieved
+  explainer immediately and let the model refine, rather than making her wait in
+  silence.
+- **Retrieval runs in the browser** and the client posts the passages it wants
+  answered from. Fine locally, wrong in production — a client could post any
+  context and have it read back in a trusted voice.
+- **Cloudflare rejects urllib's default User-Agent** with `403 error code: 1010`.
+  The proxy sends an ordinary one.
+- Speech in and out are still browser Mandarin/Cantonese stand-ins. No browser
+  recognises or speaks Hokkien; that is the MERaLiON dependency.
+
 ## Deploy
 
 Live at <https://vcherchu.github.io/dialect-money/>.

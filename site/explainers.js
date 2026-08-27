@@ -11,6 +11,11 @@
  *   This is a real product constraint, not a shortcut.
  * - Scripts are drafts. Nothing here has been through the human check the
  *   problem statement requires, and no specific figure or rate is quoted.
+ * - `keywords` drives retrieval in ask.html. Terms are multi-character on
+ *   purpose: a single common character matches nearly every question and would
+ *   make every explainer look relevant. A real assistant would replace this
+ *   scoring with embeddings, but not the contract around it -- answer only from
+ *   what was retrieved, cite it, refuse otherwise.
  */
 
 window.LIBRARY = {
@@ -39,6 +44,7 @@ window.LIBRARY = {
   explainers: [
     {
       id: 'ip-rider',
+      keywords: ['附加险', '附加合约', 'rider', '住院', '看病', '医院', '自己付', '自付', '共付', 'shield', '医疗保险', '保费会涨'],
       titleZh: '加了附加险，看病真的不用自己付钱？',
       titleEn: 'Integrated Shield riders — what "no cash outlay" leaves out',
       seconds: 95,
@@ -60,6 +66,7 @@ window.LIBRARY = {
     },
     {
       id: 'guaranteed-or-not',
+      keywords: ['保证', '不保证', '估计', 'illustration', '到期', '拿回', '分红', '回报', '预估', '保单上的数字'],
       titleZh: '保单上的大数目，是保证的还是估计的？',
       titleEn: 'Guaranteed vs non-guaranteed figures on a benefit illustration',
       seconds: 80,
@@ -80,6 +87,7 @@ window.LIBRARY = {
     },
     {
       id: 'fd-promo-rate',
+      keywords: ['定期存款', '存款', '利息', '利率', '促销', '年利率', 'fixed deposit', '银行利息', '提早拿', '锁'],
       titleZh: '定期存款的高利息，为什么拿到手好像变少了？',
       titleEn: 'Fixed deposit promo rates — per annum, lock-in, and the drop-back',
       seconds: 85,
@@ -101,6 +109,7 @@ window.LIBRARY = {
     },
     {
       id: 'free-gift',
+      keywords: ['礼物', '赠品', '超市券', '电饭锅', '旅行', '签名就送', 'gift', '免费送'],
       titleZh: '签名就送礼物，礼物的钱是谁出的？',
       titleEn: 'Sign-up gifts — who actually pays for the rice cooker',
       seconds: 70,
@@ -122,6 +131,7 @@ window.LIBRARY = {
     },
     {
       id: 'whole-life-vs-term',
+      keywords: ['终身', '定期保险', '人寿', '寿险', 'term', 'whole life', '储蓄', '保额', '哪一种好'],
       titleZh: '终身保险和定期保险，差在哪里？',
       titleEn: 'Whole life vs term — what the extra premium is buying',
       seconds: 90,
@@ -142,6 +152,7 @@ window.LIBRARY = {
     },
     {
       id: 'how-the-adviser-is-paid',
+      keywords: ['佣金', '销售员', '代理', 'agent', 'commission', '赚多少', '顾问', '为什么推荐'],
       titleZh: '销售员卖这份保单，他赚多少？',
       titleEn: 'How the person selling to you is paid — and why you may ask',
       seconds: 65,
