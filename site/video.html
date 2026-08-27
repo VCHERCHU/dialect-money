@@ -112,6 +112,91 @@
     color: rgba(251,249,244,.34); max-width: 34ch;
   }
 
+  /* ---- the picture that replaces a read title ----
+     One drawn situation per explainer. She recognises "a man is showing me a
+     paper" without reading anything. */
+  .art { align-self: flex-start; margin: 0 0 1.6rem; }
+  .art svg { display: block; width: min(72vw, 290px); height: auto; }
+  .art-sm svg { width: 54px; }
+
+  /* The invitation to tap is motion, not a sentence. */
+  .start-wrap {
+    position: relative; align-self: flex-start; margin: .6rem 0 0;
+    width: 168px; height: 168px; display: grid; place-items: center;
+  }
+  .halo {
+    position: absolute; inset: 14px; border-radius: 50%;
+    background: var(--accent); animation: halo 2.1s ease-out infinite;
+  }
+  .halo.b { animation-delay: .7s; }
+  @keyframes halo {
+    0%   { transform: scale(1);    opacity: .45; }
+    100% { transform: scale(1.42); opacity: 0; }
+  }
+  .start-btn {
+    position: relative; width: 140px; height: 140px; border-radius: 50%;
+    background: var(--accent); display: grid; place-items: center;
+  }
+
+  /* Visible proof that sound is happening. Nothing in the old design told her
+     the page was talking; a label would not have, either. */
+  .sound { display: flex; align-items: flex-end; gap: 1.5rem; margin: 0 0 1.4rem; }
+  .bars { display: flex; align-items: flex-end; gap: 5px; height: 44px; }
+  .bars i {
+    display: block; width: 7px; border-radius: 4px; background: var(--accent);
+    height: 12px; animation: talk 900ms ease-in-out infinite;
+  }
+  .bars i:nth-child(2) { animation-delay: 120ms; }
+  .bars i:nth-child(3) { animation-delay: 240ms; }
+  .bars i:nth-child(4) { animation-delay: 360ms; }
+  .bars i:nth-child(5) { animation-delay: 480ms; }
+  .bars i:nth-child(6) { animation-delay: 600ms; }
+  @keyframes talk { 0%, 100% { height: 12px; } 50% { height: 40px; } }
+  /* Stopped: the bars fall flat and go amber. Movement stopping IS the
+     message, so no "paused" text is needed. */
+  .sound.still { opacity: .5; }
+  .sound.still .bars i { animation: none; height: 6px; background: var(--warn); }
+  .sound.still svg path { fill: var(--warn); stroke: var(--warn); }
+  .line.dim { opacity: .38; }
+
+  /* One giant play, under the dimmed line rather than over it — the helper is
+     still reading along, and an overlay covered the middle of the sentence.
+     Tapping anywhere on the stage resumes; this is what says so. */
+  .resume-mark {
+    display: flex; justify-content: center; margin: 2rem 0 0;
+    pointer-events: none;
+  }
+  .resume-mark div {
+    width: 132px; height: 132px; border-radius: 50%;
+    background: rgba(240,180,106,.16); border: 3px solid var(--warn);
+    display: grid; place-items: center;
+  }
+
+  /* The end screen states the act as a picture: her, a question, an arrow, him. */
+  .ask-art { margin: 0 0 1.4rem; }
+  .ask-art svg { display: block; width: min(86vw, 342px); height: auto; }
+  .end .qs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .8rem; }
+  .end .qs li { display: flex; gap: .85rem; align-items: flex-start; font-size: 1.2rem; line-height: 1.5; font-weight: 600; }
+  .end .qs b {
+    flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%;
+    background: var(--accent); color: #06251b;
+    display: grid; place-items: center; font-size: 1.05rem;
+  }
+  .end .glyphs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin-top: 1.6rem; }
+  .end .glyph {
+    min-height: 72px; border-radius: 16px;
+    display: grid; place-items: center; cursor: pointer;
+    background: none; border: 2px solid rgba(251,249,244,.28);
+    color: var(--paper); font: inherit; text-decoration: none;
+  }
+  .end .glyph.go { background: var(--accent); border: 0; color: #06251b; }
+  .end .glyph.check { border-color: var(--warn); background: rgba(240,180,106,.14); color: var(--warn); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .halo { animation: none; opacity: .3; }
+    .bars i { animation: none; height: 26px; }
+  }
+
   .hint { margin: 2rem 0 0; font-size: 1rem; color: var(--dim); }
   .hint b { color: var(--accent); font-weight: 600; }
 
@@ -142,15 +227,21 @@
     padding: .5rem 1rem 1.2rem;
     background: var(--stage-2);
   }
+  /* Wordless controls. The labels are gone, so the targets take the room the
+     words were using: 62px for the seeks, 92px for the one that matters. */
   .ctl {
-    flex: 1 1 0; max-width: 8rem; min-height: var(--tap);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: .1rem; padding: .5rem .3rem;
-    background: none; border: 0; border-radius: 12px;
+    flex: 0 0 auto;
+    width: 62px; height: 62px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: none; border: 2px solid rgba(251,249,244,.28);
     color: var(--paper); font: inherit; cursor: pointer;
   }
-  .ctl i { font-style: normal; font-size: 1.5rem; line-height: 1; }
-  .ctl span { font-size: .82rem; color: var(--dim); }
+  .ctl svg { display: block; }
+  .ctl.main {
+    width: 92px; height: 92px; border: 0;
+    background: var(--accent); color: #06251b;
+  }
+  .ctl.main.resume { background: var(--warn); color: #2b1a05; }
   .ctl[disabled] { opacity: .3; cursor: default; }
   .ctl[aria-pressed="true"] { background: rgba(111,211,173,.16); }
   .ctl[aria-pressed="true"] i, .ctl[aria-pressed="true"] span { color: var(--accent); }
@@ -205,10 +296,10 @@
   <button class="stage" type="button" id="stage" aria-live="polite"></button>
 
   <div class="controls" id="controls" hidden>
-    <button class="ctl" type="button" id="prev"><i>&#8630;</i><span>上一句</span></button>
-    <button class="ctl" type="button" id="toggle"><i>&#10073;&#10073;</i><span>停</span></button>
-    <button class="ctl" type="button" id="next"><i>&#8631;</i><span>下一句</span></button>
-    <button class="ctl" type="button" id="slow" aria-pressed="false"><i>&#128034;</i><span>慢一点</span></button>
+    <button class="ctl" type="button" id="prev" aria-label="上一句"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5 L8 12 L18 19 Z" fill="currentColor"></path><rect x="4" y="5" width="3" height="14" rx="1.5" fill="currentColor"></rect></svg></button>
+    <button class="ctl main" type="button" id="toggle" aria-label="停"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4.5" height="16" rx="2.2" fill="currentColor"></rect><rect x="13.5" y="4" width="4.5" height="16" rx="2.2" fill="currentColor"></rect></svg></button>
+    <button class="ctl" type="button" id="next" aria-label="下一句"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5 L16 12 L6 19 Z" fill="currentColor"></path><rect x="17" y="5" width="3" height="14" rx="1.5" fill="currentColor"></rect></svg></button>
+    <button class="ctl" type="button" id="slow" aria-pressed="false" aria-label="慢一点"><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 19 a11 8 0 0 1 22 0 Z" fill="currentColor"></path><path d="M11 19 a5 5.6 0 0 1 4 -6.4" stroke="#14140f" stroke-width="1.5" fill="none"></path><path d="M19 19 a5 5.6 0 0 0 -4 -6.4" stroke="#14140f" stroke-width="1.5" fill="none"></path><path d="M25.6 15.6 a4 4 0 0 1 4.6 2.9 a3.4 3.4 0 0 1 -4.2 2.3 Z" fill="currentColor"></path><rect x="6.5" y="19" width="3.6" height="5.4" rx="1.8" fill="currentColor"></rect><rect x="19" y="19" width="3.6" height="5.4" rx="1.8" fill="currentColor"></rect></svg></button>
   </div>
 
   <div id="endCard" hidden></div>
@@ -313,6 +404,65 @@
      line. Nobody who speaks Hokkien has checked this text. */
   var draftDialect = useHokkien && !hok.checked ? dialect.zh : null;
 
+  /* ---- one drawn situation per explainer -------------------------
+     This is what replaces a title she cannot read. Keyed by explainer
+     id; a new explainer with no picture falls back to the selling
+     scene, which is the wedge for all of them anyway.
+     --------------------------------------------------------------- */
+  var ART = {
+    'ip-rider':
+      '<circle cx="24" cy="24" r="10" fill="#a8a397"/>' +
+      '<rect x="12" y="38" width="24" height="34" rx="11" fill="#a8a397"/>' +
+      '<rect x="44" y="22" width="32" height="42" rx="3" fill="#fbf9f4"/>' +
+      '<rect x="49" y="30" width="22" height="3" rx="1.5" fill="#14140f"/>' +
+      '<rect x="49" y="38" width="22" height="3" rx="1.5" fill="#14140f"/>' +
+      '<rect x="49" y="46" width="13" height="3" rx="1.5" fill="#14140f"/>' +
+      '<circle cx="96" cy="23" r="11" fill="#6fd3ad"/>' +
+      '<rect x="82" y="39" width="28" height="33" rx="12" fill="#6fd3ad"/>',
+    'guaranteed-or-not':
+      '<rect x="20" y="16" width="34" height="52" rx="4" fill="#6fd3ad"/>' +
+      '<rect x="66" y="16" width="34" height="52" rx="4" fill="none" stroke="#f0b46a" stroke-width="3" stroke-dasharray="7 6"/>' +
+      '<rect x="27" y="30" width="20" height="4" rx="2" fill="#14140f"/>' +
+      '<rect x="27" y="42" width="14" height="4" rx="2" fill="#14140f"/>',
+    'fd-promo-rate':
+      '<ellipse cx="42" cy="60" rx="26" ry="8" fill="#6fd3ad"/>' +
+      '<ellipse cx="42" cy="50" rx="26" ry="8" fill="#6fd3ad"/>' +
+      '<ellipse cx="42" cy="40" rx="26" ry="8" fill="#fbf9f4"/>' +
+      '<circle cx="88" cy="30" r="18" fill="none" stroke="#f0b46a" stroke-width="3.4"/>' +
+      '<path d="M88 20 L88 30 L96 34" stroke="#f0b46a" stroke-width="3.4" stroke-linecap="round" fill="none"/>',
+    'free-gift':
+      '<rect x="26" y="32" width="48" height="36" rx="4" fill="#6fd3ad"/>' +
+      '<rect x="26" y="22" width="48" height="12" rx="4" fill="#fbf9f4"/>' +
+      '<rect x="45" y="22" width="10" height="46" fill="#14140f"/>' +
+      '<path d="M84 30 L102 30 L106 44 L88 50 Z" fill="#f0b46a"/>' +
+      '<circle cx="90" cy="35" r="2.6" fill="#14140f"/>',
+    'whole-life-vs-term':
+      '<path d="M8 44 a26 26 0 0 1 52 0 Z" fill="#6fd3ad"/>' +
+      '<path d="M34 44 L34 68" stroke="#6fd3ad" stroke-width="4" stroke-linecap="round"/>' +
+      '<path d="M64 44 a24 24 0 0 1 48 0 Z" fill="none" stroke="#f0b46a" stroke-width="3.2" stroke-dasharray="8 6"/>' +
+      '<path d="M88 44 L88 66" stroke="#f0b46a" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 5"/>',
+    'how-the-adviser-is-paid':
+      '<circle cx="46" cy="24" r="12" fill="#a8a397"/>' +
+      '<rect x="30" y="42" width="32" height="30" rx="12" fill="#a8a397"/>' +
+      '<circle cx="86" cy="46" r="15" fill="#f0b46a"/>' +
+      '<circle cx="86" cy="46" r="8" fill="none" stroke="#14140f" stroke-width="2.6"/>' +
+      '<path d="M62 50 L72 47" stroke="#a8a397" stroke-width="6" stroke-linecap="round"/>'
+  };
+
+  function artSvg() {
+    return '<svg viewBox="0 0 120 80" aria-hidden="true">' +
+           (ART[item.id] || ART['ip-rider']) + '</svg>';
+  }
+
+  /* Six bars, so she can SEE that it is talking. */
+  var BARS = '<span class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+  var SPEAKER =
+    '<svg width="54" height="54" viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M4 20 L4 12 L8 12 L8 20 Z" fill="#6fd3ad"/>' +
+    '<path d="M10 20 L10 8 L14 8 L14 20 Z" fill="#6fd3ad"/>' +
+    '<path d="M16 20 L16 3 L20 3 L20 20 Z" fill="#6fd3ad"/>' +
+    '<path d="M2 21 L22 21" stroke="#6fd3ad" stroke-width="1.6" stroke-linecap="round"/></svg>';
+
   /* ---- state ----
      `gen` guards every async callback. cancel() fires onend on some
      browsers, so a stale utterance can otherwise advance past the line
@@ -395,15 +545,24 @@
     controls.hidden = true;
     endCard.hidden = true;
     stage.style.flex = '';                 // the stage owns the screen again
+    /* The picture carries what the title used to. The title itself stays
+       below it, quieter, for the helper holding the phone — but nothing on
+       this screen has to be read to use it: one drawn situation, one
+       breathing target, and the outlined bars when there is no voice yet. */
     stage.innerHTML =
-      '<h1 class="title-zh">' + esc(useHokkien ? (hok.title || item.titleZh) : item.titleZh) + '</h1>' +
-      '<p class="title-en">' + esc(item.titleEn) + ' · ' + esc(item.source.name) + '</p>' +
-      '<span class="big-start"><i>&#9654;</i>' + esc(dialect.zh) + '讲一遍</span>' +
-      '<p class="hint">' +
-        (narrated
-          ? '按一下就开始。听的时候，<b>按屏幕可以暂停</b>。'
-          : '<b>' + esc(dialect.zh) + '版的配音还在制作中。</b>字会一句一句出来，暂时没有声音。') +
-      '</p>' +
+      '<span class="art">' + artSvg() + '</span>' +
+      '<h1 class="title-zh" style="font-size:clamp(1.25rem,4.6vw,1.7rem)">' +
+        esc(useHokkien ? (hok.title || item.titleZh) : item.titleZh) + '</h1>' +
+      '<span class="start-wrap">' +
+        (narrated ? '<span class="halo"></span><span class="halo b"></span>' : '') +
+        '<span class="start-btn">' +
+          '<svg width="58" height="58" viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path d="M8 4 L20 12 L8 20 Z" fill="#06251b"/></svg>' +
+        '</span>' +
+      '</span>' +
+      (narrated
+        ? ''
+        : '<span class="sound still" style="margin:1.6rem 0 0">' + BARS + '</span>') +
       (draftDialect
         ? '<p class="hint draft"><b>' + esc(draftDialect) +
           '的字是初稿</b>，还没有给讲' + esc(draftDialect) + '的人检查过。</p>'
@@ -418,9 +577,16 @@
        sits inside the stage's aria-live region — so it must be hidden from
        screen readers, or every line is announced twice. */
     stage.innerHTML =
+      '<span class="sound' + (paused ? ' still' : '') + '" aria-hidden="true">' +
+        SPEAKER + BARS +
+      '</span>' +
       (i > 0 ? '<p class="line-prev" aria-hidden="true">' + esc(script[i - 1]) + '</p>' : '') +
-      '<p class="line">' + esc(script[i]) + '</p>' +
-      (paused ? '<p class="paused"><i>&#9654;</i>停了 — 按一下继续</p>' : '');
+      '<p class="line' + (paused ? ' dim' : '') + '">' + esc(script[i]) + '</p>' +
+      (paused
+        ? '<span class="resume-mark" aria-hidden="true"><div>' +
+          '<svg width="52" height="52" viewBox="0 0 24 24"><path d="M8 4 L20 12 L8 20 Z" fill="#f0b46a"/></svg>' +
+          '</div></span>'
+        : '');
     renderDots();
   }
 
@@ -436,28 +602,67 @@
        pushes the questions below the fold on a phone, and the questions are
        the only reason the video exists. */
     stage.style.flex = '0 0 auto';
+    /* "听完了。下次他跟你讲这个，你可以这样问他。" was two sentences doing what
+       one picture can: her, a question, an arrow, him. The arrow carries the
+       instruction. */
     stage.innerHTML =
-      '<p class="line" style="font-size:clamp(1.5rem,5.4vw,2.2rem)">' +
-      '听完了。<br>下次他跟你讲这个，你可以这样问他。</p>';
+      '<span class="ask-art" aria-hidden="true"><svg viewBox="0 0 152 58">' +
+        '<circle cx="20" cy="18" r="11" fill="#6fd3ad"/>' +
+        '<rect x="7" y="31" width="26" height="26" rx="11" fill="#6fd3ad"/>' +
+        '<path d="M40 4 L98 4 a5 5 0 0 1 5 5 L103 26 a5 5 0 0 1 -5 5 L56 31 L46 40 L48 31 L40 31 ' +
+          'a5 5 0 0 1 -5 -5 L35 9 a5 5 0 0 1 5 -5 Z" fill="#fbf9f4"/>' +
+        '<path d="M63 12 a5.5 5.5 0 1 1 5.5 5.5 L68.5 21" stroke="#14140f" stroke-width="3.2" ' +
+          'stroke-linecap="round" fill="none"/>' +
+        '<circle cx="68.5" cy="26" r="2.1" fill="#14140f"/>' +
+        '<path d="M110 19 L123 19 M118.5 14.5 L123 19 L118.5 23.5" stroke="#a8a397" ' +
+          'stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' +
+        '<circle cx="136" cy="18" r="9.5" fill="#a8a397"/>' +
+        '<rect x="125" y="30" width="22" height="27" rx="9" fill="#a8a397"/>' +
+      '</svg></span>';
     renderDots();
 
     endCard.hidden = false;
     endCard.className = 'end';
+    /* The questions stay as words — they ARE the outcome. Numbering them lets
+       her point at one instead of reading all three. Every exit is a shape;
+       the label survives only for screen readers, via aria-label. */
     endCard.innerHTML =
-      '<h2>你可以这样问他<span>Questions you can ask them</span></h2>' +
-      '<ol>' +
-        item.ask.concat([L.verify.ask]).map(function (q) {
-          return '<li>' + esc(q) + '</li>';
+      '<ul class="qs">' +
+        item.ask.concat([L.verify.ask]).map(function (q, n) {
+          return '<li><b>' + (n + 1) + '</b><span>' + esc(q) + '</span></li>';
         }).join('') +
-      '</ol>' +
-      '<div class="row">' +
-        '<a class="btn primary" href="' + esc(L.verify.url) + '" target="_blank" rel="noopener">' +
-          '&#9873; ' + esc(L.verify.labelZh) + '</a>' +
-        '<button class="btn" type="button" id="again">&#8630; 再听一次</button>' +
-        '<a class="btn" id="share" href="#" target="_blank" rel="noopener">&#8618; 分享 Share</a>' +
-        '<a class="btn" href="index.html">&#9776; 其他题目</a>' +
+      '</ul>' +
+      '<div class="glyphs">' +
+        '<button class="glyph go" type="button" id="again" aria-label="再听一次">' +
+          '<svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path d="M5 12 a7 7 0 1 1 2.4 5.3" stroke="currentColor" stroke-width="2.4" ' +
+            'stroke-linecap="round" fill="none"/>' +
+          '<path d="M4 6 L5 12.5 L11 11" stroke="currentColor" stroke-width="2.4" ' +
+            'stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>' +
+        '</button>' +
+        '<a class="glyph check" href="' + esc(L.verify.url) + '" target="_blank" rel="noopener" ' +
+          'aria-label="' + esc(L.verify.labelZh) + '">' +
+          '<svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path d="M12 3 L20 6 L20 12 c0 4.4 -3.4 7.6 -8 9 c-4.6 -1.4 -8 -4.6 -8 -9 L4 6 Z" ' +
+            'stroke="currentColor" stroke-width="2" fill="none"/>' +
+          '<circle cx="11" cy="11" r="3.1" stroke="currentColor" stroke-width="2" fill="none"/>' +
+          '<path d="M13.4 13.4 L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
+        '</a>' +
+        '<a class="glyph" id="share" href="#" target="_blank" rel="noopener" aria-label="分享">' +
+          '<svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path d="M4 13 c5 -8 11 -8 15 -8" stroke="currentColor" stroke-width="2.2" ' +
+            'stroke-linecap="round" fill="none"/>' +
+          '<path d="M14 1 L20 5 L14 9" stroke="currentColor" stroke-width="2.2" ' +
+            'stroke-linecap="round" stroke-linejoin="round" fill="none"/>' +
+          '<path d="M4 13 L4 20 L20 20" stroke="currentColor" stroke-width="2.2" ' +
+            'stroke-linecap="round" fill="none"/></svg>' +
+        '</a>' +
+        '<a class="glyph" href="index.html" aria-label="其他题目">' +
+          '<svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path d="M4 7 L20 7 M4 12 L20 12 M4 17 L20 17" stroke="currentColor" ' +
+            'stroke-width="2.2" stroke-linecap="round"/></svg>' +
+        '</a>' +
       '</div>' +
-      '<p class="src">' + esc(L.verify.labelEn) + '</p>' +
       '<p class="src">来源 Source: <a href="' + esc(item.source.url) + '" target="_blank" rel="noopener">' +
         esc(item.source.name) + ' — ' + esc(item.source.page) + '</a> · 更新 ' + esc(item.published) +
       '</p>';
@@ -563,8 +768,15 @@
   }
 
   function syncToggle() {
-    toggle.querySelector('i').innerHTML = paused ? '&#9654;' : '&#10073;&#10073;';
-    toggle.querySelector('span').textContent = paused ? '继续' : '停';
+    /* The shape says which way it will go, so nothing is written under it. */
+    toggle.innerHTML = paused
+      ? '<svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M8 4 L20 12 L8 20 Z" fill="currentColor"/></svg>'
+      : '<svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true">' +
+        '<rect x="6" y="4" width="4.5" height="16" rx="2.2" fill="currentColor"/>' +
+        '<rect x="13.5" y="4" width="4.5" height="16" rx="2.2" fill="currentColor"/></svg>';
+    toggle.classList.toggle('resume', paused);
+    toggle.setAttribute('aria-label', paused ? '继续' : '停');
     document.getElementById('prev').disabled = i <= 0;
   }
 
