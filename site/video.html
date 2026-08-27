@@ -300,6 +300,32 @@
   document.getElementById('dialectTag').textContent = dialect.zh;
   document.title = item.titleZh + ' · 方言理财';
 
+  /* ---- two ways in ----------------------------------------------
+     Standalone, which is how a shared WhatsApp link opens this, and
+     framed, which is how the library opens it without losing the
+     helper's place in the list. Framed, every way out has to close
+     the overlay — loading index.html inside the frame would leave a
+     library nested in a video, which is nonsense.
+     --------------------------------------------------------------- */
+  var framed = window.parent !== window;
+
+  /* Framed, the overlay draws its own close control in the top-left corner.
+     Two exits in one corner is one too many, and ours would sit under the
+     dialect tag if moved. Hide it and leave the space clear. */
+  if (framed) {
+    document.getElementById('back').hidden = true;
+    document.querySelector('.top').style.paddingLeft = '4.25rem';
+  }
+
+  function leave() {
+    hardStop();
+    if (framed) {
+      parent.postMessage({ dialectMoney: 'close', id: item.id }, location.origin);
+      return;
+    }
+    location.href = 'index.html#' + item.id;
+  }
+
   /* ---- how long a line stays up when nothing is speaking ---------
      Read aloud, Chinese runs roughly four characters a second; at rate
      0.85 it is nearer three. Floor it at 2.6s so a very short line does
@@ -398,6 +424,13 @@
        wants her to land on a play button, not on a list. */
     document.getElementById('share').href = 'https://wa.me/?text=' +
       encodeURIComponent('方言理财：' + item.titleZh + '\n' + location.href.split('#')[0]);
+
+    /* Framed, "other topics" closes the overlay and hands the helper back to
+       the list they were already looking at. Standalone it stays a plain link. */
+    if (framed) {
+      var out = endCard.querySelector('a[href="index.html"]');
+      out.addEventListener('click', function (e) { e.preventDefault(); leave(); });
+    }
 
     document.getElementById('again').addEventListener('click', function () {
       endCard.hidden = true;
@@ -503,10 +536,7 @@
     this.setAttribute('aria-pressed', slow ? 'true' : 'false');
     if (i >= 0 && i < script.length) { go(i); }   // hear the change at once
   });
-  document.getElementById('back').addEventListener('click', function () {
-    hardStop();
-    location.href = 'index.html#' + item.id;
-  });
+  document.getElementById('back').addEventListener('click', leave);
 
   /* Keyboard, for the helper on a laptop checking a script before it ships. */
   document.addEventListener('keydown', function (e) {
@@ -524,7 +554,7 @@
       else { pause(); }
     } else if (e.key === 'ArrowRight') { go(i + 1); }
     else if (e.key === 'ArrowLeft') { go(Math.max(0, i - 1)); }
-    else if (e.key === 'Escape') { hardStop(); location.href = 'index.html#' + item.id; }
+    else if (e.key === 'Escape') { leave(); }
   });
 
   window.addEventListener('pagehide', hardStop);

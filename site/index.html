@@ -130,6 +130,32 @@
   .src { margin-top: 1rem; font-size: .9rem; color: var(--ink-faint); }
   .src a { color: var(--accent); }
 
+  /* ---- video overlay --------------------------------------------
+     video.html is a page in its own right — a shared WhatsApp link
+     opens it directly, and that is the senior's path. On the library
+     it is lifted into an overlay instead, so the helper browsing the
+     list does not lose their place in it.
+
+     The iframe is built when Watch is tapped and destroyed on close:
+     nothing preloads, six videos do not sit in the background, and
+     closing it takes the narration with it.
+     --------------------------------------------------------------- */
+  .overlay { position: fixed; inset: 0; z-index: 50; background: #14140f; }
+  .overlay iframe { display: block; width: 100%; height: 100%; border: 0; }
+  /* Left, not right: it stands in for video.html's own back button, which
+     hides itself when framed. The dialect tag lives in the right corner. */
+  .overlay-close {
+    position: absolute; z-index: 1;
+    top: env(safe-area-inset-top); left: 0;
+    min-width: var(--tap); min-height: var(--tap);
+    display: grid; place-items: center;
+    background: none; border: 0; color: #fbf9f4;
+    font: inherit; font-size: 1.9rem; line-height: 1;
+    cursor: pointer; opacity: .8;
+  }
+  /* The list behind the overlay must not scroll under it. */
+  body.watching { overflow: hidden; }
+
   /* ---- footer / pipeline ---- */
   footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-faint); }
   footer h2 { font-size: 1rem; color: var(--ink-soft); margin: 0 0 .5rem; }
@@ -198,6 +224,11 @@
     </p>
   </footer>
 
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <button class="overlay-close" type="button" id="overlayClose"
+          aria-label="关掉 Close video">✕</button>
 </div>
 
 <script src="explainers.js"></script>
@@ -300,6 +331,45 @@
     });
   }
 
+  /* ---- video overlay --------------------------------------------
+     Progressive enhancement: the Watch control stays a real link to
+     video.html, so it survives no-JS, middle-click and copy-link.
+     With JS the click is intercepted and the same URL is framed.
+     --------------------------------------------------------------- */
+  var overlay = document.getElementById('overlay');
+
+  function openVideo(item) {
+    stop();                        // the library must not talk over the video
+    var frame = document.createElement('iframe');
+    frame.title = '方言理财 · 看视频';
+    frame.setAttribute('allow', 'autoplay');
+    frame.src = videoLink(item);
+    overlay.appendChild(frame);
+    overlay.hidden = false;
+    document.body.classList.add('watching');
+    frame.focus();                 // so the first tap lands on the stage
+  }
+
+  function closeVideo() {
+    if (overlay.hidden) { return; }
+    var frame = overlay.querySelector('iframe');
+    /* Removing the frame is what stops the narration: video.html cancels
+       speech on pagehide. Blanking src would leave the utterance queue alive. */
+    if (frame) { frame.remove(); }
+    overlay.hidden = true;
+    document.body.classList.remove('watching');
+  }
+
+  /* video.html posts this when its own back button or Escape is used. */
+  window.addEventListener('message', function (e) {
+    if (e.origin !== location.origin) { return; }
+    if (e.data && e.data.dialectMoney === 'close') { closeVideo(); }
+  });
+  document.getElementById('overlayClose').addEventListener('click', closeVideo);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeVideo(); }
+  });
+
   /* ---- cards ---- */
   function statusLabel(item) {
     var s = item.audio[chosen];
@@ -347,7 +417,7 @@
         item.ask.concat([L.verify.ask]).map(function (q) { return '<li>' + q + '</li>'; }).join('') +
       '</ol></div>' +
       '<div class="row">' +
-        '<a class="btn primary" href="' + videoLink(item) + '">▶ 看视频 Watch</a>' +
+        '<a class="btn primary" data-watch href="' + videoLink(item) + '">▶ 看视频 Watch</a>' +
         '<a class="btn" href="' + L.verify.url + '" target="_blank" rel="noopener">⚑ ' + L.verify.labelZh + '</a>' +
         (ready ? '<button class="btn" type="button" data-play="' + item.id + '">听 Listen</button>' : '') +
         '<a class="btn" href="' + shareLink(item) + '" target="_blank" rel="noopener">↪ 分享 Share</a>' +
@@ -367,6 +437,11 @@
     });
 
     body.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('[data-watch]')) {
+        e.preventDefault();
+        openVideo(item);
+        return;
+      }
       var btn = e.target.closest ? e.target.closest('[data-play]') : null;
       if (!btn) { return; }
       if (playing && playing.id === item.id) { stop(); } else { play(item); }
