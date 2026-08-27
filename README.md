@@ -68,12 +68,17 @@ How an answer is produced:
 2. **Refusal before the model** — nothing retrieved means no permitted context,
    so it says "I don't know" without spending a call. This closes the only door
    an unsourced answer could arrive through.
-3. **kimi-k3** answers from those passages only, under a system prompt that
-   forbids any figure not in them, forbids recommending anything, and requires
-   the literal token `NO_ANSWER` when they don't cover the question.
-4. **Fallback** — any proxy failure reads the retrieved explainer verbatim
-   instead, labelled *offline* in the UI. Always safe: that text is
-   human-drafted.
+3. **Speak first.** The retrieved explainer is read out immediately, in under a
+   second. It is already human-drafted and sourced, so there is no reason to make
+   her wait for a model to approve it.
+4. **kimi-k3 refines.** It answers from those passages only, under a system prompt
+   that forbids any figure not in them, forbids recommending anything, and
+   requires the literal token `NO_ANSWER` when they don't cover the question. The
+   clearer version replaces the text when it lands — an improvement, never a gate.
+   If she is still mid-sentence, the audio is not swapped under her; the button
+   becomes *hear the clearer version* instead.
+5. **Fallback** — any proxy failure keeps the verbatim explainer, labelled
+   *offline* in the UI. Always safe: that text is human-drafted.
 
 ```bash
 cp .env.example .env      # then paste your OPENCODE_API_KEY
@@ -86,10 +91,14 @@ cannot run the proxy, so the deployed page always uses the keyword fallback.
 
 Rough edges worth knowing:
 
-- **kimi-k3 is a reasoning model — 20 to 30 seconds per answer.** Far too slow
-  for a 72-year-old holding a phone. The fix is probably to speak the retrieved
-  explainer immediately and let the model refine, rather than making her wait in
-  silence.
+- **kimi-k3 is a reasoning model — still 20 to 30 seconds per answer.** That is no
+  longer dead air, because the explainer is read out first, but it does mean the
+  refined wording arrives long after she has started listening. Streaming would
+  close the gap properly.
+- **The spoken line and the highlighted line can diverge.** When refined text
+  replaces verbatim text under live speech, the words being spoken no longer match
+  what is on screen, so line highlighting switches off rather than pointing at the
+  wrong line.
 - **Retrieval runs in the browser** and the client posts the passages it wants
   answered from. Fine locally, wrong in production — a client could post any
   context and have it read back in a trusted voice.
