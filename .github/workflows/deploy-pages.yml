@@ -1,0 +1,47 @@
+name: Deploy prototype to GitHub Pages
+
+# `develop` is listed because that is where the prototype currently lives —
+# drop it once develop merges into main, or the two branches will fight over
+# the single Pages site.
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'site/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+# Allow GITHUB_TOKEN to deploy to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; don't cancel a run that is mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pages itself cannot be created by this workflow — the default
+      # GITHUB_TOKEN is refused ("Resource not accessible by integration"), so
+      # enablement: true does not help. It was turned on once out of band:
+      #   gh api -X POST repos/VCHERCHU/dialect-money/pages -f build_type=workflow
+      - uses: actions/configure-pages@v5
+
+      # Publish only site/, so the prototype lives at the domain root
+      # (https://vcherchu.github.io/dialect-money/) rather than under /site/.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
