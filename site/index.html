@@ -74,6 +74,15 @@
   }
   .unchecked span { display: block; font-size: .8rem; font-weight: 500; opacity: .85; }
 
+  /* ---- the browser refused to speak: say so, do not just sit there ---- */
+  .novoice {
+    margin: 1.1rem 0 0; padding: .6rem .8rem;
+    background: var(--warn-lo); border-left: 4px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    font-size: .95rem; line-height: 1.5; color: var(--warn); font-weight: 600;
+  }
+  .novoice span { display: block; font-size: .8rem; font-weight: 500; opacity: .85; }
+
   /* ---- Tai-lo romanisation, for a human reader or reviewer ---- */
   .tailo { margin: .9rem 0 0; font-size: .95rem; color: var(--ink-soft); }
   .tailo summary {
@@ -359,6 +368,7 @@
   function stop() {
     if (synth) { synth.cancel(); }
     if (playing) {
+      if (playing.timer) { clearTimeout(playing.timer); playing.timer = null; }
       if (playing.audio) {
         playing.audio.pause();
         playing.audio = null;
@@ -420,32 +430,89 @@
     next();
   }
 
+  /* Roughly how long a line takes to read aloud, for the watchdog below.
+     Generous on purpose: cutting a line off early is worse than waiting. */
+  function lineMs(text) {
+    return Math.max(2600, Math.round(text.length * 260) + 900);
+  }
+
+  /* Speech was refused, not merely absent. Say so on the card: leaving the
+     stop glyph up with no sound reads as a broken product, and the script is
+     right there to be read instead. */
+  function narrationUnavailable(item) {
+    var card = document.getElementById('card-' + item.id);
+    stop();
+    if (!card) { return; }
+
+    var body = card.querySelector('.body');
+    var note = card.querySelector('.novoice');
+    if (!note) {
+      note = document.createElement('p');
+      note.className = 'novoice';
+      body.insertBefore(note, body.firstChild);
+    }
+    note.innerHTML =
+      '这个浏览器现在不肯出声。下面的字还在，可以照着念。' +
+      '<span>This browser refused to speak. The script below still reads in order.</span>';
+    body.hidden = false;
+  }
+
   /* The browser-voice stand-in. It speaks the Mandarin script even when
      Hokkien text is on screen: a zh-CN voice reading Hokkien Han characters
      produces Mandarin readings of Hokkien words, which is worse than an
      honest Mandarin stand-in. The arrays are line-for-line, so the
-     highlight still tracks. */
+     highlight still tracks.
+
+     One line at a time rather than queueing them all. Queueing looked
+     simpler but had no way back from a failure: Chrome drops pending
+     utterances when a tab is backgrounded, and refuses outright with
+     'not-allowed' where speech is unavailable — both left the card showing
+     the stop glyph, silent, for ever. Every line now advances on end, on
+     error, or on a watchdog. */
   function speak(item, c, highlight, from) {
-    var start = from || 0;
     var lines = fullScript(item);
+    var n = from || 0;
+    var first = n;
 
-    if (!synth) {
-      if (start === 0) {
-        alert('This browser has no speech support. Read the script below instead.');
+    if (!synth) { narrationUnavailable(item); return; }
+
+    function step() {
+      if (!playing || playing.id !== item.id) { return; }
+      if (n >= lines.length) { stop(); return; }
+
+      var text = lines[n];
+      var here = n;
+      var moved = false;
+
+      function advance() {
+        if (moved || !playing || playing.id !== item.id) { return; }
+        moved = true;
+        if (playing.timer) { clearTimeout(playing.timer); playing.timer = null; }
+        n = here + 1;
+        step();
       }
-      stop();
-      return;
-    }
 
-    lines.forEach(function (line, i) {
-      if (i < start) { return; }
-      var u = new SpeechSynthesisUtterance(line);
+      var u = new SpeechSynthesisUtterance(text);
       u.lang = dialect().ttsLang;
       u.rate = 0.85;                       // slower than default, for 70+ listeners
-      u.onstart = function () { highlight(i); };
-      if (i === lines.length - 1) { u.onend = stop; }
+      u.onstart = function () { highlight(here); };
+      u.onend = advance;
+      u.onerror = function (event) {
+        /* Refused on the very first line means no voice is coming at all —
+           worth telling her. A later failure is one bad line, so carry on. */
+        if (here === first && event && event.error === 'not-allowed') {
+          narrationUnavailable(item);
+          return;
+        }
+        advance();
+      };
+
+      highlight(here);
       synth.speak(u);
-    });
+      playing.timer = setTimeout(advance, lineMs(text));
+    }
+
+    step();
   }
 
   function play(item) {
