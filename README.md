@@ -13,9 +13,9 @@ Cantonese, for seniors who are locked out of it by English text on websites.
 
 ## Where this stands
 
-Problem definition, plus a clickable prototype on the `develop` branch. Nothing
-should be built *for real* until assumption 1 — distribution — has been tested
-against a real person.
+Problem definition, plus a clickable prototype live at
+<https://vcherchu.github.io/dialect-money/>. Nothing should be built *for real*
+until assumption 1 — distribution — has been tested against a real person.
 
 ## The prototype
 
@@ -59,13 +59,12 @@ What is honestly faked, and labelled as such in the UI:
 
 Live at <https://vcherchu.github.io/dialect-money/>.
 
-Pushing to `develop` or `main` under `site/**` deploys it — that is the whole
-release process. `.github/workflows/deploy-pages.yml` publishes `./site` as the
-site root, so a README-only commit produces no deploy run. That is expected, not
-a broken pipeline.
+Pushing to `main` under `site/**` deploys it — that is the whole release
+process. `.github/workflows/deploy-pages.yml` publishes `./site` as the site
+root, so a README-only commit produces no deploy run. That is expected, not a
+broken pipeline.
 
-`develop` is in the trigger list only because the prototype lives there. Remove
-it when develop merges, or the two branches will overwrite each other's deploys.
+Only `main` deploys. Work on a branch, merge, and the deploy follows.
 
 ```bash
 gh run list --repo VCHERCHU/dialect-money --workflow deploy-pages.yml --limit 1

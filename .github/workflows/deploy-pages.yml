@@ -1,11 +1,8 @@
 name: Deploy prototype to GitHub Pages
 
-# `develop` is listed because that is where the prototype currently lives —
-# drop it once develop merges into main, or the two branches will fight over
-# the single Pages site.
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
     paths:
       - 'site/**'
       - '.github/workflows/deploy-pages.yml'
