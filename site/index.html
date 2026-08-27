@@ -113,6 +113,16 @@
     outline: 3px solid var(--accent); outline-offset: 2px;
   }
 
+  /* Ask is a peer of the library, not a sentence about it. */
+  .ask-entry {
+    display: flex; align-items: center; gap: .9rem;
+    min-height: 72px; padding: 0 1.25rem; margin: 1.75rem 0 0;
+    background: var(--accent); border-radius: var(--radius);
+    color: #fff; text-decoration: none;
+  }
+  .ask-entry svg { flex: 0 0 auto; display: block; }
+  .ask-entry b { font-size: 1.35rem; font-weight: 700; }
+
   .count { margin: 1.5rem 0 .75rem; font-size: .95rem; color: var(--ink-faint); }
 
   /* ---- explainer cards ---- */
@@ -132,6 +142,23 @@
     font-size: 1.5rem; line-height: 1;
   }
   .card.playing .play { background: var(--warn); }
+  /* Drawn, so it recolours with .playing rather than being a text character
+     the font may render differently. */
+  .play svg { display: block; }
+
+  /* One drawn situation per card, from L.art — she recognises the picture
+     before anyone reads the title to her. On the dark stage colour, so one
+     palette serves the card, video mode and the pictograms. */
+  .thumb {
+    flex: 0 0 auto; width: 78px; height: 54px; border-radius: 10px;
+    background: #14140f; display: grid; place-items: center; overflow: hidden;
+  }
+  .thumb svg { display: block; width: 70px; height: auto; }
+
+  /* Actions carry their meaning as shapes; the wording moves to aria-label
+     so screen readers keep it. */
+  .btn.icon { padding: .6rem 1rem; }
+  .btn.icon svg { display: block; }
   .card-head h3 { margin: 0; font-size: 1.35rem; line-height: 1.45; font-weight: 600; }
   .meta { margin: .4rem 0 0; font-size: .9rem; color: var(--ink-faint); }
   .meta .queued { color: var(--warn); font-weight: 600; }
@@ -230,7 +257,14 @@
       has reviewed the dialect text.
     </div>
     <p class="row">
-      <a class="btn primary" href="ask.html">🎤 有问题？直接问 · Ask a question out loud</a>
+      <a class="ask-entry" href="ask.html" aria-label="有问题？直接问 · Ask a question out loud">
+        <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="9" y="2" width="6" height="11" rx="3" fill="#fff"></rect>
+          <path d="M5 11 a7 7 0 0 0 14 0" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"></path>
+          <path d="M12 18 L12 22 M8 22 L16 22" stroke="#fff" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+        <b>问一问</b>
+      </a>
     </p>
   </header>
 
@@ -545,6 +579,12 @@
     }
   }
 
+  /* The picture set is shared data now — see the note in explainers.js. */
+  function artSvg(id) {
+    var d = (L.art && (L.art[id] || L.art['ip-rider'])) || '';
+    return '<svg viewBox="0 0 120 80" aria-hidden="true">' + d + '</svg>';
+  }
+
   /* ---- video overlay --------------------------------------------
      Progressive enhancement: the Watch control stays a real link to
      video.html, so it survives no-JS, middle-click and copy-link.
@@ -616,9 +656,13 @@
     head.setAttribute('aria-expanded', 'false');
     head.setAttribute('aria-controls', 'body-' + item.id);
     head.innerHTML =
-      '<span class="play" aria-hidden="true">' + (ready ? '▶' : '⋯') + '</span>' +
-      '<span><h3>' + c.title + '</h3>' +
-      '<p class="meta">' + statusLabel(item) + ' · ' + item.source.name + '</p></span>';
+      '<span class="play" aria-hidden="true">' +
+        (ready ? '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5 L19 12 L8 19 Z" fill="currentColor"/></svg>'
+               : '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.9" fill="currentColor"/><circle cx="12" cy="12" r="1.9" fill="currentColor"/><circle cx="19" cy="12" r="1.9" fill="currentColor"/></svg>') +
+      '</span>' +
+      '<span style="flex:1 1 auto"><h3>' + c.title + '</h3>' +
+      '<p class="meta">' + statusLabel(item) + ' · ' + item.source.name + '</p></span>' +
+      '<span class="thumb" aria-hidden="true">' + artSvg(item.id) + '</span>';
 
     var body = document.createElement('div');
     body.className = 'body';
@@ -643,10 +687,16 @@
         c.ask.map(function (q) { return '<li>' + q + '</li>'; }).join('') +
       '</ol></div>' +
       '<div class="row">' +
-        '<a class="btn primary" data-watch href="' + videoLink(item) + '">▶ 看视频 Watch</a>' +
-        '<a class="btn" href="' + L.verify.url + '" target="_blank" rel="noopener">⚑ ' + L.verify.labelZh + '</a>' +
-        (ready ? '<button class="btn" type="button" data-play="' + item.id + '">听 Listen</button>' : '') +
-        '<a class="btn" href="' + shareLink(item) + '" target="_blank" rel="noopener">↪ 分享 Share</a>' +
+        '<a class="btn primary icon" data-watch href="' + videoLink(item) +
+          '" aria-label="看视频"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5 L19 12 L8 19 Z" fill="currentColor"/></svg></a>' +
+        '<a class="btn icon" href="' + L.verify.url + '" target="_blank" rel="noopener"' +
+          ' aria-label="' + L.verify.labelZh + '"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L20 6 L20 12 c0 4.4 -3.4 7.6 -8 9 c-4.6 -1.4 -8 -4.6 -8 -9 L4 6 Z" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="11" cy="11" r="3.1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M13.4 13.4 L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>' +
+        (ready
+          ? '<button class="btn icon" type="button" data-play="' + item.id +
+            '" aria-label="听"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9 L8 9 L13 5 L13 19 L8 15 L4 15 Z" fill="currentColor"/><path d="M16 9 a4 4 0 0 1 0 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button>'
+          : '') +
+        '<a class="btn icon" href="' + shareLink(item) + '" target="_blank" rel="noopener"' +
+          ' aria-label="分享"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 c5 -8 11 -8 15 -8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M14 1 L20 5 L14 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M4 13 L4 20 L20 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg></a>' +
       '</div>' +
       '<p class="src">来源 Source: <a href="' + item.source.url + '" target="_blank" rel="noopener">' +
         item.source.name + ' — ' + item.source.page + '</a> · 更新 ' + item.published + '</p>';

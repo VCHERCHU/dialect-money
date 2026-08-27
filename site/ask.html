@@ -79,8 +79,55 @@
   }
   .mic[data-state="listening"] { background: var(--stop); box-shadow: 0 6px 0 rgba(155,44,31,.25); }
   .mic[disabled] { background: var(--ink-faint); box-shadow: none; cursor: default; }
+  /* The mic keeps its label element, but it is empty unless something has
+     gone WRONG. A blocked microphone or a browser that cannot listen has to
+     be said in words — no picture conveys "permission refused, type below".
+     The instruction that used to live here is now the pulsing halo. */
   .mic-label { font-size: 1.35rem; font-weight: 600; margin: 1rem 0 0; }
+  .mic-label:empty, .mic-hint:empty { display: none; }
   .mic-hint { font-size: .95rem; color: var(--ink-faint); margin: .35rem 0 0; }
+
+  .mic-wrap { position: relative; display: inline-grid; place-items: center; padding: 18px; }
+  .mic-wrap .halo {
+    position: absolute; inset: 18px; border-radius: 50%;
+    background: var(--accent); animation: halo 2.1s ease-out infinite;
+  }
+  .mic-wrap .halo.b { animation-delay: .7s; }
+  @keyframes halo {
+    0%   { transform: scale(1);    opacity: .38; }
+    100% { transform: scale(1.38); opacity: 0; }
+  }
+  .mic-wrap.listening .halo { background: var(--stop); }
+  /* Idle invites a tap; listening should not keep inviting one. */
+  .mic-area.listening .mic-wrap .halo { animation-duration: 1.1s; }
+  .mic svg { display: block; }
+
+  /* Listening, shown as movement rather than the word 我在听. */
+  .bars { display: none; justify-content: center; align-items: flex-end; gap: 6px; height: 40px; margin: 1rem 0 0; }
+  .mic-area:has(.mic[data-state="listening"]) .bars { display: flex; }
+  /* :has is well supported now, but a browser without it must still show the
+     state — the fallback is a class the script sets alongside data-state. */
+  .mic-area.listening .bars { display: flex; }
+  .bars i {
+    display: block; width: 8px; border-radius: 4px; background: var(--stop);
+    height: 10px; animation: talk 900ms ease-in-out infinite;
+  }
+  .bars i:nth-child(2) { animation-delay: 120ms; }
+  .bars i:nth-child(3) { animation-delay: 240ms; }
+  .bars i:nth-child(4) { animation-delay: 360ms; }
+  .bars i:nth-child(5) { animation-delay: 480ms; }
+  @keyframes talk { 0%, 100% { height: 10px; } 50% { height: 38px; } }
+
+  .btn.icon { padding: .6rem 1rem; }
+  .btn.icon svg { display: block; }
+  .back svg { display: block; }
+  .heard b svg { display: block; }
+  .ask-art { margin: 0 0 1rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mic-wrap .halo { animation: none; opacity: .26; }
+    .bars i { animation: none; height: 24px; }
+  }
 
   .heard {
     margin: 1.75rem 0 0; padding: 1rem 1.1rem;
@@ -154,7 +201,7 @@
 <body>
 <div class="wrap">
 
-  <a class="back" href="index.html">← 回到全部题目 · All explainers</a>
+  <a class="back" href="index.html" aria-label="回到全部题目 · All explainers"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></a>
 
   <h1>问一问<small>Ask · prototype</small></h1>
   <p class="tagline">有人卖东西给你，不懂就问。用你的话问，用你的话答。</p>
@@ -174,21 +221,25 @@
   <div class="pills" id="pills" role="group" aria-label="Choose a dialect"></div>
 
   <div class="mic-area">
-    <button class="mic" id="mic" type="button" data-state="idle" aria-describedby="mic-label">🎤</button>
-    <p class="mic-label" id="mic-label">按一下，然后讲话</p>
-    <p class="mic-hint" id="mic-hint">Tap, then speak. Tap again to stop.</p>
+    <span class="mic-wrap" id="mic-wrap">
+      <span class="halo" aria-hidden="true"></span>
+      <span class="halo b" aria-hidden="true"></span>
+      <button class="mic" id="mic" type="button" data-state="idle" aria-label="按一下，然后讲话"><svg width="58" height="58" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3" fill="currentColor"/><path d="M5 11 a7 7 0 0 0 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M12 18 L12 22 M8 22 L16 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </span>
+    <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    <p class="mic-label" id="mic-label"></p>
+    <p class="mic-hint" id="mic-hint"></p>
   </div>
 
-  <div class="heard" id="heard" hidden><b>听到 Heard</b><span id="heard-text"></span></div>
+  <div class="heard" id="heard" hidden><b aria-label="听到 Heard"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21 L8 16 a6 6 0 1 1 6 -6 a3 3 0 0 1 -3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></b><span id="heard-text"></span></div>
 
   <div class="answer" id="answer" aria-live="polite" hidden></div>
 
   <section class="fallback">
-    <h2>不方便讲话？打字或者按一个问题</h2>
-    <p>Type instead, or tap an example. Useful for testing, and for a caregiver asking on her behalf.</p>
+    <h2 aria-label="不方便讲话？打字或者按一个问题"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="12" rx="2.5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M7 12 L7 12 M11 12 L13 12 M17 12 L17 12 M8 16 L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></h2>
     <form class="typed" id="typed">
       <input id="q" type="text" placeholder="他叫我加附加险，值得吗？" aria-label="Type your question">
-      <button class="btn primary" type="submit">问 Ask</button>
+      <button class="btn primary icon" type="submit" aria-label="问 Ask"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 L20 12 M14 6 L20 12 L14 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
     </form>
     <ul class="examples" id="examples"></ul>
   </section>
@@ -354,7 +405,7 @@
         '</ul>' +
         '<p class="cite">I answer only from the library on this site. Your question is outside it, ' +
           'so there is no sourced answer to give — and guessing is worse than saying so.</p>' +
-        '<div class="ask-block"><h3>我可以讲这些<span>What I do have</span></h3><ul class="examples">' + titles + '</ul></div>' +
+        '<div class="ask-block"><h3 aria-label="我可以讲这些 · What I do have"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 L20 7 M4 12 L20 12 M4 17 L20 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></h3><ul class="examples">' + titles + '</ul></div>' +
       '</div>';
     box.hidden = false;
     speak([
@@ -456,7 +507,7 @@
        replay button is how she hears the new version. */
     var replayLabel = (o.origin === 'llm' && o.wasSpeaking)
       ? '▶ 听更清楚的说法 Hear the clearer version'
-      : '▶ 再听一次 Again';
+      : '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 a7 7 0 1 1 2.4 5.3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M4 6 L5 12.5 L11 11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
 
     box.innerHTML =
       '<div class="a-card">' +
@@ -470,14 +521,15 @@
           o.lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') +
         '</ul>' +
         (o.asks && o.asks.length
-          ? '<div class="ask-block"><h3>你可以这样问他<span>Questions you can ask them</span></h3><ol>' +
+          ? '<div class="ask-block"><span class="ask-art"><svg viewBox="0 0 152 58" aria-hidden="true" style="display:block;width:min(86vw,342px);height:auto"><circle cx="20" cy="18" r="11" fill="#0b5c46"/><rect x="7" y="31" width="26" height="26" rx="11" fill="#0b5c46"/><path d="M40 4 L98 4 a5 5 0 0 1 5 5 L103 26 a5 5 0 0 1 -5 5 L56 31 L46 40 L48 31 L40 31 a5 5 0 0 1 -5 -5 L35 9 a5 5 0 0 1 5 -5 Z" fill="#e8f2ee"/><path d="M63 12 a5.5 5.5 0 1 1 5.5 5.5 L68.5 21" stroke="#0b5c46" stroke-width="3.2" stroke-linecap="round" fill="none"/><circle cx="68.5" cy="26" r="2.1" fill="#0b5c46"/><path d="M110 19 L123 19 M118.5 14.5 L123 19 L118.5 23.5" stroke="#8a857a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="136" cy="18" r="9.5" fill="#8a857a"/><rect x="125" y="30" width="22" height="27" rx="9" fill="#8a857a"/></svg></span><ol>' +
               o.asks.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') +
             '</ol></div>'
           : '') +
         (o.origin === 'stream' ? '' :
         '<div class="row">' +
           (ready ? '<button class="btn primary" id="replay" type="button">' + replayLabel + '</button>' : '') +
-          '<a class="btn" href="index.html#' + esc(top.id) + '">全部内容 Full explainer</a>' +
+          '<a class="btn icon" href="index.html#' + esc(top.id) +
+            '" aria-label="全部内容 Full explainer"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 L20 7 M4 12 L20 12 M4 17 L20 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></a>' +
         '</div>') +
         (ready ? '' : '<p class="cite"><b>' + esc(dialect().zh) + '版还在制作中</b> — no narration in this dialect yet, so this answer is text only.</p>') +
         '<p class="cite">' + esc(badge) + '</p>' +
@@ -594,6 +646,15 @@
   });
 
   /* ---- microphone ---- */
+  /* One place that flips every visual the listening state owns: the bars, the
+     halo colour, and the button's own fill. */
+  function setMicState(on) {
+    var area = document.querySelector('.mic-area');
+    var wrap = document.getElementById('mic-wrap');
+    if (area) { area.classList.toggle('listening', on); }
+    if (wrap) { wrap.classList.toggle('listening', on); }
+  }
+
   function micLabel(main, hint) {
     document.getElementById('mic-label').textContent = main;
     document.getElementById('mic-hint').textContent = hint;
@@ -621,8 +682,9 @@
       rec.onstart = function () {
         listening = true;
         mic.dataset.state = 'listening';
+        setMicState(true);
         mic.textContent = '■';
-        micLabel('我在听……', 'Listening. Tap again to stop.');
+        micLabel('', '');   // the bars say it
       };
       rec.onresult = function (ev) {
         var text = '', final = false;
@@ -645,9 +707,10 @@
       rec.onend = function () {
         listening = false;
         mic.dataset.state = 'idle';
+        setMicState(false);
         mic.textContent = '🎤';
         if (mic.dataset.state !== 'listening') {
-          micLabel('按一下，然后讲话', 'Tap, then speak. Tap again to stop.');
+          micLabel('', '');   // the halo says it
         }
       };
 
