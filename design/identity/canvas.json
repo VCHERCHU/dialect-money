@@ -1,0 +1,33 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Identity" },
+    { "id": "page-2", "name": "Not chosen" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1000, "h": 940, "page": "page-1" },
+    { "file": "AppIcon.dc.html", "x": 1080, "y": 0, "w": 760, "h": 940, "page": "page-1" },
+    { "file": "Usage.dc.html", "x": 1920, "y": 0, "w": 760, "h": 940, "page": "page-1" },
+    { "file": "DirectionA.dc.html", "x": 0, "y": 0, "w": 480, "h": 560, "page": "page-2" },
+    { "file": "DirectionC.dc.html", "x": 560, "y": 0, "w": 480, "h": 560, "page": "page-2" },
+    { "file": "DirectionD.dc.html", "x": 1120, "y": 0, "w": 480, "h": 560, "page": "page-2" }
+  ],
+  "annotations": [
+    {
+      "id": "chosen",
+      "x": 0,
+      "y": -150,
+      "w": 660,
+      "text": "话 — speech, words. Built on the 讠 speech radical. Outlined from Songti so the logo carries no font dependency. Exported assets live in design/assets/.",
+      "page": "page-1"
+    },
+    {
+      "id": "why",
+      "x": 1680,
+      "y": 0,
+      "w": 360,
+      "text": "The three directions that lost, kept with the reason each one lost. A is here because it led for a while — its rationale turned out not to be true.",
+      "page": "page-2"
+    }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="方言理财 Dialect Money">
+  <!-- Team brand mark: gold 话 roundel on the dark ground from the Dialect Money
+       card. The glyph is set as live text, not an outline, so the file stays a
+       licence-free 1KB and renders from whichever CJK serif the device has. -->
+  <rect width="96" height="96" rx="18" fill="#2b2621"/>
+  <circle cx="48" cy="48" r="31" fill="none" stroke="#c89a4b" stroke-width="4"/>
+  <text x="48" y="49" fill="#c89a4b"
+        font-family="'Songti SC','SimSun','Noto Serif SC','Source Han Serif SC','PingFang SC','Microsoft YaHei',serif"
+        font-size="46" text-anchor="middle" dominant-baseline="central">话</text>
+</svg>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=Familjen+Grotesk:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; font-family: "Familjen Grotesk", system-ui, sans-serif; }
+    a { color: #8f6829; } a:hover { color: #6f4f1c; }
+    .wm { font-family: "Newsreader", Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+    .lbl { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; color: #6d6459; }
+    .cap { font-size: 11.5px; color: #6d6459; line-height: 1.5; }
+  </style>
+</helmet>
+
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs>
+    <symbol id="sealMark" viewBox="0 0 100 100">
+      <rect x="16" y="16" width="68" height="68" rx="6" fill="none" stroke="currentColor" stroke-width="6"></rect>
+      <rect x="33.5" y="42" width="7" height="16" rx="3.5" fill="currentColor"></rect>
+      <rect x="46.5" y="32" width="7" height="36" rx="3.5" fill="currentColor"></rect>
+      <rect x="59.5" y="38" width="7" height="24" rx="3.5" fill="currentColor"></rect>
+    </symbol>
+  </defs>
+</svg>
+
+<div style="background: #f7f4ee; color: #241f1b; min-height: 560px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 21px;">
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline;">
+    <div class="lbl">Direction C</div>
+    <div class="lbl" style="color: #2f5d4e;">Institutional</div>
+  </div>
+
+  <div style="font-size: 21px; font-weight: 600; letter-spacing: -0.01em;">Civic seal</div>
+
+  <div style="display: flex; gap: 15px;">
+    <div style="width: 112px; height: 112px; border-radius: 22.5%; background: #1f3d3a; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg style="width: 78px; height: 78px; color: #e4d9c4"><use href="#sealMark"></use></svg>
+    </div>
+    <div style="width: 112px; height: 112px; border-radius: 22.5%; background: #e4d9c4; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg style="width: 78px; height: 78px; color: #1f3d3a"><use href="#sealMark"></use></svg>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 11px;">
+    <svg style="width: 32px; height: 32px; color: #1f3d3a"><use href="#sealMark"></use></svg>
+    <div class="wm" style="font-size: 19px;">Dialect Money</div>
+  </div>
+
+  <div style="height: 1px; background: #ddd5c8;"></div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div>
+      <div class="lbl" style="margin-bottom: 4px;">Why</div>
+      <div class="cap">A squared seal with a voice level inside. Borrows the
+        visual authority of CPF, MAS and MoneySense &mdash; which is exactly
+        where the brief says the content comes from. Maximum credibility with
+        the institutions that would have to carry it.</div>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom: 4px;">Tradeoff</div>
+      <div class="cap">Cold, and it says audio rather than money. The product
+        exists <em>because</em> official channels already failed to reach her;
+        looking like one more of them may reproduce the exclusion. The level
+        bars also edge toward generic AI-audio visuals.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

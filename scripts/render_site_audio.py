@@ -15,19 +15,16 @@ Commit the .mp3 files: GitHub Pages serves them as static assets. If they are
 absent the app falls back to the browser voice, so the site is never broken by
 not having run this.
 
-Needs the Hokkien TTS extras and ffmpeg:
+Needs the Hokkien TTS extras. No ffmpeg: libsndfile 1.2 writes MP3 itself,
+and say_hokkien picks the format from the output file's extension.
 
-    .venv/bin/pip install torch omnivoice soundfile transformers
-    brew install ffmpeg          # or apt-get install ffmpeg
+    .venv/bin/pip install -r requirements.txt
 """
 
 import argparse
 import json
 import re
-import shutil
-import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -39,11 +36,6 @@ DIALECT = "hokkien"
 
 # Narration speed. Below 1.0 is slower, which suits an elderly listener.
 SPEED = 0.9
-
-# 24 kbps mono is ample for speech and keeps the repo light — a 20-second clip
-# lands around 60 KB, so the whole set stays well under a megabyte.
-MP3_BITRATE = "24k"
-
 
 # --------------------------------------------------------------------------
 # Reading the data file
@@ -157,15 +149,6 @@ def target(stem, index):
     return AUDIO_DIR / ("%s.%s.%d.mp3" % (stem, DIALECT, index))
 
 
-def to_mp3(wav_path, mp3_path):
-    """Transcode with ffmpeg. Speech at 24 kbps mono keeps the repo small."""
-    subprocess.run(
-        ["ffmpeg", "-y", "-loglevel", "error", "-i", str(wav_path),
-         "-ac", "1", "-b:a", MP3_BITRATE, str(mp3_path)],
-        check=True,
-    )
-
-
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -193,34 +176,26 @@ def main(argv=None):
         print("\nDry run — nothing written. Drop --dry-run to render.")
         return 0
 
-    if not shutil.which("ffmpeg"):
-        raise SystemExit(
-            "ffmpeg is not on PATH, and the site asks for .mp3.\n"
-            "  brew install ffmpeg      (macOS)\n"
-            "  apt-get install ffmpeg   (Debian/Ubuntu)"
-        )
-
     from pipeline import tts  # imported here so --dry-run needs no torch
 
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
     written = skipped = 0
 
-    with tempfile.TemporaryDirectory() as tmp:
-        scratch = Path(tmp) / "clip.wav"
-        for explainer_id, index, line in work:
-            out = target(explainer_id, index)
-            if out.exists() and not args.force:
-                skipped += 1
-                continue
-            print("  %s" % out.name, flush=True)
-            try:
-                tts.say_hokkien(line, str(scratch), speed=SPEED)
-                to_mp3(scratch, out)
-            except tts.TTSError as err:
-                raise SystemExit("Narration failed on %s: %s" % (out.name, err))
-            except subprocess.CalledProcessError as err:
-                raise SystemExit("ffmpeg failed on %s: %s" % (out.name, err))
-            written += 1
+    for explainer_id, index, line in work:
+        out = target(explainer_id, index)
+        if out.exists() and not args.force:
+            skipped += 1
+            continue
+        print("  %s" % out.name, flush=True)
+        try:
+            # say_hokkien hands the path straight to soundfile, which picks the
+            # format from the extension — libsndfile 1.2 encodes MP3 itself, so
+            # there is no temp wav and no ffmpeg in the loop.
+            result = tts.say_hokkien(line, str(out), speed=SPEED)
+        except tts.TTSError as err:
+            raise SystemExit("Narration failed on %s: %s" % (out.name, err))
+        print("        %.1fs, %d KB" % (result["seconds"], out.stat().st_size // 1024))
+        written += 1
 
     print("\n%d written, %d already present." % (written, skipped))
     print("These are unreviewed drafts. Have a Singapore Hokkien speaker listen")
