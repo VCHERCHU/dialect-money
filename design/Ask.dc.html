@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #0b5c46; text-decoration: none; }
+    a:hover { color: #08402f; }
+  </style>
+</helmet>
+
+<!-- ask.html scrolls, so this frame is taller than a phone viewport on purpose. -->
+<div style="width: 390px; height: 960px; background: #fbf9f4; color: #1a1a17; display: flex; flex-direction: column; gap: 0; padding: 8px 18px 24px; overflow: hidden">
+
+  <div style="display: flex; align-items: center; min-height: 56px; font-size: 16px; font-weight: 600; color: #0b5c46">← 回到全部题目</div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px">
+    <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.01em">问一问</div>
+    <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #8a857a">Ask · prototype</div>
+  </div>
+
+  <div style="font-size: 18px; line-height: 1.6; color: #55524a; margin-top: 14px">
+    有人卖东西给你，不懂就问。用你的话问，用你的话答。
+  </div>
+
+  <div style="display: flex; gap: 8px; margin-top: 22px">
+    <div style="flex: 1 1 0; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0b5c46; border: 2px solid #0b5c46; border-radius: 14px; color: #ffffff">
+      <div style="font-size: 18px; font-weight: 600">福建话</div>
+      <div style="font-size: 11px; font-weight: 500; color: rgba(255,255,255,.75)">Hokkien</div>
+    </div>
+    <div style="flex: 1 1 0; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; border: 2px solid #e3ded1; border-radius: 14px">
+      <div style="font-size: 18px; font-weight: 600">潮州话</div>
+      <div style="font-size: 11px; font-weight: 500; color: #8a857a">Teochew</div>
+    </div>
+    <div style="flex: 1 1 0; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; border: 2px solid #e3ded1; border-radius: 14px">
+      <div style="font-size: 18px; font-weight: 600">广东话</div>
+      <div style="font-size: 11px; font-weight: 500; color: #8a857a">Cantonese</div>
+    </div>
+  </div>
+
+  <!-- The microphone IS the interface. One target, unmissable, and the only
+       thing on the screen that looks pressable. -->
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 0; margin-top: 34px">
+    <div style="width: 150px; height: 150px; border-radius: 50%; background: #0b5c46; box-shadow: 0 6px 0 rgba(11,92,70,.25); display: flex; align-items: center; justify-content: center">
+      <svg width="58" height="58" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="9" y="2" width="6" height="11" rx="3" fill="#ffffff"></rect>
+        <path d="M5 11 a7 7 0 0 0 14 0" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        <path d="M12 18 L12 22 M8 22 L16 22" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </div>
+    <div style="font-size: 21px; font-weight: 600; margin-top: 16px">按一下，然后讲话</div>
+    <div style="font-size: 14px; color: #8a857a; margin-top: 5px">Tap, then speak. Tap again to stop.</div>
+  </div>
+
+  <!-- The way in for someone who will not speak to a phone, and for the
+       caregiver asking on her behalf. -->
+  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 32px; padding-top: 22px; border-top: 1px solid #e3ded1">
+    <div style="font-size: 17px; font-weight: 600; line-height: 1.45">不方便讲话？打字或者按一个问题</div>
+
+    <div style="display: flex; gap: 8px">
+      <div style="flex: 1 1 auto; min-height: 56px; display: flex; align-items: center; padding: 0 14px; background: #ffffff; border: 2px solid #e3ded1; border-radius: 14px; font-size: 16px; color: #8a857a">他叫我加附加险，值得吗？</div>
+      <div style="flex: 0 0 auto; min-height: 56px; display: flex; align-items: center; padding: 0 18px; background: #0b5c46; border: 2px solid #0b5c46; border-radius: 14px; font-size: 16px; font-weight: 600; color: #ffffff">问</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px">
+      <div style="min-height: 56px; display: flex; align-items: center; padding: 12px 16px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; font-size: 16px; line-height: 1.45">保单上写的钱，是不是保证的？</div>
+      <div style="min-height: 56px; display: flex; align-items: center; padding: 12px 16px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px; font-size: 16px; line-height: 1.45">签名就送电饭锅，可以要吗？</div>
+      <div style="min-height: 56px; display: flex; flex-direction: column; justify-content: center; padding: 12px 16px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px">
+        <div style="font-size: 16px; line-height: 1.45">我要不要买比特币？</div>
+        <div style="font-size: 13px; color: #8a4b00; margin-top: 2px">Outside the library — shows the refusal</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

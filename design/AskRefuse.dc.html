@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+                   "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #0b5c46; text-decoration: none; }
+    a:hover { color: #08402f; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 960px; background: #fbf9f4; color: #1a1a17; display: flex; flex-direction: column; padding: 8px 18px 24px; overflow: hidden">
+
+  <div style="display: flex; align-items: center; min-height: 56px; font-size: 16px; font-weight: 600; color: #0b5c46">← 回到全部题目</div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px; padding: 14px 16px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 14px">
+    <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #8a857a">听到 Heard</div>
+    <div style="font-size: 20px; line-height: 1.5">我要不要买比特币？</div>
+  </div>
+
+  <!-- THE most important screen in the product. The counter-metric is that
+       100% of claims trace to a cited page; this is what that looks like when
+       there is no page to cite. It has to feel like an answer, not an error. -->
+  <div style="display: flex; flex-direction: column; margin-top: 18px; padding: 20px; background: #fdf1e0; border: 1px solid #8a4b00; border-radius: 14px">
+
+    <div style="font-size: 26px; font-weight: 700; line-height: 1.4">这个我不知道。</div>
+
+    <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 14px">
+      <div style="padding: 8px 11px; border-radius: 8px; background: rgba(255,255,255,.6); font-size: 17px; line-height: 1.6">我只讲这个网站里面有的东西，因为那些是政府的资料，可以查。</div>
+      <div style="padding: 8px 11px; border-radius: 8px; background: rgba(255,255,255,.6); font-size: 17px; line-height: 1.6">没有的，我不会乱讲。你问的这个，我这里没有。</div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.55; color: #8a4b00; margin-top: 14px">
+      I answer only from the library on this site. Your question is outside it, so there is no sourced answer to give — and guessing is worse than saying so.
+    </div>
+
+    <!-- A refusal that dead-ends is a failure. It hands her what it does have. -->
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding: 16px; background: #fbf9f4; border-radius: 14px">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <div style="font-size: 17px; font-weight: 600; color: #0b5c46">我可以讲这些</div>
+        <div style="font-size: 12px; color: #8a857a">What I do have</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px">
+        <div style="min-height: 56px; display: flex; align-items: center; padding: 12px 14px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 12px; font-size: 16px; line-height: 1.45">加了附加险，看病真的不用自己付钱？</div>
+        <div style="min-height: 56px; display: flex; align-items: center; padding: 12px 14px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 12px; font-size: 16px; line-height: 1.45">保单上的大数目，是保证的还是估计的？</div>
+        <div style="min-height: 56px; display: flex; align-items: center; padding: 12px 14px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 12px; font-size: 16px; line-height: 1.45">定期存款的高利息，为什么拿到手好像变少了？</div>
+        <div style="min-height: 56px; display: flex; align-items: center; padding: 12px 14px; background: #ffffff; border: 1px solid #e3ded1; border-radius: 12px; font-size: 16px; line-height: 1.45">签名就送礼物，礼物的钱是谁出的？</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-top: 18px; min-height: 56px; padding: 0 18px; border: 2px solid #e3ded1; border-radius: 14px; background: #ffffff">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto">
+      <rect x="9" y="2" width="6" height="11" rx="3" fill="#55524a"></rect>
+      <path d="M5 11 a7 7 0 0 0 14 0" stroke="#55524a" stroke-width="2" stroke-linecap="round" fill="none"></path>
+      <path d="M12 18 L12 22 M8 22 L16 22" stroke="#55524a" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <div style="flex: 1 1 auto; font-size: 16px; font-weight: 600; color: #55524a">再问一个</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
