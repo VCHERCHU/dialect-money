@@ -34,10 +34,36 @@ window.LIBRARY = {
     { name: 'MoneySense', url: 'https://www.moneysense.gov.sg' },
     { name: 'CPF',        url: 'https://www.cpf.gov.sg' },
     { name: 'MAS',        url: 'https://www.mas.gov.sg' },
+    { name: 'MAS FID',    url: 'https://eservices.mas.gov.sg/fid/institution/print' },
     { name: 'IRAS',       url: 'https://www.iras.gov.sg' },
     { name: 'MOF',        url: 'https://www.mof.gov.sg' },
     { name: 'gov.sg',     url: 'https://www.gov.sg' }
   ],
+
+  /* ---------------------------------------------------------------
+     WHO IS SELLING, not what is being sold.
+
+     v1 explains and does not advise, so nothing here may say whether
+     a product is worth buying. But there is one fact about any offer
+     that IS authoritative, checkable, and free of judgement: whether
+     the institution behind it is licensed by MAS at all. The MAS
+     Financial Institutions Directory is the single reference for that,
+     and it is the only source in the whitelist that speaks about
+     specific commercial firms.
+
+     Rule for every explainer and every narration: when an institution
+     or a representative is referred to, it is referred to through the
+     FID and nowhere else. No other list, no company website, no
+     recollection. If a firm is not in the FID, the honest answer is
+     "not found here" — never an implied verdict either way.
+     --------------------------------------------------------------- */
+  verify: {
+    zh:  '还有一件事，先查清楚：卖给你的这家公司，在MAS的名册里面吗？',
+    ask: '你公司的名字，让我在MAS的名册里查一查，可以吗？',
+    labelZh: '查一查这家公司',
+    labelEn: 'Check the firm — MAS Financial Institutions Directory',
+    url: 'https://eservices.mas.gov.sg/fid/institution/print'
+  },
 
   lastCrawl: '2026-08-26',
 
