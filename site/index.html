@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>方言理财 · Dialect Money</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
 <meta name="description" content="Authoritative Singapore money guidance, spoken in Hokkien, Teochew and Cantonese.">
 <style>
   /* ---------------------------------------------------------------
@@ -38,6 +39,8 @@
 
   /* ---- header ---- */
   header { padding: 2rem 0 1.25rem; }
+  .brandline { display: flex; align-items: center; gap: .85rem; }
+  .mark { flex: none; width: 64px; height: 64px; display: block; border-radius: 14px; }
   .brand { font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; margin: 0; }
   .brand small {
     display: block; font-size: .95rem; font-weight: 500;
@@ -198,7 +201,10 @@
 <div class="wrap">
 
   <header>
-    <h1 class="brand">方言理财<small>Dialect Money · prototype</small></h1>
+    <div class="brandline">
+      <img class="mark" src="logo.svg" width="64" height="64" alt="" aria-hidden="true">
+      <h1 class="brand">方言理财<small>Dialect Money · prototype</small></h1>
+    </div>
     <p class="tagline">政府的理财资料，用你听得懂的话讲一遍。</p>
     <p class="principle">
       这里只解释，不推荐产品。
