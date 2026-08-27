@@ -60,6 +60,28 @@
     font-size: .95rem; line-height: 1.55; color: var(--warn);
   }
   .proto b { display: block; }
+  .proto code {
+    font-size: .9em; background: rgba(0,0,0,.06);
+    padding: .1em .35em; border-radius: 4px;
+  }
+
+  /* ---- dialect text no native speaker has checked ---- */
+  .unchecked {
+    margin: 1.1rem 0 0; padding: .6rem .8rem;
+    background: var(--warn-lo); border-left: 4px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    font-size: .95rem; line-height: 1.5; color: var(--warn);
+  }
+  .unchecked span { display: block; font-size: .8rem; font-weight: 500; opacity: .85; }
+
+  /* ---- Tai-lo romanisation, for a human reader or reviewer ---- */
+  .tailo { margin: .9rem 0 0; font-size: .95rem; color: var(--ink-soft); }
+  .tailo summary {
+    cursor: pointer; min-height: 2.6rem; display: flex; align-items: center;
+    color: var(--accent); font-weight: 600;
+  }
+  .tailo ol { margin: .4rem 0 .2rem; padding-left: 1.4rem; }
+  .tailo li { margin-bottom: .35rem; line-height: 1.6; font-family: Charter, Georgia, "Times New Roman", serif; }
 
   /* ---- dialect chooser ---- */
   .chooser { margin: 2rem 0 .5rem; }
@@ -183,11 +205,14 @@
       <em>We explain what is being sold to you. We never tell you what to buy.</em>
     </p>
     <div class="proto">
-      <b>Prototype — placeholder voice.</b>
-      There is no real Hokkien or Teochew text-to-speech behind this yet. Play uses
-      your browser's Mandarin or Cantonese voice as a stand-in so the shape of the
-      experience can be judged. Scripts are drafts and have not been through the
-      human accuracy check the problem statement requires.
+      <b>Prototype — Hokkien text is a draft, and the voice is a stand-in.</b>
+      Hokkien now has its own colloquial script rather than shared written Chinese,
+      and real Singapore Hokkien narration exists in this repo (MERaLiON, run
+      locally). Until those clips are rendered into <code>site/audio/</code>, Play
+      falls back to reading the Mandarin version in your browser's voice. Teochew
+      has no real voice at all yet. No script here has been through the human
+      accuracy check the problem statement requires, and no native Hokkien speaker
+      has reviewed the dialect text.
     </div>
     <p class="row">
       <a class="btn primary" href="ask.html">🎤 有问题？直接问 · Ask a question out loud</a>
@@ -266,6 +291,45 @@
     return item.script.concat([L.verify.zh]);
   }
 
+  /* ---- what to show and narrate for the chosen dialect -----------
+     Hokkien carries its own colloquial script, because MERaLiON needs
+     that register as input. Teochew and Cantonese share the written
+     Chinese: written dialect is not standardised in Singapore, so for
+     those two only the narration differs.
+
+     `clips` is parallel to `lines` and names the pre-rendered file for
+     each one. The closing MAS line is shared across every explainer,
+     so it has one clip rather than six copies. video.html builds the
+     same two arrays the same way — keep them in step.
+     --------------------------------------------------------------- */
+  function dialectContent(item, id) {
+    var h = item.hokkien;
+    var v = L.verify;
+
+    if (id === 'hokkien' && h && h.script && h.script.length && v.hokkien) {
+      return {
+        title: h.title || item.titleZh,
+        lines: h.script.concat([v.hokkien.script]),
+        tailo: (h.tailo || []).concat(v.hokkien.tailo ? [v.hokkien.tailo] : []),
+        ask: (h.ask || item.ask).concat([v.hokkien.ask]),
+        clips: h.script.map(function (_, n) { return item.id + '.' + id + '.' + n; })
+                       .concat(['verify.' + id]),
+        needsCheck: !h.checked
+      };
+    }
+
+    return {
+      title: item.titleZh,
+      lines: fullScript(item),
+      tailo: [],
+      ask: item.ask.concat([v.ask]),
+      clips: null,
+      needsCheck: false
+    };
+  }
+
+  function content(item) { return dialectContent(item, chosen); }
+
   /* ---- dialect chooser ---- */
   function renderPills() {
     var box = document.getElementById('pills');
@@ -295,6 +359,10 @@
   function stop() {
     if (synth) { synth.cancel(); }
     if (playing) {
+      if (playing.audio) {
+        playing.audio.pause();
+        playing.audio = null;
+      }
       var card = document.getElementById('card-' + playing.id);
       if (card) {
         card.classList.remove('playing');
@@ -307,31 +375,101 @@
     }
   }
 
-  function play(item) {
-    stop();
+  /* How long to wait for a clip to actually start before giving up on it.
+     Generous: the audience is on phones, sometimes on poor connections. */
+  var STALL_MS = 6000;
+
+  /* Pre-rendered narration, one clip per line, played in order. */
+  function playClips(item, c, highlight, speakFrom) {
+    var i = 0;
+    var handedOver = false;
+
+    function fallBack() {
+      if (handedOver) { return; }             // hand over once, not per event
+      handedOver = true;
+      if (!playing || playing.id !== item.id) { return; }
+      if (playing.audio) { playing.audio.pause(); }   // or it may wake up later
+      playing.audio = null;
+      speakFrom(i);
+    }
+
+    function next() {
+      if (!playing || playing.id !== item.id) { return; }
+      if (i >= c.lines.length) { stop(); return; }
+
+      var el = new Audio('audio/' + c.clips[i] + '.mp3');
+      playing.audio = el;
+
+      /* A missing file fires 'error'. A truncated file, or one served over a
+         stalling connection, fires nothing at all — which would leave the
+         listener in silence indefinitely. Treat "has not started" as
+         unplayable and hand over to the browser voice. */
+      var guard = setTimeout(fallBack, STALL_MS);
+      function disarm() { clearTimeout(guard); }
+
+      el.addEventListener('playing', disarm);
+      el.addEventListener('ended', function () { disarm(); i += 1; next(); });
+      el.addEventListener('error', function () { disarm(); fallBack(); });
+      highlight(i);
+      var started = el.play();
+      if (started && started.catch) {
+        started.catch(function () { disarm(); fallBack(); });
+      }
+    }
+
+    next();
+  }
+
+  /* The browser-voice stand-in. It speaks the Mandarin script even when
+     Hokkien text is on screen: a zh-CN voice reading Hokkien Han characters
+     produces Mandarin readings of Hokkien words, which is worse than an
+     honest Mandarin stand-in. The arrays are line-for-line, so the
+     highlight still tracks. */
+  function speak(item, c, highlight, from) {
+    var start = from || 0;
+    var lines = fullScript(item);
+
     if (!synth) {
-      alert('This browser has no speech support. Read the script below instead.');
+      if (start === 0) {
+        alert('This browser has no speech support. Read the script below instead.');
+      }
+      stop();
       return;
     }
+
+    lines.forEach(function (line, i) {
+      if (i < start) { return; }
+      var u = new SpeechSynthesisUtterance(line);
+      u.lang = dialect().ttsLang;
+      u.rate = 0.85;                       // slower than default, for 70+ listeners
+      u.onstart = function () { highlight(i); };
+      if (i === lines.length - 1) { u.onend = stop; }
+      synth.speak(u);
+    });
+  }
+
+  function play(item) {
+    stop();
+    var c = content(item);
     var card = document.getElementById('card-' + item.id);
     var lis = card.querySelectorAll('.lines li');
     card.classList.add('playing');
     card.querySelector('.play').textContent = '■';
-    playing = { id: item.id };
+    playing = { id: item.id, audio: null };
 
-    var script = fullScript(item);
-    script.forEach(function (line, i) {
-      var u = new SpeechSynthesisUtterance(line);
-      u.lang = dialect().ttsLang;
-      u.rate = 0.85;                       // slower than default, for 70+ listeners
-      u.onstart = function () {
-        if (!playing || playing.id !== item.id) { return; }
-        Array.prototype.forEach.call(lis, function (li) { li.classList.remove('now'); });
-        if (lis[i]) { lis[i].classList.add('now'); }
-      };
-      if (i === script.length - 1) { u.onend = stop; }
-      synth.speak(u);
-    });
+    function highlight(i) {
+      if (!playing || playing.id !== item.id) { return; }
+      Array.prototype.forEach.call(lis, function (li) { li.classList.remove('now'); });
+      if (lis[i]) { lis[i].classList.add('now'); }
+    }
+
+    function speakFrom(i) { speak(item, c, highlight, i); }
+
+    if (c.clips && dialect().narration === 'meralion') {
+      playClips(item, c, highlight, speakFrom);
+    } else {
+      speakFrom(0);
+    }
   }
 
   /* ---- video overlay --------------------------------------------
@@ -388,12 +526,13 @@
   }
 
   function shareLink(item) {
-    var text = '方言理财：' + item.titleZh + '\n' + location.href.split('#')[0].replace(/[^\/]*$/, '') + videoLink(item);
+    var text = '方言理财：' + content(item).title + '\n' + location.href.split('#')[0].replace(/[^\/]*$/, '') + videoLink(item);
     return 'https://wa.me/?text=' + encodeURIComponent(text);
   }
 
   function card(item) {
     var ready = item.audio[chosen] === 'ready';
+    var c = content(item);
     var el = document.createElement('article');
     el.className = 'card';
     el.id = 'card-' + item.id;
@@ -405,7 +544,7 @@
     head.setAttribute('aria-controls', 'body-' + item.id);
     head.innerHTML =
       '<span class="play" aria-hidden="true">' + (ready ? '▶' : '⋯') + '</span>' +
-      '<span><h3>' + item.titleZh + '</h3>' +
+      '<span><h3>' + c.title + '</h3>' +
       '<p class="meta">' + statusLabel(item) + ' · ' + item.source.name + '</p></span>';
 
     var body = document.createElement('div');
@@ -413,11 +552,22 @@
     body.id = 'body-' + item.id;
     body.hidden = true;
     body.innerHTML =
+      (c.needsCheck
+        ? '<p class="unchecked">这段' + dialect().zh +
+          '文字是初稿，还没有给讲' + dialect().zh + '的人检查过。' +
+          '<span>Draft ' + dialect().en +
+          ' text — no native speaker has reviewed it yet.</span></p>'
+        : '') +
       '<ul class="lines">' +
-        fullScript(item).map(function (l) { return '<li>' + l + '</li>'; }).join('') +
+        c.lines.map(function (l) { return '<li>' + l + '</li>'; }).join('') +
       '</ul>' +
+      (c.tailo.length
+        ? '<details class="tailo"><summary>Tâi-lô 罗马字</summary><ol>' +
+            c.tailo.map(function (l) { return '<li>' + l + '</li>'; }).join('') +
+          '</ol></details>'
+        : '') +
       '<div class="ask"><h4>你可以这样问他<span>Questions you can ask them</span></h4><ol>' +
-        item.ask.concat([L.verify.ask]).map(function (q) { return '<li>' + q + '</li>'; }).join('') +
+        c.ask.map(function (q) { return '<li>' + q + '</li>'; }).join('') +
       '</ol></div>' +
       '<div class="row">' +
         '<a class="btn primary" data-watch href="' + videoLink(item) + '">▶ 看视频 Watch</a>' +

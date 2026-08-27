@@ -224,6 +224,33 @@ standard OSS licence — read it before publishing beyond coursework.
 Apple Silicon note: this model hard-crashes (SIGBUS) on MPS at both float16 and
 float32. CPU float32 works; ~11s for a first clip, ~5s once warm.
 
+### Narrating the prototype site
+
+The prototype used to show one shared written-Chinese script for all three
+dialects, on the grounds that written dialect is not standardised in Singapore.
+That still holds for Teochew and Cantonese. Hokkien is now the exception: it has
+its own colloquial script (白話) in `site/explainers.js`, because that is the
+register MERaLiON needs — feeding it Mandarin produces a literary reading, not
+speech. The Mandarin stays alongside as the checkpoint a reviewer can read.
+
+`scripts/render_site_audio.py` narrates those Hokkien lines into
+`site/audio/<id>.hokkien.<line>.mp3`, one clip per line so the app can keep
+highlighting the line being read:
+
+```sh
+python3 scripts/render_site_audio.py --dry-run   # list the clips, no model load
+python3 scripts/render_site_audio.py             # render them (needs ffmpeg)
+```
+
+Commit the `.mp3` files — Pages serves them as static assets. The site does not
+depend on them: a clip that is missing, truncated or slow to load falls back to
+reading the Mandarin version in the browser's voice, so not having run this
+never leaves a listener in silence.
+
+**Nothing in the Hokkien text or audio has been checked by a native Singapore
+Hokkien speaker.** The app labels it as a draft on every card. That check is
+assumption 2, and it should happen before this is shown to anyone.
+
 ### MCP server
 
 `mcp_server.py` exposes the Hokkien voice as MCP tools (`speak_hokkien`,
